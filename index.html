@@ -2476,6 +2476,194 @@
             font-weight: 600;
         }
 
+        /* ── Device Mockup Frame & Prototype Viewer System ── */
+        .prototype-stage-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: var(--bg-base);
+            overflow: hidden;
+        }
+
+        .prototype-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            z-index: 10;
+            gap: 12px;
+        }
+
+        .device-switcher-group {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 3px;
+            gap: 3px;
+        }
+
+        [data-theme="light"] .device-switcher-group {
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .device-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .device-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .device-btn.active {
+            background: var(--sb-accent, #00754A);
+            color: #ffffff !important;
+            box-shadow: 0 2px 8px rgba(0, 117, 74, 0.35);
+        }
+
+        .prototype-viewport-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+            padding: 24px;
+            background: radial-gradient(circle at center, rgba(0, 117, 74, 0.05) 0%, transparent 70%), var(--bg-base);
+            position: relative;
+        }
+
+        /* Smartphone Device Shell (iPhone / Android Mockup) */
+        .device-mockup-frame {
+            position: relative;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 0 6px rgba(255, 255, 255, 0.2);
+            background: #000000;
+            display: flex;
+            flex-direction: column;
+            margin: auto;
+        }
+
+        /* Mobile Smartphone Size */
+        .device-mockup-frame.mode-mobile {
+            width: 390px;
+            height: 780px;
+            border-radius: 46px;
+            padding: 12px 12px 14px 12px;
+            border: 8px solid #1e293b;
+        }
+
+        [data-theme="light"] .device-mockup-frame.mode-mobile {
+            border-color: #334155;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Tablet Mode */
+        .device-mockup-frame.mode-tablet {
+            width: 720px;
+            height: 820px;
+            border-radius: 36px;
+            padding: 14px;
+            border: 10px solid #1e293b;
+        }
+
+        /* Desktop Mode */
+        .device-mockup-frame.mode-desktop {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            padding: 0;
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+        }
+
+        /* Top Dynamic Island / Status Bar */
+        .device-top-bar {
+            position: absolute;
+            top: 14px;
+            left: 12px;
+            right: 12px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            z-index: 50;
+            pointer-events: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+        }
+
+        .device-dynamic-island {
+            width: 90px;
+            height: 20px;
+            background: #000000;
+            border-radius: 20px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+        }
+
+        .device-camera-lens {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #0d1527;
+            border: 1.5px solid #1e293b;
+            margin-left: auto;
+        }
+
+        .device-home-indicator {
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 10px;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .device-screen-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #ffffff;
+            border-radius: 36px;
+            overflow: hidden;
+        }
+
+        .device-mockup-frame.mode-desktop .device-screen-iframe {
+            border-radius: 12px;
+        }
+
+        .device-mockup-frame.mode-desktop .device-top-bar,
+        .device-mockup-frame.mode-desktop .device-home-indicator {
+            display: none;
+        }
+
         /* Terminal — disciplined block element, no decorative radius */
         .terminal-container {
             background: #080807;
@@ -4804,24 +4992,276 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${title} Prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>${title} Mobile Prototype</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-    body { font-family: sans-serif; background: #0b0f19; color: #f8fafc; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-    .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 32px; max-width: 600px; width: 100%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); backdrop-filter: blur(20px); }
-    h1 { color: #10b981; margin-top: 0; }
-    p { color: #cbd5e1; line-height: 1.6; }
-    .btn { background: #10b981; color: #0f172a; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
-    .btn:hover { transform: scale(1.05); background: #34d399; }
+    :root {
+        --primary: #00754A;
+        --primary-dark: #006241;
+        --primary-light: #d4e9e2;
+        --accent: #cba258;
+        --bg: #090d16;
+        --surface: #131b2e;
+        --surface-card: rgba(255, 255, 255, 0.05);
+        --text: #f8fafc;
+        --text-sub: #94a3b8;
+        --border: rgba(255, 255, 255, 0.1);
+        --radius: 20px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 80px; min-height: 100vh; overflow-x: hidden; }
+    
+    /* Top App Header */
+    .app-header {
+        position: sticky; top: 0; z-index: 100;
+        background: rgba(9, 13, 22, 0.85);
+        backdrop-filter: blur(20px);
+        padding: 16px 20px;
+        display: flex; align-items: center; justify-content: space-between;
+        border-bottom: 1px solid var(--border);
+    }
+    .app-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; }
+    .app-brand-icon { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; box-shadow: 0 4px 12px rgba(0, 117, 74, 0.4); }
+    .header-actions { display: flex; gap: 10px; }
+    .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--surface-card); border: 1px solid var(--border); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+    .icon-btn:active { transform: scale(0.92); background: var(--primary); color: #fff; }
+
+    /* Hero Banner */
+    .hero-card {
+        margin: 16px 20px;
+        padding: 22px;
+        background: linear-gradient(135deg, rgba(0, 117, 74, 0.35) 0%, rgba(30, 57, 50, 0.6) 100%);
+        border: 1px solid rgba(0, 117, 74, 0.4);
+        border-radius: var(--radius);
+        position: relative; overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .hero-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(0,0,0,0.4); border-radius: 50px; font-size: 11px; font-weight: 700; color: #34d399; margin-bottom: 10px; }
+    .hero-title { font-size: 20px; font-weight: 800; margin-bottom: 6px; line-height: 1.3; }
+    .hero-desc { font-size: 13px; color: var(--text-sub); line-height: 1.5; margin-bottom: 16px; }
+    .hero-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: #00754A; color: #fff; border: none; border-radius: 50px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 117, 74, 0.4); transition: 0.2s; }
+    .hero-btn:active { transform: scale(0.95); background: #006241; }
+
+    /* Category Chips */
+    .chip-scroll { display: flex; gap: 8px; padding: 0 20px 14px 20px; overflow-x: auto; scrollbar-width: none; }
+    .chip-scroll::-webkit-scrollbar { display: none; }
+    .chip { padding: 8px 16px; border-radius: 50px; background: var(--surface-card); border: 1px solid var(--border); font-size: 12.5px; font-weight: 600; color: var(--text-sub); white-space: nowrap; cursor: pointer; transition: 0.2s; }
+    .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 2px 10px rgba(0, 117, 74, 0.3); }
+
+    /* Main Section */
+    .section-header { padding: 8px 20px 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+    .section-title { font-size: 16px; font-weight: 700; }
+    .section-more { font-size: 12px; color: var(--primary-light); cursor: pointer; }
+
+    /* Feature Grid / Cards */
+    .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px 16px 20px; }
+    .feature-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; cursor: pointer; transition: 0.2s; }
+    .feature-card:active { transform: scale(0.96); border-color: var(--primary); background: rgba(0, 117, 74, 0.15); }
+    .feature-icon { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 16px; color: #34d399; margin-bottom: 12px; }
+    .feature-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .feature-stat { font-size: 12px; color: var(--text-sub); }
+
+    /* Interactive Action Panel */
+    .action-panel { margin: 0 20px 16px 20px; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; }
+    .input-row { display: flex; gap: 8px; margin-top: 10px; }
+    .text-input { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 13px; outline: none; }
+    .text-input:focus { border-color: var(--primary); }
+    .action-submit-btn { padding: 10px 16px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; }
+    .action-submit-btn:active { transform: scale(0.95); }
+
+    /* Feed List */
+    .feed-list { display: flex; flex-direction: column; gap: 10px; padding: 0 20px; }
+    .feed-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface-card); border: 1px solid var(--border); border-radius: 14px; cursor: pointer; transition: 0.2s; }
+    .feed-item:active { transform: scale(0.98); background: rgba(255,255,255,0.08); }
+    .feed-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #fff; }
+    .feed-info { flex: 1; min-width: 0; }
+    .feed-title { font-size: 13.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .feed-sub { font-size: 11.5px; color: var(--text-sub); }
+    .feed-badge { padding: 3px 8px; border-radius: 50px; background: rgba(0, 117, 74, 0.2); color: #34d399; font-size: 11px; font-weight: 700; }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+        position: fixed; bottom: 0; left: 0; right: 0;
+        height: 68px; background: rgba(9, 13, 22, 0.92);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid var(--border);
+        display: flex; align-items: center; justify-content: space-around;
+        padding: 0 10px; z-index: 100;
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sub); font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .nav-item.active { color: #34d399; }
+    .nav-item i { font-size: 18px; }
+
+    /* Toast Notification */
+    .toast-box {
+        position: fixed; top: 70px; left: 50%; transform: translateX(-50%) translateY(-20px);
+        background: #00754A; color: #fff; padding: 10px 18px; border-radius: 50px;
+        font-size: 12.5px; font-weight: 700; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        opacity: 0; pointer-events: none; transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 200; display: flex; align-items: center; gap: 8px;
+    }
+    .toast-box.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
-    <div class="card">
-        <h1>🚀 ${title}</h1>
-        <p>${idea}</p>
-        <p>인터랙티브 데모 프로토타입이 준비되었습니다.</p>
-        <button class="btn" onclick="alert('🚀 데모 기능이 동작 중입니다!')">시작하기</button>
+    <!-- Toast Popup -->
+    <div id="toast" class="toast-box">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toast-text">작업이 완료되었습니다!</span>
     </div>
+
+    <!-- App Header -->
+    <header class="app-header">
+        <div class="app-brand">
+            <div class="app-brand-icon"><i class="fa-solid fa-sparkles"></i></div>
+            <span>${title}</span>
+        </div>
+        <div class="header-actions">
+            <button class="icon-btn" onclick="showToast('알림 목록이 비어있습니다.')" title="알림"><i class="fa-regular fa-bell"></i></button>
+            <button class="icon-btn" onclick="showToast('프로필 설정이 열렸습니다.')" title="설정"><i class="fa-regular fa-user"></i></button>
+        </div>
+    </header>
+
+    <!-- Hero Card -->
+    <div class="hero-card">
+        <div class="hero-tag"><i class="fa-solid fa-bolt"></i> Live Mobile Interactive</div>
+        <h2 class="hero-title">${title}</h2>
+        <p class="hero-desc">${idea}</p>
+        <button class="hero-btn" onclick="triggerAction('메인 서비스 시작')">
+            <span>체험 시작하기</span> <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
+
+    <!-- Category Chips -->
+    <div class="chip-scroll">
+        <div class="chip active" onclick="filterChip(this, '전체')">전체 피드</div>
+        <div class="chip" onclick="filterChip(this, '추천')">✨ AI 맞춤 추천</div>
+        <div class="chip" onclick="filterChip(this, '트렌드')">🔥 인기 트렌드</div>
+        <div class="chip" onclick="filterChip(this, '커뮤니티')">💬 커뮤니티</div>
+    </div>
+
+    <!-- Feature Grid -->
+    <div class="section-header">
+        <h3 class="section-title">핵심 기능 모듈</h3>
+        <span class="section-more" onclick="showToast('모든 기능이 활성화되어 있습니다.')">전체보기</span>
+    </div>
+    <div class="feature-grid">
+        <div class="feature-card" onclick="triggerAction('스마트 자동화 모듈')">
+            <div class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div class="feature-name">스마트 자동화</div>
+            <div class="feature-stat">실시간 가동 중</div>
+        </div>
+        <div class="feature-card" onclick="triggerAction('개인화 큐레이션')">
+            <div class="feature-icon" style="color:#60a5fa;"><i class="fa-solid fa-bullseye"></i></div>
+            <div class="feature-name">맞춤 큐레이션</div>
+            <div class="feature-stat">98% 정확도</div>
+        </div>
+        <div class="feature-card" onclick="triggerAction('원클릭 연동 피드')">
+            <div class="feature-icon" style="color:#f59e0b;"><i class="fa-solid fa-link"></i></div>
+            <div class="feature-name">원클릭 연동</div>
+            <div class="feature-stat">초고속 동기화</div>
+        </div>
+        <div class="feature-card" onclick="triggerAction('인사이트 리포트')">
+            <div class="feature-icon" style="color:#ec4899;"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="feature-name">성장 리포트</div>
+            <div class="feature-stat">주간 분석 완료</div>
+        </div>
+    </div>
+
+    <!-- Interactive Simulator Panel -->
+    <div class="action-panel">
+        <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 4px;">⚡ 사용자 인터랙션 시뮬레이터</h4>
+        <p style="font-size: 12px; color: var(--text-sub);">키워드를 입력하면 즉시 실시간 피드에 반영됩니다.</p>
+        <div class="input-row">
+            <input type="text" id="sim-input" class="text-input" placeholder="새로운 요청을 입력하세요..." onkeydown="if(event.key==='Enter')addItem()">
+            <button class="action-submit-btn" onclick="addItem()">전송</button>
+        </div>
+    </div>
+
+    <!-- Feed List Section -->
+    <div class="section-header" style="margin-top: 10px;">
+        <h3 class="section-title">실시간 활동 피드</h3>
+        <span class="section-more" id="feed-count">3개 항목</span>
+    </div>
+    <div class="feed-list" id="feed-container">
+        <div class="feed-item" onclick="triggerAction('기획서 생성 알림 확인')">
+            <div class="feed-avatar">P1</div>
+            <div class="feed-info">
+                <div class="feed-title">${title} 기획안 수립</div>
+                <div class="feed-sub">방금 전 • 시스템 자동화</div>
+            </div>
+            <div class="feed-badge">완료</div>
+        </div>
+        <div class="feed-item" onclick="triggerAction('타깃 분석 데이터 확인')">
+            <div class="feed-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">3C</div>
+            <div class="feed-info">
+                <div class="feed-title">경쟁사 및 고객 여정 맵핑</div>
+                <div class="feed-sub">5분 전 • 전략 컨설팅</div>
+            </div>
+            <div class="feed-badge">정합성 통과</div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchNav(this, '홈')"><i class="fa-solid fa-house"></i><span>홈</span></div>
+        <div class="nav-item" onclick="switchNav(this, '탐색')"><i class="fa-solid fa-compass"></i><span>탐색</span></div>
+        <div class="nav-item" onclick="switchNav(this, '통계')"><i class="fa-solid fa-chart-pie"></i><span>통계</span></div>
+        <div class="nav-item" onclick="switchNav(this, '마이')"><i class="fa-solid fa-circle-user"></i><span>마이</span></div>
+    </nav>
+
+    <script>
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const text = document.getElementById('toast-text');
+            if (!toast || !text) return;
+            text.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function triggerAction(actionName) {
+            showToast('📱 [' + actionName + '] 터치 이벤트가 트리거되었습니다.');
+        }
+
+        function filterChip(el, name) {
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            showToast('카테고리 [' + name + '] 필터 적용');
+        }
+
+        function switchNav(el, name) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            showToast('[' + name + '] 탭으로 전환되었습니다.');
+        }
+
+        function addItem() {
+            const input = document.getElementById('sim-input');
+            const val = input ? input.value.trim() : '';
+            if (!val) return;
+            const container = document.getElementById('feed-container');
+            const count = document.getElementById('feed-count');
+            const div = document.createElement('div');
+            div.className = 'feed-item';
+            div.onclick = () => triggerAction(val);
+            div.innerHTML = \`
+                <div class="feed-avatar" style="background:linear-gradient(135deg, #ec4899, #f43f5e)">NEW</div>
+                <div class="feed-info">
+                    <div class="feed-title">\${val}</div>
+                    <div class="feed-sub">방금 등록됨 • 인터랙티브 테스트</div>
+                </div>
+                <div class="feed-badge" style="background:rgba(203, 162, 88, 0.2); color:#cba258;">등록됨</div>
+            \`;
+            container.prepend(div);
+            input.value = '';
+            showToast('새 피드가 성공적으로 추가되었습니다!');
+            const total = container.querySelectorAll('.feed-item').length;
+            if (count) count.innerText = total + '개 항목';
+        }
+    <\/script>
 </body>
 </html>`;
 
@@ -6006,28 +6446,52 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
 
                 // STAGE 4: Frontend Agent (Prototype HTML)
                 safeUpdateProgress(88, 'prototype');
-                logAgentClientSide('architect', `실행 가능한 인터랙티브 HTML5 데모 프로토타입을 빌드 중입니다...`);
-                const prototypePrompt = `
-                다음 상품 기획서 및 와이어프레임을 바탕으로 단일 HTML 파일로 완벽하게 작동하는 인터랙티브 웹 프로토타입을 작성하라.
-                
-                아이디어: ${idea}
-                `;
+                logAgentClientSide('architect', `실행 가능한 인터랙티브 HTML5 모바일 단말 프로토타입을 빌드 중입니다...`);
+                const prototypePrompt = `You are a senior frontend engineer creating a real, interactive mobile web application prototype in a smartphone device frame.
+Based on the product idea, PRD requirements, and wireframes below, generate a COMPLETE, INTERACTIVE, HIGHLY-POLISHED HTML5 mobile web application.
+
+[Product Idea]
+${idea}
+
+[PRD Requirements Summary]
+${prdContent.slice(0, 3500)}
+
+[UX Wireframe Concept]
+${uxContent.slice(0, 2500)}
+
+[Strict Technical & UI Guidelines]
+1. Output MUST be a single, complete, fully working HTML5 file starting directly with <!DOCTYPE html>.
+2. Include full inline CSS in <style> and interactive JavaScript in <script>.
+3. Design specifically for a modern smartphone touch UI (390px mobile viewport).
+4. Include:
+   - Sticky app header with brand icon and notification/profile buttons
+   - Hero banner with CTA button and live tag
+   - Interactive category filter chips (filtering items on click)
+   - Interactive feature cards with smooth touch feedback
+   - Interactive form input simulator (typing & clicking to add/modify items with instant UI updates)
+   - Dynamic list / feed with real-time badges
+   - Interactive bottom navigation bar
+   - Toast popup notifications on actions
+5. Modern styling: CSS variables, gradients, FontAwesome icons (cdn: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css), Google Fonts (Plus Jakarta Sans, Noto Sans KR).
+6. Realistic Korean dummy data and copy throughout.
+7. CRITICAL RULE: DO NOT output any markdown backticks (\`\`\`html), explanations, greetings, or conversational text. Output ONLY the raw valid HTML code starting directly with <!DOCTYPE html>.`;
                 
                 let prototypeContent = "";
                 try {
-                    prototypeContent = await callGeminiClientSide(
+                    const rawProto = await callGeminiClientSide(
                         apiKey,
-                        "당신은 싱글 페이지 인터랙티브 웹 프로토타입을 작성하는 Frontend Engineer 에이전트입니다.",
+                        "당신은 PRD와 와이어프레임을 바탕으로 실제 동작하는 모바일 스마트폰 웹 프로토타입 HTML5 코드를 작성하는 수석 프론트엔드 개발자입니다. 설명이나 마크다운 백틱 없이 오직 <!DOCTYPE html>로 시작하는 완성된 단일 HTML 코드만 출력합니다.",
                         prototypePrompt,
                         (msg) => logAgentClientSide('architect', msg),
-                        4096
+                        8192
                     );
+                    prototypeContent = extractPureHtmlCode(rawProto, cleanTitle, idea);
                 } catch (protoErr) {
                     console.warn('[Prototype Fallback]:', protoErr);
-                    logAgentClientSide('architect', `[ℹ️ Prototype 백업 모드 실행] 데모 프로토타입이 보완 처리되었습니다.`);
+                    logAgentClientSide('architect', `[ℹ️ Prototype 백업 모드 실행] 스마트폰 단말 프로토타입이 보완 처리되었습니다.`);
                     prototypeContent = generateFallbackDoc('prototype', cleanTitle, idea);
                 }
-                logAgentClientSide('architect', `인터랙티브 데모 프로토타입 HTML5 빌드 및 검증 완료.`);
+                logAgentClientSide('architect', `인터랙티브 모바일 단말 프로토타입 HTML5 빌드 및 렌더링 검증 완료.`);
 
                 await sleep(50);
 
@@ -8331,76 +8795,190 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
         }
 
 
-        // Render Interactive HTML Prototype in sandboxed iframe
-        function renderPrototypeView(targetArea) {
-            const htmlContent = generatedDocs['prototype'] || '';
+        // ── Pure HTML Code Extractor from AI raw output or fallback ──
+        function extractPureHtmlCode(raw, title, idea) {
+            if (!raw || typeof raw !== 'string') {
+                return generateFallbackDoc('prototype', title || 'Product', idea || '');
+            }
 
-            if (!htmlContent) {
+            let code = raw.trim();
+
+            // 1. Check for markdown code blocks (```html ... ``` or ```xml ... ```)
+            const codeBlockMatch = code.match(/```(?:html|xml)?\s*([\s\S]*?)```/i);
+            if (codeBlockMatch && codeBlockMatch[1]) {
+                code = codeBlockMatch[1].trim();
+            }
+
+            // 2. Check for <!DOCTYPE html> ... </html>
+            const doctypeIdx = code.search(/<!doctype/i);
+            if (doctypeIdx !== -1) {
+                code = code.slice(doctypeIdx);
+            } else {
+                const htmlTagIdx = code.search(/<html/i);
+                if (htmlTagIdx !== -1) {
+                    code = '<!DOCTYPE html>\n' + code.slice(htmlTagIdx);
+                }
+            }
+
+            // Trim trailing markdown or explanations after </html>
+            const closeHtmlIdx = code.search(/<\/html>/i);
+            if (closeHtmlIdx !== -1) {
+                code = code.slice(0, closeHtmlIdx + 7);
+            }
+
+            // 3. If extracted code contains basic HTML tags, return it
+            if (code.includes('<body') || code.includes('<div') || code.includes('<script') || code.includes('<style')) {
+                if (!code.toLowerCase().includes('<!doctype html>')) {
+                    code = `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>${title || 'Prototype'}</title></head><body>${code}</body></html>`;
+                }
+                return code;
+            }
+
+            // 4. If AI returned purely plain text / markdown description, generate mobile prototype
+            return generateFallbackDoc('prototype', title || 'Product', idea || raw);
+        }
+
+        let currentDeviceMode = 'mobile';
+
+        // Render Interactive HTML Prototype in Realistic Device Mockup Frame
+        function renderPrototypeView(targetArea) {
+            const rawContent = generatedDocs ? (generatedDocs['prototype'] || '') : '';
+            const title = generatedDocs ? (generatedDocs['title'] || 'pitl') : 'pitl';
+            const idea = generatedDocs ? (generatedDocs['idea'] || '') : '';
+
+            if (!rawContent) {
                 targetArea.innerHTML = `
                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:16px; color:var(--text-secondary); padding:40px;">
-                        <i class="fa-solid fa-display" style="font-size:48px; opacity:0.3;"></i>
-                        <p style="font-size:16px; font-weight:600;">${t('프로토타입이 아직 생성되지 않았습니다.', 'Prototype has not been generated yet.')}</p>
-                        <p style="font-size:13px; opacity:0.6;">${t('분석을 완료하면 자동으로 생성됩니다.', 'It will be generated automatically once analysis is complete.')}</p>
+                        <i class="fa-solid fa-mobile-screen" style="font-size:52px; opacity:0.3; color:var(--accent-neon);"></i>
+                        <p style="font-size:16px; font-weight:700; color:var(--text-primary);">${t('단말 프로토타입이 아직 생성되지 않았습니다.', 'Device Prototype has not been generated yet.')}</p>
+                        <p style="font-size:13px; opacity:0.7;">${t('기획 및 와이어프레임 분석이 완료되면 단말기 형태로 자동 렌더링됩니다.', 'It will be rendered in a realistic device frame once planning is complete.')}</p>
                     </div>`;
                 return;
             }
 
-            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const pureHtml = extractPureHtmlCode(rawContent, title, idea);
+            const blob = new Blob([pureHtml], { type: 'text/html;charset=utf-8' });
             const blobUrl = URL.createObjectURL(blob);
 
+            const currentTime = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+
             targetArea.innerHTML = `
-                <div style="display:flex; flex-direction:column; height:100%; background:var(--bg-base);">
+                <div class="prototype-stage-container">
                     <!-- Stage Methodology Header -->
-                    <div style="padding: 16px 20px; background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); flex-shrink: 0;">
+                    <div style="padding: 14px 20px; background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); flex-shrink: 0;">
                         <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 10px;">
                             <span style="display: inline-block; width: 6px; height: 20px; background: var(--accent-neon); border-radius: 3px; flex-shrink: 0;"></span>
-                            ${t("인터랙티브 데모 프로토타입", "Interactive Demo Prototype")}
+                            ${t("단말기 인터랙티브 데모 프로토타입", "Interactive Device Prototype")}
                         </h1>
                         <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5; font-weight: 500;">
-                            ${t("사용자가 직접 상호작용하며 실시간 동적 플로우를 경험할 수 있는 인터랙티브 프로토타입 시안입니다.", "Interactive prototype demo enabling hands-on user flow testing.")}
+                            ${t("실제 스마트폰 단말기 프레임에서 사용자가 직접 터치·클릭하며 실시간 플로우를 경험할 수 있는 인터랙티브 시안입니다.", "Interactive prototype in a realistic mobile device frame for hands-on user flow testing.")}
                         </p>
                     </div>
 
-                    <!-- Prototype toolbar -->
-                    <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--bg-chat); border-bottom:1px solid var(--border-color); flex-shrink:0;">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <i class="fa-solid fa-display" style="color:var(--accent-neon); font-size:15px;"></i>
-                            <span style="font-size:14px; font-weight:600; color:var(--text-primary);">${t('인터랙티브 HTML 프로토타입', 'Interactive HTML Prototype')}</span>
-                            <span style="font-size:12px; color:var(--text-muted); background:var(--bg-sidebar); padding:2px 8px; border-radius:12px; border:1px solid var(--border-color);">Live Preview</span>
-                        </div>
-                        <div style="display:flex; gap:8px;">
-                            <button onclick="downloadPrototype()" style="display:flex; align-items:center; gap:6px; background:none; border:1px solid var(--border-color); color:var(--text-secondary); padding:6px 12px; border-radius:6px; font-size:13px; cursor:pointer; transition:all 0.15s;">
-                                <i class="fa-solid fa-download"></i> ${t('다운로드', 'Download')}
+                    <!-- Prototype Toolbar & Device Switcher -->
+                    <div class="prototype-toolbar">
+                        <!-- Device Mode Switcher -->
+                        <div class="device-switcher-group">
+                            <button class="device-btn ${currentDeviceMode === 'mobile' ? 'active' : ''}" id="dev-btn-mobile" onclick="switchDeviceMode('mobile')">
+                                <i class="fa-solid fa-mobile-screen"></i> <span>스마트폰 (390×780)</span>
                             </button>
-                            <button onclick="openPrototypeFullscreen()" style="display:flex; align-items:center; gap:6px; background:none; border:1px solid var(--border-color); color:var(--text-secondary); padding:6px 12px; border-radius:6px; font-size:13px; cursor:pointer; transition:all 0.15s;">
-                                <i class="fa-solid fa-up-right-and-down-left-from-center"></i> ${t('전체화면', 'Fullscreen')}
+                            <button class="device-btn ${currentDeviceMode === 'tablet' ? 'active' : ''}" id="dev-btn-tablet" onclick="switchDeviceMode('tablet')">
+                                <i class="fa-solid fa-tablet-screen-button"></i> <span>태블릿 (720×820)</span>
+                            </button>
+                            <button class="device-btn ${currentDeviceMode === 'desktop' ? 'active' : ''}" id="dev-btn-desktop" onclick="switchDeviceMode('desktop')">
+                                <i class="fa-solid fa-desktop"></i> <span>전체화면</span>
+                            </button>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <button onclick="reloadPrototypeFrame()" style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:var(--text-secondary); padding:6px 12px; border-radius:50px; font-size:12.5px; font-weight:600; cursor:pointer; transition:all 0.15s;" title="프로토타입 새로고침">
+                                <i class="fa-solid fa-rotate-right"></i> <span>${t('새로고침', 'Reload')}</span>
+                            </button>
+                            <button onclick="openPrototypeFullscreen()" style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:var(--text-secondary); padding:6px 12px; border-radius:50px; font-size:12.5px; font-weight:600; cursor:pointer; transition:all 0.15s;" title="새 창에서 단독 실행">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>${t('새 탭 실행', 'New Tab')}</span>
+                            </button>
+                            <button onclick="downloadPrototype()" style="display:flex; align-items:center; gap:6px; background:var(--sb-accent,#00754A); border:none; color:#ffffff; padding:6px 14px; border-radius:50px; font-size:12.5px; font-weight:600; cursor:pointer; transition:all 0.15s;" title="HTML 파일 다운로드">
+                                <i class="fa-solid fa-download"></i> <span>${t('HTML 다운로드', 'Download')}</span>
                             </button>
                         </div>
                     </div>
-                    <!-- Sandboxed iframe -->
-                    <iframe id="prototype-iframe"
-                        src="${blobUrl}"
-                        style="flex:1; width:100%; border:none; background:#fff;"
-                        sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
-                        title="Interactive Prototype">
-                    </iframe>
+
+                    <!-- Viewport Area with Realistic Device Shell -->
+                    <div class="prototype-viewport-area">
+                        <div class="device-mockup-frame mode-${currentDeviceMode}" id="device-frame-shell">
+                            <!-- Phone Status Bar -->
+                            <div class="device-top-bar">
+                                <span>${currentTime}</span>
+                                <div class="device-dynamic-island">
+                                    <div class="device-camera-lens"></div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+                                    <i class="fa-solid fa-signal"></i>
+                                    <i class="fa-solid fa-wifi"></i>
+                                    <i class="fa-solid fa-battery-full" style="color:#10b981;"></i>
+                                </div>
+                            </div>
+
+                            <!-- Sandboxed Interactive Screen Iframe -->
+                            <iframe id="prototype-iframe"
+                                class="device-screen-iframe"
+                                src="${blobUrl}"
+                                sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
+                                title="Device Interactive Prototype">
+                            </iframe>
+
+                            <!-- Phone Home Indicator Bar -->
+                            <div class="device-home-indicator"></div>
+                        </div>
+                    </div>
                 </div>`;
         }
 
+        function switchDeviceMode(mode) {
+            currentDeviceMode = mode;
+            const shell = document.getElementById('device-frame-shell');
+            if (shell) {
+                shell.className = `device-mockup-frame mode-${mode}`;
+            }
+            ['mobile', 'tablet', 'desktop'].forEach(m => {
+                const btn = document.getElementById(`dev-btn-${m}`);
+                if (btn) {
+                    if (m === mode) btn.classList.add('active');
+                    else btn.classList.remove('active');
+                }
+            });
+        }
+
+        function reloadPrototypeFrame() {
+            const iframe = document.getElementById('prototype-iframe');
+            if (iframe) {
+                const src = iframe.src;
+                iframe.src = '';
+                setTimeout(() => { iframe.src = src; }, 50);
+            }
+        }
+
         function downloadPrototype() {
-            const htmlContent = generatedDocs['prototype'] || '';
-            if (!htmlContent) return;
-            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const rawContent = generatedDocs ? (generatedDocs['prototype'] || '') : '';
+            const title = generatedDocs ? (generatedDocs['title'] || 'pitl') : 'pitl';
+            const idea = generatedDocs ? (generatedDocs['idea'] || '') : '';
+            const pureHtml = extractPureHtmlCode(rawContent, title, idea);
+            if (!pureHtml) return;
+            const blob = new Blob([pureHtml], { type: 'text/html;charset=utf-8' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `prototype_${(generatedDocs['title'] || 'pitl')}.html`;
+            a.download = `prototype_${title}.html`;
             a.click();
         }
 
         function openPrototypeFullscreen() {
-            const htmlContent = generatedDocs['prototype'] || '';
-            if (!htmlContent) return;
-            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const rawContent = generatedDocs ? (generatedDocs['prototype'] || '') : '';
+            const title = generatedDocs ? (generatedDocs['title'] || 'pitl') : 'pitl';
+            const idea = generatedDocs ? (generatedDocs['idea'] || '') : '';
+            const pureHtml = extractPureHtmlCode(rawContent, title, idea);
+            if (!pureHtml) return;
+            const blob = new Blob([pureHtml], { type: 'text/html;charset=utf-8' });
             window.open(URL.createObjectURL(blob), '_blank');
         }
 
