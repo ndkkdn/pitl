@@ -2641,8 +2641,9 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.8);
         }
 
-        /* Galaxy Punch-hole Camera (Infinity-O Center Lens) */
+        /* Galaxy Punch-hole Camera (Hidden on Main UDC Screen, Shown only on Cover Screen) */
         .device-punch-hole {
+            display: none; /* Hidden on Main screen (Under Display Camera UDC) */
             width: 7px;
             height: 7px;
             border-radius: 50%;
@@ -2653,6 +2654,18 @@
             top: 50%;
             transform: translate(-50%, -50%);
             box-shadow: inset 0 0 2px #000;
+        }
+
+        /* Show punch-hole camera lens only on Cover Screen */
+        .device-mockup-frame.mode-cover .device-punch-hole {
+            display: block !important;
+        }
+
+        /* Explicitly hide on Main unfolded screen, Flex mode, and Desktop */
+        .device-mockup-frame.mode-main .device-punch-hole,
+        .device-mockup-frame.mode-flex .device-punch-hole,
+        .device-mockup-frame.mode-desktop .device-punch-hole {
+            display: none !important;
         }
 
         /* Samsung One UI Gesture Navigation Bar */
