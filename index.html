@@ -2547,41 +2547,70 @@
             position: relative;
         }
 
-        /* Smartphone Device Shell (iPhone / Android Mockup) */
+        /* ── Samsung Galaxy Z Fold 8 Device Mockup Frame System ── */
         .device-mockup-frame {
             position: relative;
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 0 6px rgba(255, 255, 255, 0.2);
-            background: #000000;
+            box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.16), inset 0 0 4px rgba(255, 255, 255, 0.25);
+            background: #080c14;
             display: flex;
             flex-direction: column;
             margin: auto;
         }
 
-        /* Mobile Smartphone Size */
-        .device-mockup-frame.mode-mobile {
-            width: 390px;
+        /* Fold 8 Mode 1: Main Screen (Unfolded 7.6~8.0" Tablet Ratio 740×780) — Default */
+        .device-mockup-frame.mode-main {
+            width: 740px;
             height: 780px;
-            border-radius: 46px;
-            padding: 12px 12px 14px 12px;
+            border-radius: 28px;
+            padding: 10px;
             border: 8px solid #1e293b;
         }
 
-        [data-theme="light"] .device-mockup-frame.mode-mobile {
+        [data-theme="light"] .device-mockup-frame.mode-main {
             border-color: #334155;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
         }
 
-        /* Tablet Mode */
-        .device-mockup-frame.mode-tablet {
-            width: 720px;
-            height: 820px;
-            border-radius: 36px;
-            padding: 14px;
-            border: 10px solid #1e293b;
+        /* Central Fold Crease Line for Fold 8 Main Unfolded View */
+        .device-mockup-frame.mode-main::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            bottom: 10px;
+            left: 50%;
+            width: 1px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.4) 50%, rgba(255,255,255,0.08) 100%);
+            pointer-events: none;
+            z-index: 45;
+            box-shadow: 0 0 8px rgba(0,0,0,0.5);
         }
 
-        /* Desktop Mode */
+        /* Fold 8 Mode 2: Cover Screen (Folded Slim Phone 380×820) */
+        .device-mockup-frame.mode-cover {
+            width: 380px;
+            height: 800px;
+            border-radius: 26px;
+            padding: 10px;
+            border: 8px solid #1e293b;
+        }
+
+        [data-theme="light"] .device-mockup-frame.mode-cover {
+            border-color: #334155;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Fold 8 Mode 3: Flex Mode (L-Shape Half Fold 580×720) */
+        .device-mockup-frame.mode-flex {
+            width: 580px;
+            height: 720px;
+            border-radius: 26px;
+            padding: 10px;
+            border: 8px solid #1e293b;
+            transform: perspective(1000px) rotateX(12deg);
+        }
+
+        /* Fold 8 Mode 4: Desktop Full Screen View */
         .device-mockup-frame.mode-desktop {
             width: 100%;
             height: 100%;
@@ -2589,59 +2618,53 @@
             padding: 0;
             border: 1px solid var(--border-color);
             box-shadow: none;
+            transform: none !important;
         }
 
-        /* Top Dynamic Island / Status Bar */
+        /* Samsung One UI Status Bar (Punch-hole Infinity-O) */
         .device-top-bar {
             position: absolute;
-            top: 14px;
-            left: 12px;
-            right: 12px;
-            height: 28px;
+            top: 12px;
+            left: 10px;
+            right: 10px;
+            height: 26px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
-            font-size: 12px;
+            padding: 0 18px;
+            font-size: 11.5px;
             font-weight: 700;
             color: #ffffff;
             z-index: 50;
             pointer-events: none;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
         }
 
-        .device-dynamic-island {
-            width: 90px;
-            height: 20px;
-            background: #000000;
-            border-radius: 20px;
+        /* Galaxy Punch-hole Camera (Infinity-O Center Lens) */
+        .device-punch-hole {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #030712;
+            border: 1px solid #1f2937;
             position: absolute;
             left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 8px;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: inset 0 0 2px #000;
         }
 
-        .device-camera-lens {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: #0d1527;
-            border: 1.5px solid #1e293b;
-            margin-left: auto;
-        }
-
+        /* Samsung One UI Gesture Navigation Bar */
         .device-home-indicator {
             position: absolute;
-            bottom: 6px;
+            bottom: 5px;
             left: 50%;
             transform: translateX(-50%);
-            width: 120px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 10px;
+            width: 110px;
+            height: 3.5px;
+            background: rgba(255, 255, 255, 0.45);
+            border-radius: 8px;
             z-index: 50;
             pointer-events: none;
         }
@@ -2651,7 +2674,7 @@
             height: 100%;
             border: none;
             background: #ffffff;
-            border-radius: 36px;
+            border-radius: 18px;
             overflow: hidden;
         }
 
@@ -2660,8 +2683,9 @@
         }
 
         .device-mockup-frame.mode-desktop .device-top-bar,
-        .device-mockup-frame.mode-desktop .device-home-indicator {
-            display: none;
+        .device-mockup-frame.mode-desktop .device-home-indicator,
+        .device-mockup-frame.mode-desktop::after {
+            display: none !important;
         }
 
         /* Terminal — disciplined block element, no decorative radius */
@@ -6446,9 +6470,9 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
 
                 // STAGE 4: Frontend Agent (Prototype HTML)
                 safeUpdateProgress(88, 'prototype');
-                logAgentClientSide('architect', `실행 가능한 인터랙티브 HTML5 모바일 단말 프로토타입을 빌드 중입니다...`);
-                const prototypePrompt = `You are a senior frontend engineer creating a real, interactive mobile web application prototype in a smartphone device frame.
-Based on the product idea, PRD requirements, and wireframes below, generate a COMPLETE, INTERACTIVE, HIGHLY-POLISHED HTML5 mobile web application.
+                logAgentClientSide('architect', `실행 가능한 인터랙티브 HTML5 갤럭시 Z 폴드 8 단말 프로토타입을 빌드 중입니다...`);
+                const prototypePrompt = `You are a senior frontend engineer creating a real, interactive web application prototype for Samsung Galaxy Z Fold 8 (Foldable large screen + Cover screen responsive).
+Based on the product idea, PRD requirements, and wireframes below, generate a COMPLETE, INTERACTIVE, HIGHLY-POLISHED HTML5 application optimized for foldable displays.
 
 [Product Idea]
 ${idea}
@@ -6459,20 +6483,20 @@ ${prdContent.slice(0, 3500)}
 [UX Wireframe Concept]
 ${uxContent.slice(0, 2500)}
 
-[Strict Technical & UI Guidelines]
+[Strict Technical & UI Guidelines for Galaxy Z Fold 8]
 1. Output MUST be a single, complete, fully working HTML5 file starting directly with <!DOCTYPE html>.
 2. Include full inline CSS in <style> and interactive JavaScript in <script>.
-3. Design specifically for a modern smartphone touch UI (390px mobile viewport).
-4. Include:
-   - Sticky app header with brand icon and notification/profile buttons
-   - Hero banner with CTA button and live tag
-   - Interactive category filter chips (filtering items on click)
-   - Interactive feature cards with smooth touch feedback
-   - Interactive form input simulator (typing & clicking to add/modify items with instant UI updates)
-   - Dynamic list / feed with real-time badges
-   - Interactive bottom navigation bar
+3. Design for Galaxy Z Fold 8's expansive screen with responsive multi-column layout:
+   - On wide screen (>=600px, Fold 8 Unfolded): 2-column or 3-column split view (sidebar navigation + main dashboard + interactive simulator).
+   - On narrow screen (<600px, Fold 8 Cover screen): Single column mobile-friendly view with bottom navigation bar.
+4. Include rich interactive features:
+   - Sticky app top header with brand identity and status widgets
+   - Interactive category/tab filters
+   - Interactive feature cards with live click feedback
+   - Interactive form input & real-time feed simulator (instantly adding and updating items)
    - Toast popup notifications on actions
-5. Modern styling: CSS variables, gradients, FontAwesome icons (cdn: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css), Google Fonts (Plus Jakarta Sans, Noto Sans KR).
+   - Modern Glassmorphism/Samsung One UI 7 inspired polished design
+5. Use beautiful styling: CSS variables, gradients, FontAwesome icons (cdn: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css), Google Fonts (Plus Jakarta Sans, Noto Sans KR).
 6. Realistic Korean dummy data and copy throughout.
 7. CRITICAL RULE: DO NOT output any markdown backticks (\`\`\`html), explanations, greetings, or conversational text. Output ONLY the raw valid HTML code starting directly with <!DOCTYPE html>.`;
                 
@@ -6480,7 +6504,7 @@ ${uxContent.slice(0, 2500)}
                 try {
                     const rawProto = await callGeminiClientSide(
                         apiKey,
-                        "당신은 PRD와 와이어프레임을 바탕으로 실제 동작하는 모바일 스마트폰 웹 프로토타입 HTML5 코드를 작성하는 수석 프론트엔드 개발자입니다. 설명이나 마크다운 백틱 없이 오직 <!DOCTYPE html>로 시작하는 완성된 단일 HTML 코드만 출력합니다.",
+                        "당신은 PRD와 와이어프레임을 바탕으로 삼성 갤럭시 Z 폴드 8(Galaxy Z Fold 8) 대화면 및 커버 스크린에 최적화된 인터랙티브 HTML5 프로토타입 코드를 작성하는 수석 프론트엔드 엔지니어입니다. 설명이나 마크다운 백틱 없이 오직 <!DOCTYPE html>로 시작하는 완성된 단일 HTML 코드만 출력합니다.",
                         prototypePrompt,
                         (msg) => logAgentClientSide('architect', msg),
                         8192
@@ -6488,10 +6512,10 @@ ${uxContent.slice(0, 2500)}
                     prototypeContent = extractPureHtmlCode(rawProto, cleanTitle, idea);
                 } catch (protoErr) {
                     console.warn('[Prototype Fallback]:', protoErr);
-                    logAgentClientSide('architect', `[ℹ️ Prototype 백업 모드 실행] 스마트폰 단말 프로토타입이 보완 처리되었습니다.`);
+                    logAgentClientSide('architect', `[ℹ️ Prototype 백업 모드 실행] 갤럭시 Z 폴드 8 단말 프로토타입이 보완 처리되었습니다.`);
                     prototypeContent = generateFallbackDoc('prototype', cleanTitle, idea);
                 }
-                logAgentClientSide('architect', `인터랙티브 모바일 단말 프로토타입 HTML5 빌드 및 렌더링 검증 완료.`);
+                logAgentClientSide('architect', `갤럭시 Z 폴드 8 인터랙티브 프로토타입 HTML5 빌드 및 렌더링 검증 완료.`);
 
                 await sleep(50);
 
@@ -8838,9 +8862,9 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
             return generateFallbackDoc('prototype', title || 'Product', idea || raw);
         }
 
-        let currentDeviceMode = 'mobile';
+        let currentDeviceMode = 'main';
 
-        // Render Interactive HTML Prototype in Realistic Device Mockup Frame
+        // Render Interactive HTML Prototype in Realistic Galaxy Z Fold 8 Device Mockup Frame
         function renderPrototypeView(targetArea) {
             const rawContent = generatedDocs ? (generatedDocs['prototype'] || '') : '';
             const title = generatedDocs ? (generatedDocs['title'] || 'pitl') : 'pitl';
@@ -8849,9 +8873,9 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
             if (!rawContent) {
                 targetArea.innerHTML = `
                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:16px; color:var(--text-secondary); padding:40px;">
-                        <i class="fa-solid fa-mobile-screen" style="font-size:52px; opacity:0.3; color:var(--accent-neon);"></i>
-                        <p style="font-size:16px; font-weight:700; color:var(--text-primary);">${t('단말 프로토타입이 아직 생성되지 않았습니다.', 'Device Prototype has not been generated yet.')}</p>
-                        <p style="font-size:13px; opacity:0.7;">${t('기획 및 와이어프레임 분석이 완료되면 단말기 형태로 자동 렌더링됩니다.', 'It will be rendered in a realistic device frame once planning is complete.')}</p>
+                        <i class="fa-solid fa-book-open" style="font-size:52px; opacity:0.3; color:var(--accent-neon);"></i>
+                        <p style="font-size:16px; font-weight:700; color:var(--text-primary);">${t('갤럭시 폴드 단말 프로토타입이 아직 생성되지 않았습니다.', 'Galaxy Fold Prototype has not been generated yet.')}</p>
+                        <p style="font-size:13px; opacity:0.7;">${t('기획 및 와이어프레임 분석이 완료되면 갤럭시 Z 폴드 8 단말기 형태로 자동 렌더링됩니다.', 'It will be rendered in a realistic Galaxy Z Fold 8 device frame once planning is complete.')}</p>
                     </div>`;
                 return;
             }
@@ -8868,25 +8892,28 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                     <div style="padding: 14px 20px; background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); flex-shrink: 0;">
                         <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 10px;">
                             <span style="display: inline-block; width: 6px; height: 20px; background: var(--accent-neon); border-radius: 3px; flex-shrink: 0;"></span>
-                            ${t("단말기 인터랙티브 데모 프로토타입", "Interactive Device Prototype")}
+                            ${t("Galaxy Z Fold 8 인터랙티브 데모 프로토타입", "Galaxy Z Fold 8 Interactive Prototype")}
                         </h1>
                         <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5; font-weight: 500;">
-                            ${t("실제 스마트폰 단말기 프레임에서 사용자가 직접 터치·클릭하며 실시간 플로우를 경험할 수 있는 인터랙티브 시안입니다.", "Interactive prototype in a realistic mobile device frame for hands-on user flow testing.")}
+                            ${t("삼성 갤럭시 Z 폴드 8(Galaxy Z Fold 8) 대화면 폴더블 단말기 프레임에서 실시간 인터랙션을 직접 체험할 수 있습니다.", "Experience real-time prototype interaction inside Samsung Galaxy Z Fold 8 foldable device frame.")}
                         </p>
                     </div>
 
                     <!-- Prototype Toolbar & Device Switcher -->
                     <div class="prototype-toolbar">
-                        <!-- Device Mode Switcher -->
+                        <!-- Galaxy Fold 8 Form Factor Switcher -->
                         <div class="device-switcher-group">
-                            <button class="device-btn ${currentDeviceMode === 'mobile' ? 'active' : ''}" id="dev-btn-mobile" onclick="switchDeviceMode('mobile')">
-                                <i class="fa-solid fa-mobile-screen"></i> <span>스마트폰 (390×780)</span>
+                            <button class="device-btn ${currentDeviceMode === 'main' ? 'active' : ''}" id="dev-btn-main" onclick="switchDeviceMode('main')" title="대화면 8.0인치 펼침 뷰">
+                                <i class="fa-solid fa-book-open"></i> <span>메인 대화면 (펼침 740×780)</span>
                             </button>
-                            <button class="device-btn ${currentDeviceMode === 'tablet' ? 'active' : ''}" id="dev-btn-tablet" onclick="switchDeviceMode('tablet')">
-                                <i class="fa-solid fa-tablet-screen-button"></i> <span>태블릿 (720×820)</span>
+                            <button class="device-btn ${currentDeviceMode === 'cover' ? 'active' : ''}" id="dev-btn-cover" onclick="switchDeviceMode('cover')" title="외부 슬림 커버 스크린">
+                                <i class="fa-solid fa-mobile-screen"></i> <span>커버 스크린 (접힘 380×800)</span>
                             </button>
-                            <button class="device-btn ${currentDeviceMode === 'desktop' ? 'active' : ''}" id="dev-btn-desktop" onclick="switchDeviceMode('desktop')">
-                                <i class="fa-solid fa-desktop"></i> <span>전체화면</span>
+                            <button class="device-btn ${currentDeviceMode === 'flex' ? 'active' : ''}" id="dev-btn-flex" onclick="switchDeviceMode('flex')" title="반접힘 플렉스 모드">
+                                <i class="fa-solid fa-laptop"></i> <span>플렉스 모드 (L자 반접힘)</span>
+                            </button>
+                            <button class="device-btn ${currentDeviceMode === 'desktop' ? 'active' : ''}" id="dev-btn-desktop" onclick="switchDeviceMode('desktop')" title="전체화면 뷰">
+                                <i class="fa-solid fa-expand"></i> <span>전체화면</span>
                             </button>
                         </div>
 
@@ -8904,18 +8931,18 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                         </div>
                     </div>
 
-                    <!-- Viewport Area with Realistic Device Shell -->
+                    <!-- Viewport Area with Realistic Galaxy Z Fold 8 Shell -->
                     <div class="prototype-viewport-area">
                         <div class="device-mockup-frame mode-${currentDeviceMode}" id="device-frame-shell">
-                            <!-- Phone Status Bar -->
+                            <!-- Samsung One UI Top Status Bar -->
                             <div class="device-top-bar">
                                 <span>${currentTime}</span>
-                                <div class="device-dynamic-island">
-                                    <div class="device-camera-lens"></div>
-                                </div>
+                                <div class="device-punch-hole" title="Galaxy Infinity-O Camera"></div>
                                 <div style="display:flex; align-items:center; gap:6px; font-size:11px;">
+                                    <span style="font-size:10px; font-weight:800; background:rgba(255,255,255,0.15); padding:1px 4px; border-radius:3px;">5G</span>
                                     <i class="fa-solid fa-signal"></i>
                                     <i class="fa-solid fa-wifi"></i>
+                                    <span style="font-size:10.5px; font-weight:700;">98%</span>
                                     <i class="fa-solid fa-battery-full" style="color:#10b981;"></i>
                                 </div>
                             </div>
@@ -8925,10 +8952,10 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                                 class="device-screen-iframe"
                                 src="${blobUrl}"
                                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
-                                title="Device Interactive Prototype">
+                                title="Galaxy Z Fold 8 Prototype">
                             </iframe>
 
-                            <!-- Phone Home Indicator Bar -->
+                            <!-- Samsung One UI Gesture Bar -->
                             <div class="device-home-indicator"></div>
                         </div>
                     </div>
@@ -8941,7 +8968,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
             if (shell) {
                 shell.className = `device-mockup-frame mode-${mode}`;
             }
-            ['mobile', 'tablet', 'desktop'].forEach(m => {
+            ['main', 'cover', 'flex', 'desktop'].forEach(m => {
                 const btn = document.getElementById(`dev-btn-${m}`);
                 if (btn) {
                     if (m === mode) btn.classList.add('active');
