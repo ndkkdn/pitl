@@ -3,29 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
     <title>PITL | Autonomous Product Planning Workspace</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Noto+Sans+KR:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Marked.js for Markdown Parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <style>
-        /* Starbucks Design System Tokens (Inspired by DESIGN-starbucks.md) */
+        /* PITL 2026 Design Tokens — PANTONE 11-4201 Cloud Dancer base + vivid violet→coral accents */
         :root {
-            /* ── STARBUCKS BRAND PALETTE ── */
-            --sb-green: #006241;       /* Starbucks Historic Brand Green */
-            --sb-accent: #00754A;      /* Green Accent - Primary Filled CTAs & Floating Frap */
-            --sb-house: #1E3932;       /* House Green - Deep dark feature bands & footer */
-            --sb-uplift: #2b5148;      /* Green Uplift - Secondary dark green */
-            --sb-mint: #d4e9e2;        /* Green Light - Mint wash */
-            --sb-cream: #f2f0eb;       /* Neutral Warm Canvas */
-            --sb-ceramic: #edebe9;     /* Ceramic Cream Section Wash */
+            /* ── LEGACY BRAND ALIASES (mapped onto the 2026 palette) ── */
+            --sb-green: var(--accent-strong);
+            --sb-accent: var(--accent-neon);
+            --sb-house: var(--bg-card);
+            --sb-uplift: var(--bg-editor);
+            --sb-mint: rgba(var(--accent-rgb), 0.12);
+            --sb-cream: #F0EEE9;       /* Cloud Dancer */
+            --sb-ceramic: #E9E6DF;
             --sb-gold: #cba258;        /* Gold - Reserved for Rewards/Audit Ceremony */
-            --sb-gold-light: #faf6ee;  /* Gold Lightest Wash */
+            --sb-gold-light: #faf6ee;
 
             /* ── GRID & SPACING SYSTEM ── */
             --bl: 8px;
@@ -52,36 +53,47 @@
             --letterSpacingNormal: -0.01em; /* -0.16px Tight Universal Tracking */
             --buttonActiveScale: scale(0.95);
 
-            /* ── BASE DARK THEME (House Green Deep Blend) ── */
-            --bg-base: #0b1613;
-            --bg-sidebar: #122420;
-            --bg-chat: rgba(30, 57, 50, 0.4);
-            --bg-editor: #162a25;
-            --bg-card: #1e3932;
-            --border-color: rgba(212, 233, 226, 0.15);
-            --border-active: #00754A;
+            /* ── BASE DARK THEME (Ink surfaces + Cloud Dancer text) ── */
+            --bg-base: #141318;
+            --bg-sidebar: #19181F;
+            --bg-chat: rgba(31, 29, 38, 0.55);
+            --bg-editor: #1A1920;
+            --bg-card: #1F1D26;
+            --border-color: rgba(240, 238, 233, 0.12);
+            --border-active: #8B6CFF;
             --glass-blur: blur(20px);
-            --glass-border: 1px solid rgba(212, 233, 226, 0.15);
-            --glass-border-active: 1px solid #00754A;
-            --glass-surface: rgba(30, 57, 50, 0.6);
-            --glass-surface-hover: rgba(30, 57, 50, 0.85);
+            --glass-border: 1px solid rgba(240, 238, 233, 0.12);
+            --glass-border-active: 1px solid #8B6CFF;
+            --glass-surface: rgba(31, 29, 38, 0.65);
+            --glass-surface-hover: rgba(42, 39, 52, 0.85);
 
-            /* ── TEXT COLORS (87% Ink Warm Opacity) ── */
-            --text-primary: #f8fafc;
-            --text-secondary: rgba(255, 255, 255, 0.70);
-            --text-muted: #64837a;
+            /* ── TEXT COLORS (all ≥ WCAG AA on base/card) ── */
+            --text-primary: #F0EEE9;
+            --text-secondary: rgba(240, 238, 233, 0.72);
+            --text-muted: #9C97A6;
 
             /* ── ACCENT PALETTE ── */
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
-            --accent-cyan: #06b6d4;
-            --accent-green: #00754A;
-            --accent-red: #c82014;
-            --accent-neon: #00754A;
-            --accent-amber: #cba258;
-            --glow-neon: 0 4px 20px rgba(0, 117, 74, 0.35);
-            --glow-neon-sm: 0 2px 10px rgba(0, 117, 74, 0.25);
-            --grid-color: rgba(0, 117, 74, 0.08);
+            --accent-rgb: 139, 108, 255;
+            --accent-2-rgb: 255, 122, 144;
+            --success-rgb: 52, 211, 153;
+            --surface-rgb: 31, 29, 38;
+            --hairline-rgb: 240, 238, 233;
+            --accent-neon: #8B6CFF;      /* primary accent (legacy token name) */
+            --accent-strong: #A891FF;    /* accent text on dark surfaces */
+            --accent-soft: #B6A4FF;
+            --accent-coral: #FF7A90;
+            --cta-gradient: linear-gradient(135deg, #7357FF 0%, #D23A6E 100%);
+            --success: #34D399;
+            --focus-ring: #B6A4FF;
+            --accent-blue: #60A5FA;
+            --accent-purple: #8B6CFF;
+            --accent-cyan: #22D3EE;
+            --accent-green: #34D399;     /* success semantics */
+            --accent-red: #FF6B6B;
+            --accent-amber: #F5B841;
+            --glow-neon: 0 4px 20px rgba(139, 108, 255, 0.35);
+            --glow-neon-sm: 0 2px 10px rgba(139, 108, 255, 0.25);
+            --grid-color: rgba(139, 108, 255, 0.07);
 
             /* ── BORDER RADIUS SCALE ── */
             --radius-sm: 6px;
@@ -90,72 +102,58 @@
             --radius-xl: 50px;
         }
 
-        /* Starbucks House Green & Dark Roasted Coffee Bean Blend Theme */
-        body.dark-theme {
-            /* ── STARBUCKS ROASTED COFFEE BEAN PALETTE ── */
-            --sb-coffee-roast: #1a120e;      /* Espresso Dark Roast Base */
-            --sb-coffee-bean: #362219;       /* Roasted Coffee Bean Color */
-            --sb-coffee-glow: #4a2e21;       /* Warm Coffee Amber Glow */
-            --sb-gold-roast: #cba258;        /* Roasted Gold Accent */
-
-            --bg-base: #0b1411;              /* Deep House Green & Espresso Blend Base */
-            --bg-sidebar: #12221d;
-            --bg-chat: rgba(26, 18, 14, 0.45);/* Subtle Espresso Roast Wash */
-            --bg-editor: #152621;
-            --bg-card: #1d352e;
-            --border-color: rgba(212, 233, 226, 0.15);
-            --border-active: #00754A;
-            --glass-surface: rgba(30, 54, 46, 0.65);
-            --glass-surface-hover: rgba(54, 34, 25, 0.4);
-            --text-primary: #f8fafc;
-            --text-secondary: rgba(255, 255, 255, 0.72);
-            --text-muted: #738b82;
-            --accent-green: #00754A;
-            --accent-neon: #00754A;
-            --accent-amber: #cba258;
-            --glow-neon: 0 4px 20px rgba(0, 117, 74, 0.35);
-            --grid-color: rgba(0, 117, 74, 0.08);
-        }
-
         /* Smooth global theme transitions */
         body, .chrome-title-bar, .sidebar-panel, .chat-panel, .document-wrapper, .circle-tab-item, .history-card, .btn-minimal {
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease !important;
             letter-spacing: -0.01em; /* Universal tight tracking for SoDoSans feel */
         }
 
-        /* Starbucks Dark Theme Ambient Background: House Green & Roasted Coffee Bean Fusion */
+        /* Dark theme ambient background: ink base with violet / coral washes */
         body.dark-theme {
-            background-color: #0b1411;
+            background-color: #141318;
             background-image:
-                radial-gradient(ellipse 80% 60% at 10% 0%, rgba(0, 117, 74, 0.22) 0%, transparent 60%),
-                radial-gradient(ellipse 65% 55% at 90% 100%, rgba(66, 43, 34, 0.38) 0%, transparent 60%),
-                radial-gradient(ellipse 50% 50% at 50% 50%, rgba(26, 18, 14, 0.28) 0%, transparent 80%);
-            color: #f8fafc;
+                radial-gradient(ellipse 80% 60% at 10% 0%, rgba(139, 108, 255, 0.18) 0%, transparent 60%),
+                radial-gradient(ellipse 65% 55% at 90% 100%, rgba(255, 122, 144, 0.10) 0%, transparent 60%);
+            color: #F0EEE9;
         }
 
-        /* ── STARBUCKS NEUTRAL WARM LIGHT THEME (Café Cream & Ceramic Material) ── */
+        /* ── LIGHT THEME: PANTONE 11-4201 Cloud Dancer (2026 Color of the Year) ── */
         [data-theme="light"], body.light-theme {
-            --bg-base: #f2f0eb;       /* Neutral Warm Canvas */
-            --bg-sidebar: #edebe9;    /* Ceramic Cream */
-            --bg-chat: #f8f6f2;
-            --bg-editor: #ffffff;
-            --bg-card: #ffffff;       /* Pure White Card on Warm Canvas */
-            --border-color: #d4e9e2;   /* Mint Hairline */
-            --border-active: #006241;
-            --glass-surface: #ffffff;
-            --glass-surface-hover: #f8f6f2;
-            --text-primary: rgba(0, 0, 0, 0.87);   /* Text Black 87% warm ink */
-            --text-secondary: rgba(0, 0, 0, 0.58); /* Text Black Soft */
-            --text-muted: #6b7c76;
-            --accent-blue: #00754A;
-            --accent-purple: #1E3932;
-            --accent-cyan: #006241;
-            --accent-green: #006241;
-            --accent-red: #c82014;
-            --accent-neon: #006241;
-            --accent-amber: #cba258;   /* Gold Ceremony */
-            --glow-neon: 0 4px 20px rgba(0, 98, 65, 0.25);
-            --grid-color: rgba(0, 98, 65, 0.05);
+            --bg-base: #F0EEE9;       /* Cloud Dancer */
+            --bg-sidebar: #E9E6DF;
+            --bg-chat: #F5F3EF;
+            --bg-editor: #FAF9F6;
+            --bg-card: #FAF9F6;
+            --border-color: rgba(27, 26, 31, 0.10);
+            --border-active: #5B3BF0;
+            --glass-border: 1px solid rgba(27, 26, 31, 0.10);
+            --glass-border-active: 1px solid #5B3BF0;
+            --glass-surface: #FAF9F6;
+            --glass-surface-hover: #F5F3EF;
+            --text-primary: #1B1A1F;
+            --text-secondary: rgba(27, 26, 31, 0.68);
+            --text-muted: #66616D;
+            --accent-rgb: 91, 59, 240;
+            --accent-2-rgb: 201, 36, 90;
+            --success-rgb: 11, 122, 90;
+            --surface-rgb: 250, 249, 246;
+            --hairline-rgb: 27, 26, 31;
+            --accent-neon: #5B3BF0;
+            --accent-strong: #4A2BD6;
+            --accent-soft: #8F75FF;
+            --accent-coral: #C9245A;
+            --cta-gradient: linear-gradient(135deg, #6D4AFF 0%, #C9245A 100%);
+            --success: #0B7A5A;
+            --focus-ring: #5B3BF0;
+            --accent-blue: #2F5BD3;
+            --accent-purple: #5B3BF0;
+            --accent-cyan: #0E7490;
+            --accent-green: #0B7A5A;
+            --accent-red: #C4242B;
+            --accent-amber: #9A6A00;
+            --glow-neon: 0 4px 20px rgba(91, 59, 240, 0.22);
+            --glow-neon-sm: 0 2px 10px rgba(91, 59, 240, 0.16);
+            --grid-color: rgba(91, 59, 240, 0.05);
         }
 
         /* Smooth global theme transitions */
@@ -166,31 +164,31 @@
 
         [data-theme="light"] body,
         body.light-theme {
-            background-color: #f2f0eb;
+            background-color: #F0EEE9;
             background-image:
-                radial-gradient(ellipse 80% 60% at 10% 0%, rgba(212, 233, 226, 0.45) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 50% at 90% 100%, rgba(250, 246, 238, 0.6) 0%, transparent 60%);
-            color: rgba(0, 0, 0, 0.87);
+                radial-gradient(ellipse 80% 60% at 10% 0%, rgba(109, 74, 255, 0.10) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 90% 100%, rgba(255, 92, 122, 0.08) 0%, transparent 60%);
+            color: #1B1A1F;
         }
 
         /* Title Bar & Circle Tabs - Starbucks Warm Style */
         [data-theme="light"] .chrome-title-bar {
             background: #edebe9;
-            border-bottom: 1px solid #d4e9e2;
+            border-bottom: 1px solid var(--border-color);
             box-shadow: 0 2px 10px rgba(0,0,0,0.04);
         }
 
         [data-theme="light"] .circle-tab-item .node-inner {
             background: #ffffff;
-            border-color: #d4e9e2;
+            border-color: var(--border-color);
             color: rgba(0, 0, 0, 0.87);
         }
 
         [data-theme="light"] .circle-tab-item.active .node-inner {
             background: #ffffff;
-            border-color: #006241;
-            box-shadow: 0 0 16px rgba(0, 98, 65, 0.3);
-            color: #006241;
+            border-color: var(--accent-strong);
+            box-shadow: 0 0 16px rgba(var(--accent-rgb), 0.3);
+            color: var(--accent-strong);
         }
 
         [data-theme="light"] .circle-tab-label {
@@ -199,7 +197,7 @@
         }
 
         [data-theme="light"] .circle-tab-item.active .circle-tab-label {
-            color: #006241;
+            color: var(--accent-strong);
         }
 
         [data-theme="light"] .active-indicator-triangle::after {
@@ -307,8 +305,8 @@
 
         [data-theme="light"] .history-card:hover,
         [data-theme="light"] .history-item-card:hover {
-            border-color: #059669;
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15);
+            border-color: var(--accent-strong);
+            box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.15);
         }
 
         /* Main Viewer & Markdown Body */
@@ -360,7 +358,7 @@
 
         [data-theme="light"] .markdown-body code {
             background: #f1f5f9;
-            color: #059669;
+            color: var(--accent-strong);
         }
 
         /* Landing Prompt Box */
@@ -393,7 +391,7 @@
 
         /* ── Pill-style Gate Button for MECE & Gate50 ── */
         .pill-gate-btn {
-            background: linear-gradient(135deg, var(--accent-neon), #059669);
+            background: var(--cta-gradient);
             color: #ffffff;
             font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif;
             font-size: 15px;
@@ -405,14 +403,15 @@
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+            box-shadow: 0 10px 25px rgba(var(--accent-rgb), 0.35);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             user-select: none;
         }
         .pill-gate-btn:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.5);
-            background: linear-gradient(135deg, #34d399, var(--accent-neon));
+            box-shadow: 0 15px 35px rgba(var(--accent-rgb), 0.5);
+            background: var(--cta-gradient);
+            filter: brightness(1.08);
         }
 
         /* ── Progress Popover Tooltip (Shown when active circle node is clicked) ── */
@@ -424,7 +423,7 @@
             width: 320px;
             background: rgba(15, 18, 26, 0.95);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(var(--accent-rgb), 0.3);
             border-radius: 14px;
             padding: 16px 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
@@ -433,7 +432,7 @@
         }
         [data-theme="light"] .pipeline-progress-popover {
             background: rgba(255, 255, 255, 0.96);
-            border-color: rgba(5, 150, 105, 0.3);
+            border-color: rgba(var(--accent-rgb), 0.3);
             box-shadow: 0 20px 40px rgba(0,0,0,0.12);
         }
         @keyframes popover-slide {
@@ -457,7 +456,7 @@
             font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif;
             background-color: #050507;
             background-image:
-                radial-gradient(ellipse 80% 60% at 10% 0%, rgba(16, 185, 129, 0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 80% 60% at 10% 0%, rgba(var(--accent-rgb), 0.07) 0%, transparent 60%),
                 radial-gradient(ellipse 60% 50% at 90% 100%, rgba(59, 130, 246, 0.06) 0%, transparent 60%),
                 radial-gradient(ellipse 50% 40% at 50% 50%, rgba(139, 92, 246, 0.04) 0%, transparent 70%);
             color: var(--text-primary);
@@ -501,8 +500,8 @@
             top: -40%;
             left: -75%;
             background-image: 
-                linear-gradient(var(--grid-color, rgba(0, 229, 153, 0.08)) 1.5px, transparent 1.5px),
-                linear-gradient(90deg, var(--grid-color, rgba(0, 229, 153, 0.08)) 1.5px, transparent 1.5px);
+                linear-gradient(var(--grid-color, rgba(var(--accent-rgb), 0.08)) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, var(--grid-color, rgba(var(--accent-rgb), 0.08)) 1.5px, transparent 1.5px);
             background-size: 80px 80px;
             transform: rotateX(65deg) translateZ(0);
             transform-style: preserve-3d;
@@ -695,7 +694,7 @@
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background: var(--sb-accent, #00754A);
+            background: var(--sb-accent);
             color: #ffffff;
             border: none;
             cursor: pointer;
@@ -709,9 +708,9 @@
         }
 
         .frap-floating-btn:hover {
-            background: var(--sb-green, #006241);
+            background: var(--sb-green);
             transform: translateY(-3px) scale(1.04);
-            box-shadow: 0 0 8px rgba(0,0,0,0.28), 0 12px 24px rgba(0, 117, 74, 0.45);
+            box-shadow: 0 0 8px rgba(0,0,0,0.28), 0 12px 24px rgba(var(--accent-rgb), 0.45);
         }
 
         .frap-floating-btn:active {
@@ -738,8 +737,8 @@
         }
 
         .badge-tag {
-            background: rgba(0, 229, 153, 0.06);
-            border: 1px solid rgba(0, 229, 153, 0.15);
+            background: rgba(var(--accent-rgb), 0.06);
+            border: 1px solid rgba(var(--accent-rgb), 0.15);
             color: var(--accent-neon);
             padding: var(--sp-1) var(--sp-2); /* 8px 16px */
             border-radius: var(--radius-sm); /* disciplined square */
@@ -769,7 +768,7 @@
         }
 
         .landing-title span {
-            background: linear-gradient(135deg, var(--sb-accent, #00754A), #10b981, #34d399);
+            background: linear-gradient(135deg, var(--accent-neon), var(--accent-coral));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -819,7 +818,7 @@
         }
 
         .manus-prompt-container:focus-within {
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(16, 185, 129, 0.3), 0 0 40px rgba(16, 185, 129, 0.1);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(var(--accent-rgb), 0.3), 0 0 40px rgba(var(--accent-rgb), 0.1);
         }
 
         .manus-prompt-container:focus-within::before {
@@ -859,10 +858,10 @@
         .prompt-submit-btn {
             width: 42px;
             height: 42px;
-            background: var(--text-primary);
+            background: var(--cta-gradient);
             border: none;
             border-radius: 50%;
-            color: var(--bg-base);
+            color: #ffffff;
             font-size: 16px;
             cursor: pointer;
             display: flex;
@@ -874,8 +873,8 @@
 
         .prompt-submit-btn:hover {
             transform: scale(1.05) translateZ(20px);
-            background: var(--accent-neon);
-            color: var(--bg-base);
+            background: var(--cta-gradient);
+            color: #ffffff;
             box-shadow: var(--glow-neon);
         }
 
@@ -904,10 +903,10 @@
 
         .suggestion-pill:hover {
             color: var(--accent-neon);
-            background: rgba(16, 185, 129, 0.08);
-            border-color: rgba(16, 185, 129, 0.3);
+            background: rgba(var(--accent-rgb), 0.08);
+            border-color: rgba(var(--accent-rgb), 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.12), inset 0 1px 0 rgba(255,255,255,0.06);
+            box-shadow: 0 4px 20px rgba(var(--accent-rgb), 0.12), inset 0 1px 0 rgba(255,255,255,0.06);
         }
 
         /* Landing History Grid */
@@ -982,9 +981,9 @@
         }
 
         .landing-history-card:hover {
-            border-color: rgba(16, 185, 129, 0.3);
-            background: rgba(16, 185, 129, 0.05);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.08), inset 0 1px 0 rgba(255,255,255,0.08);
+            border-color: rgba(var(--accent-rgb), 0.3);
+            background: rgba(var(--accent-rgb), 0.05);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(var(--accent-rgb), 0.08), inset 0 1px 0 rgba(255,255,255,0.08);
             transform: translateY(-2px);
         }
 
@@ -1015,7 +1014,7 @@
         }
 
         .landing-card-badge {
-            background: rgba(0, 229, 153, 0.08);
+            background: rgba(var(--accent-rgb), 0.08);
             color: var(--accent-neon);
             padding: 2px var(--sp-1);
             border-radius: var(--radius-sm);
@@ -1149,10 +1148,10 @@
         }
 
         .sidebar-gear-btn:hover {
-            background: var(--sb-accent, #00754A);
+            background: var(--sb-accent);
             color: #ffffff;
-            border-color: var(--sb-accent, #00754A);
-            box-shadow: 0 4px 14px rgba(0, 117, 74, 0.35);
+            border-color: var(--sb-accent);
+            box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.35);
         }
 
         .sidebar-gear-btn:hover i {
@@ -1174,7 +1173,7 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-color);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 117, 74, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 15px rgba(var(--accent-rgb), 0.15);
             border-radius: 14px;
             padding: 8px;
             display: none;
@@ -1186,7 +1185,7 @@
 
         [data-theme="light"] .sidebar-settings-popover {
             background: rgba(255, 255, 255, 0.98);
-            border-color: #d4e9e2;
+            border-color: var(--border-color);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
         }
 
@@ -1213,7 +1212,7 @@
         }
 
         .settings-popover-item:hover {
-            background: var(--sb-accent, #00754A);
+            background: var(--sb-accent);
             color: #ffffff;
         }
 
@@ -1227,7 +1226,7 @@
             justify-content: center;
             color: var(--bg-base);
             font-size: 14px;
-            box-shadow: 0 4px 12px rgba(0, 229, 153, 0.2);
+            box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.2);
         }
 
         .sidebar-logo-meta {
@@ -1291,9 +1290,9 @@
         }
 
         .new-plan-btn:hover {
-            background: rgba(16, 185, 129, 0.1);
-            border-color: rgba(16, 185, 129, 0.35);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.12), inset 0 1px 0 rgba(255,255,255,0.08);
+            background: rgba(var(--accent-rgb), 0.1);
+            border-color: rgba(var(--accent-rgb), 0.35);
+            box-shadow: 0 4px 20px rgba(var(--accent-rgb), 0.12), inset 0 1px 0 rgba(255,255,255,0.08);
         }
 
         .sidebar-menu-section {
@@ -1338,10 +1337,10 @@
         }
 
         .history-item-card:hover {
-            background: rgba(16, 185, 129, 0.06);
-            border-color: rgba(16, 185, 129, 0.3);
+            background: rgba(var(--accent-rgb), 0.06);
+            border-color: rgba(var(--accent-rgb), 0.3);
             transform: translateX(3px);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08), inset 0 1px 0 rgba(255,255,255,0.06);
+            box-shadow: 0 4px 20px rgba(var(--accent-rgb), 0.08), inset 0 1px 0 rgba(255,255,255,0.06);
         }
 
         .history-card-title {
@@ -1402,7 +1401,7 @@
         }
 
         .resizer-bar:hover, .resizer-bar.dragging {
-            background: rgba(16, 185, 129, 0.08);
+            background: rgba(var(--accent-rgb), 0.08);
         }
 
         /* ── Circular Step Nodes — SVG Ring Progress + Percent Overlay ── */
@@ -1495,9 +1494,9 @@
             width: 100%;
             height: 0%;                                /* animated by JS */
             background: linear-gradient(0deg,
-                rgba(5, 150, 105, 0.85)  0%,
-                rgba(16, 185, 129, 0.65) 60%,
-                rgba(52, 211, 153, 0.4)  100%);
+                rgba(var(--accent-rgb), 0.85)  0%,
+                rgba(var(--accent-rgb), 0.65) 60%,
+                rgba(var(--accent-rgb), 0.4)  100%);
             transition: height 0.75s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 0;
             /* Wave top edge */
@@ -1545,7 +1544,7 @@
         }
         .circle-step-item.active .node-inner {
             background: transparent;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4), inset 0 0 10px rgba(16,185,129,0.1);
+            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.4), inset 0 0 10px rgba(var(--accent-rgb), 0.1);
         }
         .circle-step-item.active .node-icon { opacity: 0; }
         .circle-step-item.active .node-percent { opacity: 1; color: var(--accent-neon); }
@@ -1557,7 +1556,7 @@
         }
         .circle-step-item.completed .node-inner {
             background: transparent;
-            box-shadow: 0 0 14px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 14px rgba(var(--accent-rgb), 0.3);
         }
         .circle-step-item.completed .node-icon { opacity: 0; }
         .circle-step-item.completed .node-percent { opacity: 1; color: #ffffff; }
@@ -1661,12 +1660,12 @@
         }
 
         .step-item.active {
-            background: rgba(0, 229, 153, 0.04);
-            border-color: rgba(0, 229, 153, 0.15);
+            background: rgba(var(--accent-rgb), 0.04);
+            border-color: rgba(var(--accent-rgb), 0.15);
         }
 
         .step-item.completed {
-            background: rgba(16, 185, 129, 0.03);
+            background: rgba(var(--accent-rgb), 0.03);
         }
 
         .step-icon {
@@ -1682,13 +1681,13 @@
         }
 
         .step-item.active .step-icon {
-            background: rgba(0, 229, 153, 0.15);
+            background: rgba(var(--accent-rgb), 0.15);
             color: var(--accent-neon);
-            box-shadow: 0 0 10px rgba(0, 229, 153, 0.25);
+            box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.25);
         }
 
         .step-item.completed .step-icon {
-            background: rgba(16, 185, 129, 0.15);
+            background: rgba(var(--accent-rgb), 0.15);
             color: var(--accent-green);
         }
 
@@ -1941,9 +1940,9 @@
         }
 
         .step-pill-badge.stage1 {
-            background: rgba(16, 185, 129, 0.14);
-            color: var(--accent-neon, #10b981);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(var(--accent-rgb), 0.14);
+            color: var(--accent-neon);
+            border: 1px solid rgba(var(--accent-rgb), 0.3);
         }
 
         .step-pill-badge.stage2 {
@@ -1960,9 +1959,9 @@
         }
 
         [data-theme="light"] .step-pill-badge.stage1 {
-            background: rgba(5, 150, 105, 0.1);
-            color: #059669;
-            border-color: rgba(5, 150, 105, 0.3);
+            background: rgba(var(--accent-rgb), 0.1);
+            color: var(--accent-strong);
+            border-color: rgba(var(--accent-rgb), 0.3);
         }
 
         [data-theme="light"] .step-pill-badge.stage2 {
@@ -2056,9 +2055,9 @@
             width: 100%;
             height: 0%;
             background: linear-gradient(0deg,
-                rgba(5, 150, 105, 0.85)  0%,
-                rgba(16, 185, 129, 0.65) 60%,
-                rgba(52, 211, 153, 0.4)  100%);
+                rgba(var(--accent-rgb), 0.85)  0%,
+                rgba(var(--accent-rgb), 0.65) 60%,
+                rgba(var(--accent-rgb), 0.4)  100%);
             transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 0;
             border-radius: 48% 52% 0 0 / 18% 18% 0 0;
@@ -2103,19 +2102,19 @@
         }
         .circle-tab-item.active .node-inner {
             background: transparent;
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.5), inset 0 0 6px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.5), inset 0 0 6px rgba(var(--accent-rgb), 0.2);
         }
         .circle-tab-item.active .node-icon { opacity: 0; }
         .circle-tab-item.active .node-percent { 
             opacity: 1; 
-            color: #34d399; 
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 8px rgba(52, 211, 153, 0.8);
+            color: var(--accent-soft); 
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 8px rgba(var(--accent-rgb), 0.8);
         }
         .circle-tab-item.active .circle-tab-label { color: var(--accent-neon); }
 
         [data-theme="light"] .circle-tab-item.active .node-percent {
-            color: #006241;
-            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9), 0 0 6px rgba(212, 233, 226, 0.9);
+            color: var(--accent-strong);
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9), 0 0 6px rgba(var(--hairline-rgb), 0.9);
         }
 
         /* COMPLETED State */
@@ -2125,13 +2124,13 @@
         }
         .circle-tab-item.completed .node-inner {
             background: transparent;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.3);
         }
         .circle-tab-item.completed .node-icon { opacity: 0; }
         .circle-tab-item.completed .node-percent { 
             opacity: 1; 
             color: #ffffff;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 117, 74, 0.8);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 6px rgba(var(--accent-rgb), 0.8);
         }
         [data-theme="light"] .circle-tab-item.completed .node-percent {
             color: #004d33;
@@ -2222,8 +2221,8 @@
         }
 
         .badge-qa {
-            background: rgba(16, 185, 129, 0.08);
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            background: rgba(var(--success-rgb), 0.08);
+            border: 1px solid rgba(var(--success-rgb), 0.2);
             color: var(--accent-green);
             padding: 4px 10px;
             border-radius: 12px;
@@ -2330,7 +2329,7 @@
         }
 
         .markdown-body th {
-            background: rgba(16, 185, 129, 0.06);
+            background: rgba(var(--accent-rgb), 0.06);
             color: var(--text-primary);
             text-align: left;
             padding: var(--sp-1) var(--sp-2);
@@ -2338,7 +2337,7 @@
             font-size: var(--type-10);
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+            border-bottom: 1px solid rgba(var(--accent-rgb), 0.2);
         }
 
         .markdown-body td {
@@ -2368,13 +2367,13 @@
         /* ── Software Highlight (형광펜 효과) & Mark Styling ── */
         .markdown-body mark,
         .markdown-body .highlight-important {
-            background: linear-gradient(120deg, rgba(0, 117, 74, 0.28) 0%, rgba(203, 162, 88, 0.32) 100%);
+            background: linear-gradient(120deg, rgba(var(--accent-rgb), 0.28) 0%, rgba(203, 162, 88, 0.32) 100%);
             color: #ffffff;
             padding: 3px 8px;
             margin: 0 2px;
             border-radius: 4px;
             font-weight: 700;
-            border-bottom: 2.5px solid var(--sb-accent, #00754A);
+            border-bottom: 2.5px solid var(--sb-accent);
             box-decoration-break: clone;
             -webkit-box-decoration-break: clone;
             display: inline;
@@ -2382,27 +2381,27 @@
 
         [data-theme="light"] .markdown-body mark,
         [data-theme="light"] .markdown-body .highlight-important {
-            background: linear-gradient(120deg, rgba(0, 117, 74, 0.16) 0%, rgba(203, 162, 88, 0.22) 100%);
-            border-bottom: 2.5px solid #006241;
+            background: linear-gradient(120deg, rgba(var(--accent-rgb), 0.16) 0%, rgba(203, 162, 88, 0.22) 100%);
+            border-bottom: 2.5px solid var(--accent-strong);
             color: #004d33;
         }
 
         /* ── GitHub & Starbucks Style Callout Cards ── */
         .markdown-body blockquote {
-            border-left: 4px solid var(--sb-accent, #00754A);
+            border-left: 4px solid var(--sb-accent);
             padding: 16px 20px;
             margin: 20px 0;
             font-size: 14.5px;
             color: var(--text-primary);
             line-height: 1.65;
-            background: rgba(0, 117, 74, 0.08);
+            background: rgba(var(--accent-rgb), 0.08);
             border-radius: 0 12px 12px 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         [data-theme="light"] .markdown-body blockquote {
-            background: rgba(0, 117, 74, 0.06);
-            border-left-color: #006241;
+            background: rgba(var(--accent-rgb), 0.06);
+            border-left-color: var(--accent-strong);
         }
 
         .markdown-body blockquote p:last-child {
@@ -2531,9 +2530,9 @@
         }
 
         .device-btn.active {
-            background: var(--sb-accent, #00754A);
+            background: var(--sb-accent);
             color: #ffffff !important;
-            box-shadow: 0 2px 8px rgba(0, 117, 74, 0.35);
+            box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.35);
         }
 
         .prototype-viewport-area {
@@ -2543,7 +2542,7 @@
             justify-content: center;
             overflow: auto;
             padding: 24px;
-            background: radial-gradient(circle at center, rgba(0, 117, 74, 0.05) 0%, transparent 70%), var(--bg-base);
+            background: radial-gradient(circle at center, rgba(var(--accent-rgb), 0.05) 0%, transparent 70%), var(--bg-base);
             position: relative;
         }
 
@@ -2836,7 +2835,7 @@
         /* Pulse highlight for suggests click */
         @keyframes suggestion-pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.02); box-shadow: 0 0 15px rgba(0, 229, 153, 0.2); }
+            50% { transform: scale(1.02); box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.2); }
             100% { transform: scale(1); }
         }
         .populated-pulse {
@@ -2905,7 +2904,7 @@
         body::before {
             background: radial-gradient(
                 550px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                rgba(5, 150, 105, 0.07) 0%,
+                rgba(var(--accent-rgb), 0.07) 0%,
                 rgba(37, 99, 235, 0.03) 45%,
                 transparent 80%
             );
@@ -2951,13 +2950,14 @@
         }
 
         .prompt-submit-btn {
-            background: #121211;
+            background: var(--cta-gradient);
             color: #ffffff;
         }
 
         .prompt-submit-btn:hover {
-            background: var(--accent-neon);
+            background: var(--cta-gradient);
             color: #ffffff;
+            box-shadow: var(--glow-neon);
         }
 
         .suggestion-pill {
@@ -3395,7 +3395,7 @@
                 width: 24px !important;
                 height: 24px !important;
                 justify-content: center !important;
-                border-color: rgba(16, 185, 129, 0.3) !important;
+                border-color: rgba(var(--success-rgb), 0.3) !important;
             }
 
             .badge-qa i {
@@ -3468,10 +3468,10 @@
             background: rgba(11, 11, 10, 0.85);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid rgba(0, 229, 153, 0.25);
+            border: 1px solid rgba(var(--accent-rgb), 0.25);
             border-radius: 12px;
             padding: 16px 28px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 229, 153, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(var(--accent-rgb), 0.15);
             color: var(--text-primary);
             font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif;
             font-weight: 500;
@@ -3493,16 +3493,16 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: rgba(0, 229, 153, 0.12);
+            background: rgba(var(--accent-rgb), 0.12);
             color: var(--accent-neon);
             font-size: 13px;
-            box-shadow: 0 0 10px rgba(0, 229, 153, 0.2);
+            box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.2);
             animation: pulse-neon 2s infinite;
         }
         @keyframes pulse-neon {
-            0% { box-shadow: 0 0 0 0 rgba(0, 229, 153, 0.5); }
-            70% { box-shadow: 0 0 0 8px rgba(0, 229, 153, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 229, 153, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.5); }
+            70% { box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0); }
+            100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0); }
         }
 
         /* Password Overlay Styling */
@@ -3674,6 +3674,553 @@
         .password-submit-btn:active {
             transform: translateY(0);
         }
+
+        /* ── 2026 Accessibility: visible keyboard focus (WCAG 2.4.7) ── */
+        :focus-visible {
+            outline: 2px solid var(--focus-ring) !important;
+            outline-offset: 2px !important;
+        }
+        textarea:focus-visible,
+        input:focus-visible {
+            outline-offset: 0 !important;
+        }
+        ::selection {
+            background: rgba(var(--accent-rgb), 0.28);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           2026 DESIGN LAYER — unified chrome surfaces, soft cards, bento tiles
+           (마지막에 두어 이전의 중복 규칙들보다 우선 적용)
+           ═══════════════════════════════════════════════════════════════════ */
+        :root {
+            --surface-chrome: rgba(25, 24, 31, 0.86);
+            --radius-card: 16px;
+            --radius-tile: 20px;
+            --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.30), 0 8px 24px rgba(0, 0, 0, 0.22);
+            --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.35), 0 18px 40px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(var(--accent-rgb), 0.45);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        [data-theme="light"], body.light-theme {
+            --surface-chrome: rgba(233, 230, 223, 0.88);
+            --shadow-card: 0 1px 2px rgba(27, 26, 31, 0.05), 0 6px 20px rgba(27, 26, 31, 0.06);
+            --shadow-card-hover: 0 2px 6px rgba(27, 26, 31, 0.08), 0 18px 40px rgba(91, 59, 240, 0.14), 0 0 0 1px rgba(var(--accent-rgb), 0.35);
+        }
+
+        /* ── Sidebar & top bars share one surface ── */
+        .sidebar-panel,
+        [data-theme="light"] .sidebar-panel {
+            background: var(--bg-sidebar) !important;
+            border-right: 1px solid var(--border-color) !important;
+        }
+        .landing-top-bar,
+        .computer-chrome,
+        [data-theme="light"] .computer-chrome {
+            background: var(--surface-chrome) !important;
+            border-bottom: 1px solid var(--border-color) !important;
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            box-shadow: none !important;
+        }
+        .computer-chrome .chrome-title-bar,
+        .computer-chrome .chrome-address-bar,
+        [data-theme="light"] .chrome-title-bar {
+            background: transparent !important;
+            border-bottom: 1px solid var(--border-color) !important;
+            box-shadow: none !important;
+        }
+        .step-pill-group,
+        [data-theme="light"] .step-pill-group {
+            background: rgba(var(--surface-rgb), 0.72) !important;
+            border: 1px solid var(--border-color) !important;
+            box-shadow: var(--shadow-card) !important;
+        }
+        .btn-minimal,
+        [data-theme="light"] .btn-minimal {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        /* ── Soft cards (history lists) ── */
+        .history-item-card,
+        .landing-history-card,
+        [data-theme="light"] .history-item-card,
+        [data-theme="light"] .landing-history-card {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: var(--radius-card) !important;
+            box-shadow: var(--shadow-card) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            transition: transform 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out), border-color 0.25s var(--ease-out) !important;
+        }
+        .history-item-card:hover, .history-item-card:focus-visible,
+        .landing-history-card:hover, .landing-history-card:focus-visible,
+        [data-theme="light"] .history-item-card:hover,
+        [data-theme="light"] .landing-history-card:hover {
+            background: var(--bg-card) !important;
+            border-color: rgba(var(--accent-rgb), 0.45) !important;
+            box-shadow: var(--shadow-card-hover) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        /* ── Prompt box follows the theme (was always white) ── */
+        .manus-prompt-container,
+        .manus-prompt-container .prompt-box-inner {
+            background: var(--bg-card) !important;
+        }
+        .manus-prompt-container {
+            border: 1px solid var(--border-color) !important;
+            border-radius: 24px !important;
+            box-shadow: var(--shadow-card) !important;
+        }
+        .manus-prompt-container:focus-within {
+            border-color: rgba(var(--accent-rgb), 0.55) !important;
+            box-shadow: var(--shadow-card), 0 0 0 4px rgba(var(--accent-rgb), 0.14) !important;
+        }
+        .manus-prompt-container .prompt-box-inner textarea {
+            color: var(--text-primary) !important;
+        }
+        .manus-prompt-container .prompt-box-inner textarea::placeholder {
+            color: var(--text-muted) !important;
+        }
+
+        /* ── Document viewer: paper card on the base canvas ── */
+        .viewer-canvas,
+        [data-theme="light"] .viewer-canvas {
+            background: var(--bg-base) !important;
+        }
+        .viewer-canvas .document-wrapper.markdown-body,
+        [data-theme="light"] .viewer-canvas .document-wrapper.markdown-body {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: var(--radius-tile) !important;
+            box-shadow: var(--shadow-card) !important;
+        }
+        .markdown-body table,
+        [data-theme="light"] .markdown-body table {
+            border-collapse: separate !important;
+            border-spacing: 0;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px;
+            overflow: hidden;
+            background: transparent !important;
+        }
+        .markdown-body th,
+        [data-theme="light"] .markdown-body th {
+            background: rgba(var(--accent-rgb), 0.07) !important;
+            color: var(--text-primary) !important;
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+        .markdown-body td,
+        [data-theme="light"] .markdown-body td {
+            background: transparent !important;
+            border-color: var(--border-color) !important;
+        }
+        .markdown-body tbody tr:hover td {
+            background: rgba(var(--accent-rgb), 0.04) !important;
+        }
+
+        /* ── Bento tile dashboard ── */
+        .tile-bento {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-auto-rows: minmax(200px, auto);
+            gap: 16px;
+            width: 100%;
+        }
+        .tile-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-tile);
+            box-shadow: var(--shadow-card);
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
+        }
+        .tile-card.wide { grid-column: span 2; }
+        .tile-card.ready::before {
+            content: '';
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 3px;
+            background: var(--cta-gradient);
+        }
+        .tile-card:hover,
+        .tile-card:focus-visible {
+            transform: translateY(-3px);
+            border-color: rgba(var(--accent-rgb), 0.45);
+            box-shadow: var(--shadow-card-hover);
+        }
+        .tile-card.empty { opacity: 0.72; }
+        .tile-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tile-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1;
+            background: var(--cta-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .tile-code {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+        .tile-status {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.14);
+            color: var(--text-muted);
+        }
+        .tile-card.ready .tile-status {
+            background: rgba(var(--success-rgb), 0.12);
+            color: var(--success);
+        }
+        .tile-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        .tile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(var(--accent-rgb), 0.12);
+            color: var(--accent-neon);
+            font-size: 17px;
+        }
+        .tile-title {
+            font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 4px 0 0;
+        }
+        .tile-card.wide .tile-title { font-size: 19px; }
+        .tile-snippet {
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .tile-card.wide .tile-snippet { -webkit-line-clamp: 4; }
+        .tile-cta {
+            align-self: flex-end;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-neon);
+        }
+        .tile-cta i { margin-left: 4px; transition: transform 0.25s var(--ease-out); }
+        .tile-card:hover .tile-cta i { transform: translateX(3px); }
+        @media (max-width: 1100px) {
+            .tile-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 640px) {
+            .tile-bento { grid-template-columns: 1fr; }
+            .tile-card.wide { grid-column: auto; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           2026 MOTION LAYER — scrolltelling, micro-interactions, ripples
+           이징: 콘텐츠 등장은 부드러운 감속(smooth), 버튼·아이콘은 경쾌한 반동(spring)
+           transform/opacity만 애니메이션 → 레이아웃 재계산 없음
+           ═══════════════════════════════════════════════════════════════════ */
+        :root {
+            --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --dur-fast: 160ms;
+            --dur-base: 260ms;
+            --dur-slow: 560ms;
+        }
+
+        /* Scroll-triggered reveal (scrolltelling) */
+        .reveal-pending {
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        .reveal-in {
+            animation: motion-reveal-up var(--dur-slow) var(--ease-smooth) both;
+            animation-delay: var(--reveal-delay, 0ms);
+        }
+        @keyframes motion-reveal-up {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        /* View transitions: landing → workspace, document switches */
+        body.state-workspace .workspace-view-container {
+            animation: motion-fade-in var(--dur-slow) var(--ease-smooth) backwards;
+        }
+        .view-enter {
+            animation: motion-view-enter var(--dur-base) var(--ease-smooth) backwards;
+        }
+        @keyframes motion-fade-in {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes motion-view-enter {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        /* Micro-interactions: springy hover / press feedback */
+        .prompt-submit-btn,
+        .btn-minimal,
+        .pitl-modal-btn,
+        .password-submit-btn,
+        .new-plan-btn,
+        .pill-gate-btn,
+        .suggestion-pill {
+            transition: transform var(--dur-base) var(--ease-spring),
+                        box-shadow var(--dur-base) var(--ease-smooth),
+                        background-color var(--dur-base) ease,
+                        border-color var(--dur-base) ease,
+                        color var(--dur-base) ease,
+                        opacity var(--dur-base) ease !important;
+        }
+        .prompt-submit-btn:active,
+        .btn-minimal:active,
+        .pitl-modal-btn:active,
+        .password-submit-btn:active,
+        .new-plan-btn:active,
+        .pill-gate-btn:active,
+        .suggestion-pill:active {
+            transform: scale(0.95) !important;
+            transition-duration: var(--dur-fast) !important;
+        }
+        .tile-icon {
+            transition: transform var(--dur-base) var(--ease-spring);
+        }
+        .tile-card:hover .tile-icon,
+        .tile-card:focus-visible .tile-icon {
+            transform: translateY(-2px) rotate(-6deg) scale(1.08);
+        }
+
+        /* Button ripple */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            background: currentColor;
+            opacity: 0.22;
+            transform: scale(0);
+            animation: motion-ripple var(--dur-slow) var(--ease-smooth) forwards;
+        }
+        @keyframes motion-ripple {
+            to { transform: scale(1); opacity: 0; }
+        }
+
+        /* Kinetic headline: slow gradient drift */
+        .landing-title span {
+            background-size: 200% 200% !important;
+            animation: motion-gradient-drift 8s ease-in-out infinite alternate;
+        }
+        @keyframes motion-gradient-drift {
+            from { background-position: 0% 50%; }
+            to   { background-position: 100% 50%; }
+        }
+
+        /* Reading progress (scrolltelling) */
+        .computer-chrome {
+            position: relative;
+        }
+        #read-progress {
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 100%;
+            height: 2px;
+            background: var(--cta-gradient);
+            transform: scaleX(0);
+            transform-origin: 0 50%;
+            transition: transform 80ms linear;
+            pointer-events: none;
+            z-index: 60;
+        }
+
+        @media print {
+            .reveal-pending { opacity: 1 !important; transform: none !important; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           2026 NEUMORPHISM LAYER (Figma 트렌드 8)
+           배경과 같은 톤의 표면 + 빛(좌상단)/그림자(우하단) 이중 그림자 → 촉각적 입체감
+           튀어나온 면(raised): 카드·타일·버튼 / 눌린 면(inset): 입력창·아이콘 우물·눌림 상태
+           저대비 약점 보완: 1px 헤어라인 테두리와 포커스 링 유지, 주요 CTA는 그라디언트 유지
+           ═══════════════════════════════════════════════════════════════════ */
+        :root {
+            --neu-surface: linear-gradient(145deg, #23212B 0%, #1B1A21 100%);
+            --neu-raised: -5px -5px 12px rgba(255, 255, 255, 0.035), 6px 6px 16px rgba(0, 0, 0, 0.55);
+            --neu-raised-hover: -7px -7px 16px rgba(255, 255, 255, 0.045), 10px 10px 24px rgba(0, 0, 0, 0.6);
+            --neu-raised-sm: -2px -2px 5px rgba(255, 255, 255, 0.03), 3px 3px 7px rgba(0, 0, 0, 0.5);
+            --neu-inset: inset 3px 3px 8px rgba(0, 0, 0, 0.5), inset -2px -2px 6px rgba(255, 255, 255, 0.04);
+            --neu-inset-sm: inset 2px 2px 5px rgba(0, 0, 0, 0.5), inset -1px -1px 3px rgba(255, 255, 255, 0.04);
+            --shadow-card: var(--neu-raised);
+            --shadow-card-hover: var(--neu-raised-hover), 0 0 0 1px rgba(var(--accent-rgb), 0.40);
+        }
+        [data-theme="light"], body.light-theme {
+            --neu-surface: linear-gradient(145deg, #F7F5F1 0%, #E9E6DF 100%);
+            --neu-raised: -6px -6px 14px rgba(255, 255, 255, 0.9), 6px 6px 14px rgba(156, 153, 150, 0.38);
+            --neu-raised-hover: -8px -8px 18px rgba(255, 255, 255, 0.95), 10px 10px 22px rgba(156, 153, 150, 0.45);
+            --neu-raised-sm: -3px -3px 6px rgba(255, 255, 255, 0.85), 3px 3px 6px rgba(156, 153, 150, 0.35);
+            --neu-inset: inset 3px 3px 7px rgba(156, 153, 150, 0.42), inset -3px -3px 7px rgba(255, 255, 255, 0.9);
+            --neu-inset-sm: inset 2px 2px 4px rgba(156, 153, 150, 0.40), inset -2px -2px 4px rgba(255, 255, 255, 0.85);
+            --shadow-card: var(--neu-raised);
+            --shadow-card-hover: var(--neu-raised-hover), 0 0 0 1px rgba(var(--accent-rgb), 0.30);
+        }
+
+        /* Raised surfaces: same tone as the page with a soft directional gradient */
+        .tile-card,
+        .history-item-card,
+        .landing-history-card,
+        [data-theme="light"] .history-item-card,
+        [data-theme="light"] .landing-history-card,
+        .history-item-card:hover,
+        .landing-history-card:hover,
+        [data-theme="light"] .history-item-card:hover,
+        [data-theme="light"] .landing-history-card:hover,
+        .viewer-canvas .document-wrapper.markdown-body,
+        [data-theme="light"] .viewer-canvas .document-wrapper.markdown-body,
+        .step-pill-group,
+        [data-theme="light"] .step-pill-group {
+            background: var(--neu-surface) !important;
+        }
+
+        /* Pressed state: cards sink into the surface */
+        .tile-card:active,
+        .history-item-card:active,
+        .landing-history-card:active {
+            box-shadow: var(--neu-inset) !important;
+            transform: none !important;
+        }
+
+        /* Small controls: raised, pressed = inset */
+        .btn-minimal,
+        [data-theme="light"] .btn-minimal,
+        .new-plan-btn {
+            background: var(--neu-surface) !important;
+            border: 1px solid var(--border-color) !important;
+            box-shadow: var(--neu-raised-sm) !important;
+        }
+        .btn-minimal:active,
+        [data-theme="light"] .btn-minimal:active,
+        .new-plan-btn:active {
+            box-shadow: var(--neu-inset-sm) !important;
+        }
+
+        /* Wells: inputs are carved into the surface */
+        .manus-prompt-container,
+        [data-theme="light"] .manus-prompt-container {
+            background: var(--bg-card) !important;
+            box-shadow: var(--neu-inset-sm), var(--neu-raised-sm) !important;
+        }
+        .manus-prompt-container .prompt-box-inner {
+            background: transparent !important;
+        }
+        .manus-prompt-container:focus-within {
+            box-shadow: var(--neu-inset-sm), 0 0 0 3px rgba(var(--accent-rgb), 0.22) !important;
+        }
+        .chrome-url-box,
+        [data-theme="light"] .chrome-url-box {
+            background: var(--bg-sidebar) !important;
+            box-shadow: var(--neu-inset-sm) !important;
+        }
+        .tile-icon {
+            box-shadow: var(--neu-inset-sm);
+        }
+        .tile-status {
+            box-shadow: var(--neu-inset-sm);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           2026 RETROFUTURISM LAYER (Figma 트렌드 9)
+           과거가 그린 미래: 크롬 질감 헤드라인,
+           미래지향 디스플레이 글꼴, 네온 악센트(다크 전용), 픽셀 분할 진행 바
+           ═══════════════════════════════════════════════════════════════════ */
+        :root {
+            --font-future: 'Unbounded', 'Space Grotesk', 'Noto Sans KR', sans-serif;
+            --chrome-text: linear-gradient(180deg, #FFFFFF 0%, #DCD8E4 44%, #8E8A99 52%, #F0EEE9 62%, #FFFFFF 100%);
+            --neon-glow: 0 0 10px rgba(var(--accent-rgb), 0.55);
+        }
+        [data-theme="light"], body.light-theme {
+            --chrome-text: linear-gradient(180deg, #1B1A1F 0%, #3A3742 44%, #6A6672 52%, #2A2830 62%, #1B1A1F 100%);
+            --neon-glow: none;
+        }
+
+        /* Chrome-textured headline + futuristic display face */
+        .landing-title {
+            background: var(--chrome-text);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none !important;
+        }
+        .landing-title span {
+            font-family: var(--font-future);
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        body.dark-theme .landing-title {
+            filter: drop-shadow(0 0 22px rgba(139, 108, 255, 0.28));
+        }
+        .badge-tag,
+        .tile-num,
+        .tile-code {
+            font-family: var(--font-future) !important;
+        }
+        .tile-num {
+            letter-spacing: -0.5px;
+        }
+
+        /* Neon accents (dark only — --neon-glow is none in light) */
+        .badge-tag {
+            text-shadow: var(--neon-glow);
+        }
+        body.dark-theme .badge-tag {
+            border-color: rgba(var(--accent-rgb), 0.55) !important;
+            box-shadow: 0 0 14px rgba(var(--accent-rgb), 0.25), inset 0 0 10px rgba(var(--accent-rgb), 0.12);
+        }
+        body.dark-theme .tile-num {
+            filter: drop-shadow(0 0 6px rgba(var(--accent-rgb), 0.55));
+        }
+        body.dark-theme .prompt-submit-btn,
+        body.dark-theme .tile-card.ready::before {
+            box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.55), 0 0 24px rgba(var(--accent-2-rgb), 0.25);
+        }
+
+        /* Pixel motif: LED-segmented reading progress bar */
+        #read-progress {
+            height: 3px;
+            -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 6px, transparent 6px 8px);
+            mask-image: repeating-linear-gradient(90deg, #000 0 6px, transparent 6px 8px);
+        }
+        body.dark-theme #read-progress {
+            filter: drop-shadow(0 0 4px rgba(var(--accent-rgb), 0.8));
+        }
     </style>
 </head>
 <body class="state-landing dark-theme">
@@ -3727,14 +4274,14 @@
             animation: slideUpModal 0.25s cubic-bezier(0.34,1.56,0.64,1);">
             <!-- Glow -->
             <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);
-                width:60%;height:2px;background:linear-gradient(90deg,transparent,var(--accent-neon,#39ff14),transparent);
+                width:60%;height:2px;background:linear-gradient(90deg,transparent,var(--accent-neon),transparent);
                 border-radius:999px;"></div>
             <!-- Icon -->
             <div id="pitl-alert-icon-wrap" style="
                 width:52px;height:52px;border-radius:14px;
                 display:flex;align-items:center;justify-content:center;
                 font-size:22px;margin:0 auto 18px;
-                background:rgba(57,255,20,0.1); color:var(--accent-neon,#39ff14);">
+                background:rgba(var(--accent-rgb), 0.1); color:var(--accent-neon);">
                 <i id="pitl-alert-icon" class="fa-solid fa-circle-info"></i>
             </div>
             <!-- Title -->
@@ -3762,7 +4309,7 @@
             transition:all 0.18s ease;
         }
         .pitl-modal-btn-primary {
-            background:var(--accent-neon,#39ff14); color:#0a0f1a;
+            background:var(--accent-neon); color:#0a0f1a;
         }
         .pitl-modal-btn-primary:hover { filter:brightness(1.12); transform:translateY(-1px); }
         .pitl-modal-btn-secondary {
@@ -3879,7 +4426,7 @@
                 <div class="sidebar-settings-wrap" style="position: relative;">
                     <button class="sidebar-gear-btn" id="btn-sidebar-gear" onclick="toggleSidebarSettingsPopover(event)" title="설정 (테마)">
                         <i class="fa-solid fa-gear"></i>
-                        <span id="proxy-badge-sidebar" style="display:none;position:absolute;top:-2px;right:-2px;width:10px;height:10px;background:var(--sb-accent,#00754A);border-radius:50%;border:2px solid var(--bg-base,#0b1613);"></span>
+                        <span id="proxy-badge-sidebar" style="display:none;position:absolute;top:-2px;right:-2px;width:10px;height:10px;background:var(--sb-accent);border-radius:50%;border:2px solid var(--bg-base,#0b1613);"></span>
                     </button>
                     
                     <!-- Settings Popover Menu -->
@@ -4478,8 +5025,8 @@
             if (!overlay) { alert(message); return; }
 
             const cfg = {
-                info:    { icon:'fa-circle-info',  color:'var(--accent-neon,#39ff14)',   bg:'rgba(57,255,20,0.10)',  defaultTitle:'안내' },
-                success: { icon:'fa-circle-check', color:'#10b981',                      bg:'rgba(16,185,129,0.12)', defaultTitle:'완료' },
+                info:    { icon:'fa-circle-info',  color:'var(--accent-neon)',   bg:'rgba(var(--accent-rgb), 0.10)',  defaultTitle:'안내' },
+                success: { icon:'fa-circle-check', color:'var(--success)',                bg:'rgba(var(--success-rgb),0.12)', defaultTitle:'완료' },
                 warn:    { icon:'fa-triangle-exclamation', color:'#f59e0b',              bg:'rgba(245,158,11,0.12)', defaultTitle:'주의' },
                 error:   { icon:'fa-circle-xmark', color:'#ef4444',                     bg:'rgba(239,68,68,0.12)',  defaultTitle:'오류' },
             };
@@ -5159,7 +5706,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
         // Applies data-theme attribute (for CSS selectors) AND
         // body class (for legacy overrides). Consistent key: pitl_theme
         // ─────────────────────────────────────────────────────
-        function toggleTheme() {
+        function toggleTheme(persist = true) {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme') || 'dark';
             const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -5176,8 +5723,8 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 document.body.classList.remove('light-theme');
             }
 
-            // Persist (single key, no mismatch)
-            localStorage.setItem('pitl_theme', nextTheme);
+            // Persist (single key, no mismatch). System-driven changes are not persisted.
+            if (persist) localStorage.setItem('pitl_theme', nextTheme);
 
             // Sync ALL theme toggle button icons throughout the page
             const isLight = nextTheme === 'light';
@@ -5190,6 +5737,144 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
             });
         }
 
+
+        // ── Accessibility: keyboard-operable click targets & labelled icon buttons ──
+        (function enhanceClickableA11y() {
+            const NATIVE = 'a, button, input, select, textarea, summary, label, [contenteditable]';
+            const upgradeEl = el => {
+                if (el.matches('[onclick]') && !el.matches(NATIVE) && !el.hasAttribute('tabindex')) {
+                    el.setAttribute('tabindex', '0');
+                    if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
+                }
+                if (el.matches('button[title]:not([aria-label])') && !el.textContent.trim()) {
+                    el.setAttribute('aria-label', el.title);
+                }
+            };
+            const upgrade = root => {
+                if (root.nodeType !== 1) return;
+                upgradeEl(root);
+                root.querySelectorAll('[onclick], button[title]').forEach(upgradeEl);
+            };
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') {
+                    const alertOverlay = document.getElementById('pitl-alert-overlay');
+                    if (alertOverlay && alertOverlay.style.display !== 'none') alertOverlay.style.display = 'none';
+                    return;
+                }
+                if (e.key !== 'Enter' && e.key !== ' ') return;
+                const el = e.target;
+                if (el.nodeType === 1 && el.getAttribute('role') === 'button' && el.matches('[onclick]') && !el.matches(NATIVE)) {
+                    e.preventDefault();
+                    el.click();
+                }
+            });
+            const start = () => {
+                upgrade(document.body);
+                new MutationObserver(muts => muts.forEach(m => m.addedNodes.forEach(upgrade)))
+                    .observe(document.body, { childList: true, subtree: true });
+            };
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+            else start();
+        })();
+
+        // ── Motion layer: scroll reveals, view transitions, ripples, reading progress ──
+        (function initMotionLayer() {
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+            const REVEAL = '.tile-card, .history-item-card, .markdown-body > h1, .markdown-body > h2, .markdown-body > h3, '
+                + '.markdown-body > p, .markdown-body > ul, .markdown-body > ol, .markdown-body > table, .markdown-body > blockquote, .markdown-body > pre';
+            const RIPPLE = '.prompt-submit-btn, .btn-minimal, .pitl-modal-btn, .password-submit-btn, .new-plan-btn, .pill-gate-btn, .suggestion-pill';
+
+            const finishReveal = el => {
+                el.classList.remove('reveal-in');
+                el.style.removeProperty('--reveal-delay');
+            };
+            const io = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+                let order = 0;
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const el = entry.target;
+                    io.unobserve(el);
+                    // 한 번에 화면에 들어온 요소들은 순차적으로(stagger) 등장
+                    el.style.setProperty('--reveal-delay', `${Math.min(order++, 8) * 45}ms`);
+                    el.classList.remove('reveal-pending');
+                    el.classList.add('reveal-in');
+                    el.addEventListener('animationend', e => { if (e.target === el) finishReveal(el); });
+                });
+            }, { threshold: 0 }) : null;
+
+            // 새로 렌더링된 노드 안의 등장 대상을 준비한다. 준비한 개수를 반환
+            const prepare = root => {
+                if (!io || reduce.matches || root.nodeType !== 1) return 0;
+                const targets = root.matches(REVEAL) ? [root] : [];
+                targets.push(...root.querySelectorAll(REVEAL));
+                let count = 0;
+                targets.forEach(el => {
+                    if (el.dataset.revealed) return;
+                    el.dataset.revealed = '1';
+                    el.classList.add('reveal-pending');
+                    io.observe(el);
+                    count++;
+                });
+                return count;
+            };
+
+            const playViewEnter = el => {
+                if (reduce.matches || el.nodeType !== 1) return;
+                el.classList.add('view-enter');
+                el.addEventListener('animationend', e => { if (e.target === el) el.classList.remove('view-enter'); }, { once: true });
+            };
+
+            // Ripple on press (pointer position)
+            document.addEventListener('pointerdown', e => {
+                if (reduce.matches || e.button !== 0) return;
+                const host = e.target.closest(RIPPLE);
+                if (!host || host.disabled) return;
+                if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+                host.style.overflow = 'hidden';
+                const rect = host.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height) * 2;
+                const dot = document.createElement('span');
+                dot.className = 'ripple';
+                dot.setAttribute('aria-hidden', 'true');
+                dot.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size / 2}px;top:${e.clientY - rect.top - size / 2}px;`;
+                host.appendChild(dot);
+                dot.addEventListener('animationend', () => dot.remove(), { once: true });
+                setTimeout(() => dot.remove(), 1000); // 애니메이션이 돌지 않는 경우(숨겨진 요소 등) 대비
+            });
+
+            const start = () => {
+                prepare(document.body);
+
+                const viewer = document.getElementById('viewer-main-content');
+                new MutationObserver(muts => muts.forEach(m => m.addedNodes.forEach(node => {
+                    const prepared = prepare(node);
+                    // 문서 전환: 블록 단위 등장이 없는 화면(와이어프레임·프로토타입 등)은 화면 전체를 페이드인
+                    if (m.target === viewer && !prepared) playViewEnter(node);
+                }))).observe(document.body, { childList: true, subtree: true });
+
+                // Reading progress bar under the browser chrome
+                const chrome = document.querySelector('.computer-chrome');
+                if (viewer && chrome) {
+                    const bar = document.createElement('div');
+                    bar.id = 'read-progress';
+                    bar.setAttribute('aria-hidden', 'true');
+                    chrome.appendChild(bar);
+                    let ticking = false;
+                    const update = () => {
+                        ticking = false;
+                        const max = viewer.scrollHeight - viewer.clientHeight;
+                        bar.style.transform = `scaleX(${max > 0 ? Math.min(1, viewer.scrollTop / max) : 0})`;
+                    };
+                    viewer.addEventListener('scroll', () => {
+                        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+                    }, { passive: true });
+                    new MutationObserver(() => requestAnimationFrame(update)).observe(viewer, { childList: true });
+                }
+            };
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+            else start();
+        })();
+
         // Initialize Theme from localStorage immediately (no flicker)
         (function initTheme() {
             // Migrate legacy key 'pitl-theme' to 'pitl_theme' if needed
@@ -5198,9 +5883,16 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 localStorage.setItem('pitl_theme', legacyVal);
                 localStorage.removeItem('pitl-theme');
             }
-            const savedTheme = localStorage.getItem('pitl_theme') || 'dark';
+            // 저장된 선택이 없으면 OS의 다크/라이트 설정을 따른다
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+            const savedTheme = localStorage.getItem('pitl_theme') || (systemDark.matches ? 'dark' : 'light');
             const html = document.documentElement;
             html.setAttribute('data-theme', savedTheme);
+            systemDark.addEventListener('change', e => {
+                if (localStorage.getItem('pitl_theme')) return; // explicit choice wins
+                const isDark = html.getAttribute('data-theme') !== 'light';
+                if (isDark !== e.matches) toggleTheme(false);
+            });
             if (savedTheme === 'light') {
                 document.body.classList.add('light-theme');
                 document.body.classList.remove('dark-theme');
@@ -5221,8 +5913,8 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                     <div class="pipeline-running-card">
                         
                         <!-- Top Glowing Sparkle Wand Icon (Attached Image Matched 100%) -->
-                        <div style="width: 76px; height: 76px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); border: 1.5px solid rgba(16, 185, 129, 0.35); display: flex; align-items: center; justify-content: center; margin-bottom: 28px; box-shadow: 0 0 35px rgba(16, 185, 129, 0.28);">
-                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 34px; color: var(--accent-neon, #10b981); animation: pulse 2s infinite ease-in-out;"></i>
+                        <div style="width: 76px; height: 76px; border-radius: 50%; background: rgba(var(--accent-rgb), 0.12); border: 1.5px solid rgba(var(--accent-rgb), 0.35); display: flex; align-items: center; justify-content: center; margin-bottom: 28px; box-shadow: 0 0 35px rgba(var(--accent-rgb), 0.28);">
+                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 34px; color: var(--accent-neon); animation: pulse 2s infinite ease-in-out;"></i>
                         </div>
 
                         <!-- Main Title -->
@@ -5239,13 +5931,13 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                         <div class="running-progress-box">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                                 <span style="color: var(--text-secondary); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-                                    <i class="fa-solid fa-arrows-spin fa-spin" style="color: var(--accent-neon, #10b981); --fa-animation-duration: 3s;"></i>
+                                    <i class="fa-solid fa-arrows-spin fa-spin" style="color: var(--accent-neon); --fa-animation-duration: 3s;"></i>
                                     ${t("전체 기획 파이프라인 진행률", "Overall Pipeline Progress")}
                                 </span>
-                                <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--accent-neon, #10b981);">${currentPct}%</span>
+                                <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--accent-neon);">${currentPct}%</span>
                             </div>
                             <div style="width: 100%; height: 12px; background: rgba(255,255,255,0.06); border-radius: 6px; overflow: hidden; position: relative;">
-                                <div id="pipeline-progress-fill" style="width: ${currentPct}%; height: 100%; background: linear-gradient(90deg, var(--accent-neon, #10b981), var(--accent-blue, #3b82f6)); border-radius: 6px; transition: width 0.4s ease;"></div>
+                                <div id="pipeline-progress-fill" style="width: ${currentPct}%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue, #3b82f6)); border-radius: 6px; transition: width 0.4s ease;"></div>
                             </div>
                         </div>
 
@@ -5497,10 +6189,10 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
             const targetArea = document.getElementById('viewer-main-content');
             targetArea.innerHTML = `
                 <div class="document-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 200px); padding: 40px 20px; text-align: center;">
-                    <div style="background: rgba(15, 18, 26, 0.85); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 20px; padding: 48px 40px; width: 100%; max-width: 860px; box-shadow: 0 30px 60px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; position: relative;">
+                    <div style="background: rgba(15, 18, 26, 0.85); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border: 1px solid rgba(var(--accent-rgb), 0.2); border-radius: 20px; padding: 48px 40px; width: 100%; max-width: 860px; box-shadow: 0 30px 60px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; position: relative;">
                         
                         <!-- Top Glowing Orb Icon -->
-                        <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 0 30px rgba(16, 185, 129, 0.25);">
+                        <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(var(--accent-rgb), 0.1); border: 1px solid rgba(var(--accent-rgb), 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.25);">
                             <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 32px; color: var(--accent-neon); animation: pulse 2s infinite ease-in-out;"></i>
                         </div>
 
@@ -6587,8 +7279,8 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                     const successNotif = document.createElement('div');
                     successNotif.className = 'system-notification';
                     successNotif.setAttribute('data-i18n-msg', '에이전트 연쇄 재기획 및 갱신 완료 (Client Mode)');
-                    successNotif.style.background = 'rgba(16, 185, 129, 0.08)';
-                    successNotif.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                    successNotif.style.background = 'rgba(var(--success-rgb), 0.08)';
+                    successNotif.style.borderColor = 'rgba(var(--accent-rgb), 0.2)';
                     successNotif.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> <span class="msg-text">${t("에이전트 연쇄 재기획 및 갱신 완료 (Client Mode)", "Agent cascading update and regeneration completed (Client Mode)")}</span>`;
                     chatContainer.appendChild(successNotif);
                     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -6657,17 +7349,26 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
             const isLight = document.body.classList.contains('light-theme');
             if (isLight) {
                 return [
-                    { rgb: '5, 150, 105', hex: '#059669' },  // Readable Emerald Green
-                    { rgb: '37, 99, 235', hex: '#2563eb' },  // Legion Blue
-                    { rgb: '124, 58, 237', hex: '#7c3aed' }   // Legacy Purple
+                    { rgb: '91, 59, 240', hex: '#5b3bf0' },   // Vivid Violet
+                    { rgb: '201, 36, 90', hex: '#c9245a' },   // Deep Coral
+                    { rgb: '102, 97, 109', hex: '#66616d' }   // Warm Graphite
                 ];
             } else {
                 return [
-                    { rgb: '0, 229, 153', hex: '#00e599' },  // Neon Green
-                    { rgb: '59, 130, 246', hex: '#3b82f6' },  // Blue
-                    { rgb: '139, 92, 246', hex: '#8b5cf6' }   // Purple
+                    { rgb: '139, 108, 255', hex: '#8b6cff' }, // Vivid Violet
+                    { rgb: '255, 122, 144', hex: '#ff7a90' }, // Coral
+                    { rgb: '240, 238, 233', hex: '#f0eee9' }  // Cloud Dancer
                 ];
             }
+        }
+
+        // 움직임 최소화 설정이거나 탭이 숨겨져 있으면 배경 애니메이션을 멈춘다 (접근성·전력 절약)
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        function shouldPauseBackgroundMotion() {
+            return document.hidden || prefersReducedMotion.matches;
+        }
+        function cssAccentRGB() {
+            return getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim() || '139, 108, 255';
         }
 
         // Factory to create a single star particle
@@ -6716,6 +7417,10 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
         let rawMouseY = -1000;
 
         function animateStars() {
+            if (shouldPauseBackgroundMotion()) {
+                setTimeout(() => requestAnimationFrame(animateStars), 500);
+                return;
+            }
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             const shatterDistance = 70; // Close proximity triggers subtle particle shatters
@@ -7123,7 +7828,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                             padding: 12px 18px;
                             border-radius: 12px;
                             border: none;
-                            background: linear-gradient(135deg, #10b981, #059669);
+                            background: var(--cta-gradient);
                             color: #ffffff;
                             font-size: 14px;
                             font-weight: 700;
@@ -7132,7 +7837,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                             align-items: center;
                             justify-content: center;
                             gap: 8px;
-                            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+                            box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.35);
                             transition: all 0.2s ease;
                         ">
                             <i class="fa-solid fa-check"></i> OK
@@ -7305,7 +8010,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
             const targetArea = document.getElementById('viewer-main-content');
             targetArea.innerHTML = `
                 <div class="document-wrapper" style="text-align: center; padding: 60px 20px;">
-                    <i class="fa-solid fa-brain" style="font-size: 64px; background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(0, 229, 153, 0.25)); margin-bottom: 24px;"></i>
+                    <i class="fa-solid fa-brain" style="font-size: 64px; background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(var(--accent-rgb), 0.25)); margin-bottom: 24px;"></i>
                     <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px;">Planning-in-the-Loop Workspace</h2>
                     <p style="font-size: 14px; color: var(--text-secondary); max-width: 500px; margin: 0 auto 24px auto; line-height: 1.6;">에이전트들이 아이디어를 기반으로 비즈니스 상세 기획, PRD 작성, 와이어프레임 구조 설계 및 교차 정합성 평가를 진행하는 컴퓨터 가상화 뷰어입니다.</p>
                     <button class="new-plan-btn" style="margin: 0 auto;" onclick="resetToLanding()"><i class="fa-solid fa-play"></i> 기획안 작성하러 가기</button>
@@ -7437,7 +8142,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                 'strategist': { name: 'Strategic Advisor', icon: 'fa-compass', color: '#00e599' },
                 'analyst': { name: 'Product Analyst', icon: 'fa-chart-line', color: '#8b5cf6' },
                 'architect': { name: 'System Architect', icon: 'fa-sitemap', color: '#f59e0b' },
-                'reviewer': { name: 'QA Inspector', icon: 'fa-clipboard-check', color: '#10b981' },
+                'reviewer': { name: 'QA Inspector', icon: 'fa-clipboard-check', color: 'var(--success)' },
                 'system': { name: 'PITL Orchestrator', icon: 'fa-gears', color: '#94a3b8' }
             };
             
@@ -7580,7 +8285,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                 let extraHtml = '';
                 if (docKey === 'mece') {
                     extraHtml = `
-                        <div class="mece-resume-pill-wrapper" style="margin-top: 48px; padding: 24px; background: rgba(16, 185, 129, 0.04); border: 1px dashed rgba(16, 185, 129, 0.3); border-radius: 16px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;">
+                        <div class="mece-resume-pill-wrapper" style="margin-top: 48px; padding: 24px; background: rgba(var(--accent-rgb), 0.04); border: 1px dashed rgba(var(--accent-rgb), 0.3); border-radius: 16px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;">
                             <p style="font-size: 13.5px; color: var(--text-primary); margin: 0; font-weight: 600;">
                                 ${t("📌 [1단계: 구조화] 기획 분석이 완료되었습니다. 아래 버튼을 누르면 [2단계: 구체화] (PRD, 와이어프레임 3안, 프로토타입, QA 감사) 생성을 계속 진행합니다.", "📌 [Phase 1: Structuring] complete. Click below to proceed to [Phase 2: Realization] (PRD, Wireframes, Prototype, QA Audit).")}
                             </p>
@@ -7714,6 +8419,8 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                 }
             ];
 
+            // 핵심 산출물은 2칸짜리 벤토 타일로 강조 (4열 × 3행 = 12칸)
+            const WIDE_TILES = new Set(['1pager', 'prd', 'prototype']);
             const tileCardsHtml = tiles.map(tile => {
                 const mdRaw = generatedDocs ? (generatedDocs[tile.key] || '') : '';
                 const isReady = Boolean(mdRaw && mdRaw.trim().length > 0);
@@ -7729,41 +8436,20 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                     }
                 }
 
+                const size = WIDE_TILES.has(tile.key) ? 'wide' : '';
                 return `
-                    <div class="tile-card ${isReady ? 'ready' : 'empty'}" onclick="switchDocument('${tile.key}')" style="
-                        background: var(--bg-card);
-                        border: 1px solid var(--border-color);
-                        border-radius: var(--radius-lg);
-                        padding: 18px;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-between;
-                        gap: 14px;
-                        cursor: pointer;
-                        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-                        position: relative;
-                        overflow: hidden;
-                    " onmouseover="this.style.transform='translateY(-4px)'; this.style.borderColor='var(--accent-neon)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='none'; this.style.borderColor='var(--border-color)'; this.style.boxShadow='none';">
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                <span style="font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; color: var(--accent-neon); letter-spacing: 1px;">
-                                    ${tile.num}. ${tile.code}
-                                </span>
-                                <span style="font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: ${isReady ? 'rgba(16, 185, 129, 0.1)' : 'rgba(148, 163, 184, 0.1)'}; color: ${isReady ? 'var(--accent-neon)' : 'var(--text-muted)'}; border: 1px solid ${isReady ? 'rgba(16, 185, 129, 0.2)' : 'transparent'};">
-                                    ${isReady ? t('작성 완료', 'Ready') : t('대기 중', 'Pending')}
-                                </span>
-                            </div>
-                            <h3 style="font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid ${tile.icon}" style="color: var(--accent-neon); font-size: 15px;"></i>
-                                ${tile.title}
-                            </h3>
-                            <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-top: 4px;">
-                                ${snippet}
-                            </p>
+                    <div class="tile-card ${isReady ? 'ready' : 'empty'} ${size}" onclick="switchDocument('${tile.key}')">
+                        <div class="tile-head">
+                            <span class="tile-num">${tile.num}</span>
+                            <span class="tile-code">${tile.code}</span>
+                            <span class="tile-status">${isReady ? t('작성 완료', 'Ready') : t('대기 중', 'Pending')}</span>
                         </div>
-                        <div style="display: flex; justify-content: flex-end; align-items: center; font-size: 12px; font-weight: 600; color: var(--text-primary); margin-top: 6px;">
-                            <span>${t('상세 서류 보기', 'View Document')} <i class="fa-solid fa-arrow-right" style="font-size: 14px; margin-left: 4px; color: var(--accent-neon);"></i></span>
+                        <div class="tile-body">
+                            <span class="tile-icon"><i class="fa-solid ${tile.icon}"></i></span>
+                            <h3 class="tile-title">${tile.title}</h3>
+                            <p class="tile-snippet">${snippet}</p>
                         </div>
+                        <span class="tile-cta">${t('상세 서류 보기', 'View Document')} <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                 `;
             }).join('');
@@ -7785,12 +8471,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                         </p>
                     </div>
 
-                    <div style="
-                        display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                        gap: 16px;
-                        width: 100%;
-                    ">
+                    <div class="tile-bento">
                         ${tileCardsHtml}
                     </div>
                 </div>
@@ -8108,7 +8789,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                             <button onclick="openPrototypeFullscreen()" style="display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:var(--text-secondary); padding:6px 12px; border-radius:50px; font-size:12.5px; font-weight:600; cursor:pointer; transition:all 0.15s;" title="새 창에서 단독 실행">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>${t('새 탭 실행', 'New Tab')}</span>
                             </button>
-                            <button onclick="downloadPrototype()" style="display:flex; align-items:center; gap:6px; background:var(--sb-accent,#00754A); border:none; color:#ffffff; padding:6px 14px; border-radius:50px; font-size:12.5px; font-weight:600; cursor:pointer; transition:all 0.15s;" title="HTML 파일 다운로드">
+                            <button onclick="downloadPrototype()" style="display:flex; align-items:center; gap:6px; background:var(--sb-accent); border:none; color:#ffffff; padding:6px 14px; border-radius:50px; font-size:12.5px; font-weight:600; cursor:pointer; transition:all 0.15s;" title="HTML 파일 다운로드">
                                 <i class="fa-solid fa-download"></i> <span>${t('HTML 다운로드', 'Download')}</span>
                             </button>
                         </div>
@@ -8126,7 +8807,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                                     <i class="fa-solid fa-signal"></i>
                                     <i class="fa-solid fa-wifi"></i>
                                     <span style="font-size:10.5px; font-weight:700;">98%</span>
-                                    <i class="fa-solid fa-battery-full" style="color:#10b981;"></i>
+                                    <i class="fa-solid fa-battery-full" style="color:var(--success);"></i>
                                 </div>
                             </div>
 
@@ -8664,9 +9345,9 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                 draw() {
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(16, 185, 129, ${this.alpha})`;
+                    ctx.fillStyle = `rgba(${cssAccentRGB()}, ${this.alpha})`;
                     ctx.shadowBlur = 6;
-                    ctx.shadowColor = '#10b981';
+                    ctx.shadowColor = `rgb(${cssAccentRGB()})`;
                     ctx.fill();
                     ctx.shadowBlur = 0;
                 }
@@ -8677,6 +9358,10 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
             }
 
             function animate() {
+                if (shouldPauseBackgroundMotion()) {
+                    setTimeout(() => requestAnimationFrame(animate), 500);
+                    return;
+                }
                 ctx.clearRect(0, 0, width, height);
 
                 // Draw network connection lines between nearby particles
@@ -8692,7 +9377,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                             ctx.beginPath();
                             ctx.moveTo(particles[a].x, particles[a].y);
                             ctx.lineTo(particles[b].x, particles[b].y);
-                            ctx.strokeStyle = `rgba(0, 117, 74, ${lineAlpha})`;
+                            ctx.strokeStyle = `rgba(${cssAccentRGB()}, ${lineAlpha})`;
                             ctx.lineWidth = 0.8;
                             ctx.stroke();
                         }
@@ -8711,7 +9396,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                             ctx.beginPath();
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(mouse.x, mouse.y);
-                            ctx.strokeStyle = `rgba(52, 211, 153, ${lineAlpha})`;
+                            ctx.strokeStyle = `rgba(${cssAccentRGB()}, ${lineAlpha})`;
                             ctx.lineWidth = 1.2;
                             ctx.stroke();
                         }
@@ -8736,7 +9421,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
             initSpaceParticleNetwork();
 
             // Sync theme icons after DOM is ready
-            const savedTheme = localStorage.getItem('pitl_theme') || 'dark';
+            const savedTheme = document.documentElement.getAttribute('data-theme') || 'dark';
             const isLight = savedTheme === 'light';
             document.querySelectorAll(
                 '#theme-toggle-btn, .theme-toggle-btn, #btn-theme-toggle-sidebar'
