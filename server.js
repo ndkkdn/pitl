@@ -554,6 +554,36 @@ app.get('/api/history/load', (req, res) => {
     }
 });
 
+// API: Delete a planning history item (every outputs/ file of that title + date)
+const HISTORY_FILE_TYPES = ['1pager', 'threec', 'swot', 'stp', 'mece', 'prd', 'wireframe', 'audit'];
+app.delete('/api/history', (req, res) => {
+    const { title, date } = req.query;
+    if (typeof title !== 'string' || sanitizeFilename(title) !== title || !/^\d{6}$/.test(String(date))) {
+        return res.status(400).json({ error: "invalid title or date" });
+    }
+
+    try {
+        const names = [
+            ...HISTORY_FILE_TYPES.map(type => `${type}_${title}_${date}.md`),
+            `prototype_${title}_${date}.html`
+        ];
+        let deleted = 0;
+        for (const name of names) {
+            const filePath = path.join(outputsDir, name);
+            if (path.dirname(filePath) !== outputsDir) continue;
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+                deleted++;
+            }
+        }
+        console.log(`[History Deleted] ${title}_${date} (${deleted} files)`);
+        return res.json({ success: true, deleted });
+    } catch (error) {
+        console.error("Delete History Error:", error.message);
+        return res.status(500).json({ error: error.message });
+    }
+});
+
 // API: Stream Generation / Re-generation Process via SSE
 app.get('/api/generate-stream', async (req, res) => {
     const { idea, resumeFrom, lang } = req.query;
