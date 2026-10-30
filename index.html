@@ -4221,6 +4221,208 @@
         body.dark-theme #read-progress {
             filter: drop-shadow(0 0 4px rgba(var(--accent-rgb), 0.8));
         }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           FRAMEWORK VISUALIZATIONS (3C · SWOT/TOWS · STP · MECE/RICE)
+           팔레트는 validate_palette.js로 검증: 카테고리 4색(인접 CVD ΔE ≥ 8.4),
+           서열 램프 5단계(단일 색상, 밝은 끝 ≥ 2:1), 칸 라벨 대비 ≥ 4.5:1
+           ═══════════════════════════════════════════════════════════════════ */
+        :root {
+            --viz-surface: #1F1D26;
+            --viz-1: #8B6CFF;
+            --viz-2: #d95926;
+            --viz-3: #199e70;
+            --viz-4: #c98500;
+            --viz-muted: #77727F;
+            --viz-grid: #2E2B36;
+            --viz-axis: #4A4654;
+            --viz-seq-1: #4F3FAE; --viz-seq-1-ink: #FFFFFF;
+            --viz-seq-2: #5F4AD6; --viz-seq-2-ink: #FFFFFF;
+            --viz-seq-3: #8D78FB; --viz-seq-3-ink: #1B1A1F;
+            --viz-seq-4: #AE9EFF; --viz-seq-4-ink: #1B1A1F;
+            --viz-seq-5: #D2C8FF; --viz-seq-5-ink: #1B1A1F;
+        }
+        [data-theme="light"], body.light-theme {
+            --viz-surface: #FAF9F6;
+            --viz-1: #5B3BF0;
+            --viz-2: #eb6834;
+            --viz-3: #1baf7a;
+            --viz-4: #eda100;
+            --viz-muted: #8A8590;
+            --viz-grid: #E6E3DC;
+            --viz-axis: #C9C5BC;
+            --viz-seq-1: #B0A0FF; --viz-seq-1-ink: #1B1A1F;
+            --viz-seq-2: #8C72FC; --viz-seq-2-ink: #1B1A1F;
+            --viz-seq-3: #5B3BF0; --viz-seq-3-ink: #FFFFFF;
+            --viz-seq-4: #4526C9; --viz-seq-4-ink: #FFFFFF;
+            --viz-seq-5: #2F178F; --viz-seq-5-ink: #FFFFFF;
+        }
+
+        .viz-panel {
+            margin: 8px 0 36px;
+        }
+        .viz-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--accent-neon);
+            margin-bottom: 12px;
+        }
+        .viz-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .viz-card {
+            margin: 0;
+            padding: 18px 20px 20px;
+            background: var(--viz-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: var(--neu-inset-sm, none);
+            min-width: 0;
+        }
+        .viz-card.wide { grid-column: 1 / -1; }
+        .viz-card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .markdown-body .viz-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+        .markdown-body .viz-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 4px 0 0;
+        }
+        .viz-table-toggle {
+            flex-shrink: 0;
+            font-size: 11.5px;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .viz-table-toggle:hover { color: var(--text-primary); border-color: rgba(var(--accent-rgb), 0.45); }
+        .viz-table { margin-top: 14px; overflow-x: auto; }
+        .viz-table table { font-size: 12.5px; font-variant-numeric: tabular-nums; }
+
+        /* SVG chrome: recessive hairlines, text in text tokens (never the series color) */
+        .viz-svg { width: 100%; height: auto; display: block; overflow: visible; }
+        .viz-square { max-width: 420px; margin: 0 auto; }
+        .viz-svg .viz-gridline { stroke: var(--viz-grid); stroke-width: 1; }
+        .viz-svg .viz-axis { stroke: var(--viz-axis); stroke-width: 1; }
+        .viz-svg text { font-family: 'Noto Sans KR', 'Space Grotesk', sans-serif; }
+        .viz-svg .viz-tick { fill: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+        .viz-svg .viz-label { fill: var(--text-secondary); font-size: 11.5px; }
+        .viz-svg .viz-label-strong { fill: var(--text-primary); font-size: 12.5px; font-weight: 700; }
+        .viz-svg .viz-axis-title { fill: var(--text-secondary); font-size: 11.5px; font-weight: 600; }
+        .viz-svg .viz-quad-label { fill: var(--text-muted); font-size: 11px; font-weight: 600; }
+        .viz-mark { cursor: default; outline: none; }
+        .viz-mark:focus-visible circle:nth-child(2) { stroke: var(--focus-ring); stroke-width: 3; }
+
+        .viz-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 10px; font-size: 12px; color: var(--text-secondary); }
+        .viz-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+        .viz-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+        /* 3C */
+        .viz-3c { display: grid; grid-template-columns: minmax(240px, 360px) 1fr; gap: 20px; align-items: center; }
+        .viz-3c-lists { display: grid; gap: 12px; }
+        .viz-3c-head { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--text-primary); }
+        .markdown-body .viz-3c ul, .markdown-body .viz-quad ul { margin: 6px 0 0; padding-left: 18px; }
+        .markdown-body .viz-3c li, .markdown-body .viz-quad li { font-size: 12.5px; color: var(--text-secondary); margin: 2px 0; }
+
+        .viz-heat { display: grid; gap: 2px; overflow-x: auto; }
+        .viz-heat-row { display: grid; grid-template-columns: minmax(110px, 1.2fr) repeat(var(--cols), minmax(64px, 1fr)); gap: 2px; align-items: stretch; }
+        .viz-heat-header span { font-size: 11.5px; font-weight: 600; color: var(--text-secondary); padding: 4px 6px; text-align: center; }
+        .viz-heat-name { font-size: 12.5px; color: var(--text-secondary); padding: 8px 6px; display: flex; align-items: center; }
+        .viz-heat-row.self .viz-heat-name { color: var(--text-primary); font-weight: 700; }
+        .viz-heat-row.self .viz-heat-name::before { content: '★'; color: var(--accent-neon); margin-right: 4px; }
+        .viz-heat-cell { display: flex; align-items: center; justify-content: center; min-height: 36px; border-radius: 6px; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; outline: none; }
+        .viz-heat-cell:focus-visible { box-shadow: 0 0 0 2px var(--viz-surface), 0 0 0 4px var(--focus-ring); }
+        .viz-heat-scale { display: flex; align-items: center; gap: 2px; justify-content: flex-end; margin-top: 8px; font-size: 11px; color: var(--text-muted); }
+        .viz-heat-scale i { width: 22px; height: 10px; border-radius: 3px; }
+        .viz-heat-scale span { margin: 0 6px; }
+
+        /* SWOT / TOWS 2×2 */
+        .viz-2x2 { display: grid; grid-template-columns: auto 1fr 1fr; gap: 8px; }
+        .viz-axis-head { font-size: 11.5px; font-weight: 700; color: var(--text-muted); text-align: center; align-self: end; }
+        .viz-axis-side { writing-mode: vertical-rl; text-orientation: upright; align-self: center; text-align: center; letter-spacing: 2px; }
+        .viz-quad { padding: 12px 14px; border-radius: 12px; background: var(--bg-base); border: 1px solid var(--border-color); min-width: 0; }
+        .viz-quad-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 12.5px; color: var(--text-secondary); }
+        .viz-quad-head b { color: var(--text-primary); font-size: 13.5px; }
+        .markdown-body .viz-tows-cell p { font-size: 12.5px; color: var(--text-primary); margin: 8px 0 6px; line-height: 1.55; }
+        .viz-priority { margin-left: auto; font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+        .viz-meta { font-size: 11px; color: var(--text-muted); }
+
+        /* STP stat tiles */
+        .viz-stats { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; }
+        .viz-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        .viz-stat { flex: 1 1 120px; display: flex; flex-direction: column; gap: 2px; padding: 14px; border-radius: 12px; background: var(--bg-base); border: 1px solid var(--border-color); }
+        .viz-stat-key { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); }
+        .viz-stat-value { font-size: 24px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+        .viz-stat-value small { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-left: 3px; }
+        .viz-stat-label { font-size: 11.5px; color: var(--text-secondary); }
+        .viz-funnel-arrow { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 16px; }
+        .viz-funnel-arrow small { font-size: 10.5px; font-variant-numeric: tabular-nums; }
+
+        /* MECE tree */
+        .viz-tree { display: flex; flex-direction: column; align-items: center; gap: 18px; overflow-x: auto; }
+        .viz-tree-root { padding: 8px 18px; border-radius: 999px; background: var(--cta-gradient); color: #fff; font-size: 13px; font-weight: 700; position: relative; }
+        .viz-tree-root::after { content: ''; position: absolute; left: 50%; top: 100%; width: 1px; height: 18px; background: var(--viz-axis); }
+        .viz-tree-branches { display: grid; grid-template-columns: repeat(var(--n), minmax(140px, 1fr)); gap: 10px; width: 100%; position: relative; padding-top: 14px; border-top: 1px solid var(--viz-axis); }
+        .viz-tree-branch { display: flex; flex-direction: column; gap: 6px; position: relative; }
+        .viz-tree-branch::before { content: ''; position: absolute; left: 50%; top: -14px; width: 1px; height: 14px; background: var(--viz-axis); }
+        .viz-tree-domain { padding: 8px 10px; border-radius: 10px; text-align: center; font-size: 12.5px; font-weight: 700; color: var(--text-primary); background: rgba(var(--accent-rgb), 0.10); border: 1px solid rgba(var(--accent-rgb), 0.35); }
+        .viz-tree-leaf { padding: 6px 10px; border-radius: 8px; font-size: 12px; color: var(--text-secondary); background: var(--bg-base); border: 1px solid var(--border-color); }
+
+        /* RICE bars: ≤ 24px thick, 4px rounded data end, square at the baseline */
+        .viz-bars { display: flex; flex-direction: column; gap: 8px; }
+        .viz-bar-row { display: grid; grid-template-columns: minmax(120px, 40%) 1fr; gap: 10px; align-items: center; padding: 2px 0; border-radius: 6px; outline: none; }
+        .viz-bar-row:hover, .viz-bar-row:focus-visible { background: rgba(var(--accent-rgb), 0.06); }
+        .viz-bar-label { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .viz-bar-label b { color: var(--text-primary); margin-right: 4px; }
+        .viz-bar-track { display: flex; align-items: center; gap: 8px; min-width: 0; }
+        .viz-bar { display: block; height: 18px; border-radius: 0 4px 4px 0; }
+        .viz-bar-value { font-size: 12px; font-weight: 600; color: var(--text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+        .viz-empty { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; border-radius: 16px; border: 1px dashed rgba(var(--accent-rgb), 0.45); background: rgba(var(--accent-rgb), 0.04); }
+        .markdown-body .viz-empty p { margin: 4px 0 0; font-size: 13px; color: var(--text-secondary); }
+
+        #viz-tooltip {
+            position: fixed;
+            z-index: 10050;
+            max-width: 280px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            font-size: 12px;
+            line-height: 1.5;
+            white-space: pre-line;
+            pointer-events: none;
+        }
+
+        @media (max-width: 900px) {
+            .viz-grid { grid-template-columns: 1fr; }
+            .viz-3c { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body class="state-landing dark-theme">
@@ -5652,13 +5854,13 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
             return summary || '상품 기획';
         }
 
-        function saveClientHistoryLocally(docs) {
+        function saveClientHistoryLocally(docs, keyDateOverride) {
             let clientHistory = localStorage.getItem('pitl_client_history');
             clientHistory = clientHistory ? JSON.parse(clientHistory) : [];
             
             const cleanTitle = docs.title;
             const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '').slice(2);
-            const keyDate = dateStr;
+            const keyDate = /^\d{6}$/.test(keyDateOverride || '') ? keyDateOverride : dateStr;
             const year = '20' + keyDate.slice(0, 2);
             const month = keyDate.slice(2, 4);
             const day = keyDate.slice(4, 6);
@@ -6133,6 +6335,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
         }
 
         async function startProductPlanningClientSide(idea) {
+            window.pitlActiveSessionDate = null; // 새 기획은 오늘 날짜로 저장
             if (!idea || typeof idea !== 'string') {
                 console.error('[Pipeline Error] Invalid idea parameter:', idea);
                 return;
@@ -6477,6 +6680,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 | **Competitor** | ... | ... | ... |
                 | **Company** | ... | ... | ... |
                 | **교집합 (Concept)** | 지속 가능한 차별화 기회와 핵심 컨셉 | 제품 컨셉 및 가치 제안 | **Must Have** |
+                ${vizPromptAppendix('threec')}
                 `;
                 
                 let threeCContent = "";
@@ -6560,7 +6764,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 | **내부 환경 (Internal)** | **강점 (S)**: 핵심 3가지 • ... | **약점 (W)**: 핵심 3가지 • ... |
                 | **외부 환경 (External)** | **기회 (O)**: 핵심 3가지 • ... | **위협 (T)**: 핵심 3가지 • ... |
                 
-                ## 3. SWOT 교차(Cross) 전략 매트릭스
+                ## 3. TOWS 교차(Cross) 전략 매트릭스 (SO/ST/WO/WT)
                 - 각 전략(SO/ST/WO/WT)에 대해 실행 우선순위(High/Medium/Low), 예상 소요 기간, 필요 자원을 명시하라.
                 | 전략 유형 | 핵심 분석 결합 | 세부 실행 액션 로드맵 |
                 | :--- | :--- | :--- |
@@ -6568,6 +6772,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 | **ST 전략 (위협 회피/다각화)** | 강점으로 위협을 완화 | ... |
                 | **WO 전략 (체질 개선)** | 약점을 보완하여 기회 포착 | ... |
                 | **WT 전략 (방어 및 위기관리)** | 약점 최소화 및 위협 회피 | ... |
+                ${vizPromptAppendix('swot')}
                 `;
                 
                 let swotContent = "";
@@ -6628,6 +6833,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 - 자사의 독보적 포지션 영역(Blue Ocean Zone)을 명확히 지정하라.
                 - **Value Proposition Statement**: "X 고객에게 Y 문제를 해결해 주는 Z 독점 브랜드" 형식의 포지셔닝 명제
                 - **차별화 요인 (POD & POP)**: 경쟁사 대비 확실한 차별점(POD) 및 필수 동등 요소(POP)
+                ${vizPromptAppendix('stp')}
                 `;
                 
                 let stpContent = "";
@@ -6703,6 +6909,15 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 ## 7. 구조적 완결성 검토 (Structural Integrity Audit)
                 - 작성된 5대 MECE 프레임워크가 상호 배제(Mutually Exclusive)되고 전체 포괄(Collectively Exhaustive)되었는지 자체 검증한 정성/정량 결과를 서술하라.
                 - 5대 도메인 간 교차 참조 매트릭스를 테이블로 작성하여, 어떤 도메인의 결론이 다른 도메인의 전제와 모순되지 않는지 정합성을 검증하라.
+                ## 8. RICE 우선순위 점수화 (Reach × Impact × Confidence ÷ Effort)
+                - 5장의 MoSCoW 기능(REQ ID 유지) 6~10개에 대해 RICE 점수를 산정하라.
+                  * Reach: 분기당 도달 사용자 수 / Impact: 3(매우 큼)·2(큼)·1(보통)·0.5(작음)·0.25(최소)
+                  * Confidence: 추정 확신도(%) / Effort: 개발 공수(인월)
+                - 다음 마크다운 표로 정리하고 점수 내림차순으로 정렬하라:
+                | ID | 기능 | Reach | Impact | Confidence | Effort | RICE 점수 | MoSCoW |
+                | :--- | :--- | ---: | ---: | ---: | ---: | ---: | :--- |
+                - MoSCoW 분류와 RICE 순위가 어긋나는 기능이 있으면 그 이유를 한 줄로 설명하라.
+                ${vizPromptAppendix('mece')}
                 `;
                 
                 let meceContent = "";
@@ -8277,6 +8492,9 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                 renderPrototypeView(targetArea);
             } else {
                 let mdRaw = generatedDocs ? (generatedDocs[docKey] || '') : '';
+                const vizSplit = splitVizBlock(mdRaw);
+                mdRaw = vizSplit.markdown;
+                const vizHtml = renderFrameworkViz(docKey, vizSplit.data);
                 // Strip any H1 title lines or section headers containing '[' and ']' brackets (e.g. # [전략 기획] ... or # [YY.MM.DD] ...)
                 mdRaw = mdRaw.replace(/^#\s*\[[^\]]+\][^\n]*\n?/gm, '').replace(/^\[[^\]]+\]\s*/gm, '').trim();
                 const titleText = stageTitleMap[docKey] || docKey;
@@ -8309,6 +8527,7 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                                 ${descText}
                             </p>
                         </div>
+                        ${vizHtml}
                         ${renderMarkdownEnhanced(mdRaw)}
                         ${extraHtml}
                     </div>
@@ -8317,6 +8536,590 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
         }
 
         // Enhanced Markdown Parser with Soft Highlights (==text==) and Callout Cards
+        // ═══════════════════════════════════════════════════════════════════
+        //  Framework visualizations — 3C · SWOT/TOWS · STP · MECE/RICE
+        //  각 문서 끝의 ```pitl-viz JSON 블록을 읽어 SVG/HTML 차트로 그린다.
+        //  색: 검증된 카테고리 4색(--viz-1..4)과 단일 색상 서열 램프(--viz-seq-1..5)만 사용
+        // ═══════════════════════════════════════════════════════════════════
+        const VIZ_DOC_KEYS = new Set(['threec', 'swot', 'stp', 'mece']);
+        const VIZ_BLOCK_RE = /\n?```pitl-viz[^\n]*\n([\s\S]*?)```\s*/;
+
+        // 생성 프롬프트와 '시각화 생성' 추출 프롬프트가 함께 쓰는 데이터 규격
+        const VIZ_SCHEMAS = {
+            threec: `{"framework":"3c",
+ "customer":["고객 핵심 니즈 3개, 각 25자 이내"],
+ "competitor":["경쟁 공백 3개, 각 25자 이내"],
+ "company":["자사 강점 3개, 각 25자 이내"],
+ "whiteSpace":"3C 교집합 전략 컨셉 한 문장, 40자 이내",
+ "scores":{"attributes":["비교 속성 4~5개"],"rows":[{"name":"자사(목표)","values":[1~5 정수]},{"name":"경쟁사명","values":[1~5 정수]}]}}
+- scores.rows는 자사 포함 3~5행이고, 각 values의 길이는 attributes 길이와 같다.`,
+            swot: `{"framework":"swot",
+ "S":["강점 3~4개, 각 30자 이내"],"W":["약점 3~4개"],"O":["기회 3~4개"],"T":["위협 3~4개"],
+ "tows":[{"type":"SO","strategy":"40자 이내","priority":"High|Medium|Low","period":"예: 0-3개월"},
+         {"type":"ST","strategy":"...","priority":"...","period":"..."},
+         {"type":"WO","strategy":"...","priority":"...","period":"..."},
+         {"type":"WT","strategy":"...","priority":"...","period":"..."}]}`,
+            stp: `{"framework":"stp",
+ "segments":[{"name":"세그먼트명","size":시장 규모 숫자,"growth":연 성장률(%) 숫자,"access":접근성 1~5,"role":"primary|secondary|other"}],
+ "sizeUnit":"억원",
+ "market":{"unit":"억원","tam":숫자,"sam":숫자,"som":숫자},
+ "positioning":{"xAxis":"X축 속성명","yAxis":"Y축 속성명","points":[{"name":"자사","x":0~10,"y":0~10,"self":true},{"name":"경쟁사명","x":0~10,"y":0~10}]}}
+- segments는 3~5개이고 primary는 정확히 1개다. tam ≥ sam ≥ som. points는 자사 포함 4~6개.`,
+            mece: `{"framework":"mece",
+ "tree":[{"domain":"고객 세분화","items":["..."]},{"domain":"고객 제공 가치","items":["..."]},{"domain":"시장 기회 (Ansoff)","items":["..."]},{"domain":"기능 우선순위 (MoSCoW)","items":["..."]},{"domain":"리스크","items":["..."]}],
+ "rice":[{"id":"REQ-01","feature":"기능명, 20자 이내","reach":분기당 도달 사용자 수,"impact":0.25|0.5|1|2|3,"confidence":0~100,"effort":인월(person-month) 숫자,"moscow":"Must|Should|Could|Won't"}]}
+- tree는 5개 도메인, 각 items는 3~5개(각 20자 이내). rice는 6~10개 기능.`
+        };
+
+        function vizPromptAppendix(docKey) {
+            return `
+                ## 시각화 데이터 (필수)
+                - 문서 맨 끝에 아래 규격의 코드 블록을 반드시 추가하라. 값은 본문 내용과 일치해야 하며, 숫자 필드에는 단위 없이 숫자만 쓴다.
+                - 코드 블록 언어 표기는 정확히 pitl-viz 로 하고, 블록 안에는 유효한 JSON만 넣는다.
+                \`\`\`pitl-viz
+                ${VIZ_SCHEMAS[docKey]}
+                \`\`\`
+            `;
+        }
+
+        const vizEsc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+        const vizNum = (value, fallback = 0) => (Number.isFinite(Number(value)) ? Number(value) : fallback);
+        const vizClamp = (value, lo, hi) => Math.min(hi, Math.max(lo, value));
+        const vizList = (value, max = 6) => (Array.isArray(value) ? value.filter(Boolean).slice(0, max).map(String) : []);
+        const vizFmt = value => vizNum(value).toLocaleString('ko-KR', { maximumFractionDigits: 1 });
+        // 포커스·호버 공용 툴팁 대상 속성 (값은 표 보기로도 항상 확인 가능)
+        const vizTipAttrs = tip => `data-tip="${vizEsc(tip)}" tabindex="0" role="img" aria-label="${vizEsc(tip.replace(/\n/g, ', '))}"`;
+
+        function splitVizBlock(md) {
+            const match = (md || '').match(VIZ_BLOCK_RE);
+            if (!match) return { markdown: md || '', data: null };
+            let data = null;
+            try { data = JSON.parse(match[1]); } catch (e) { console.warn('[viz] pitl-viz JSON 파싱 실패:', e.message); }
+            return { markdown: (md.slice(0, match.index) + '\n' + md.slice(match.index + match[0].length)).trim(), data };
+        }
+
+        function parseVizJson(raw) {
+            const text = String(raw || '').replace(/```[a-z-]*\s*/gi, '').replace(/```/g, '');
+            const start = text.indexOf('{');
+            const end = text.lastIndexOf('}');
+            if (start < 0 || end <= start) throw new Error(t('응답에서 JSON을 찾지 못했습니다.', 'No JSON found in the response.'));
+            return JSON.parse(text.slice(start, end + 1));
+        }
+
+        function vizTable(headers, rows) {
+            return `<table><thead><tr>${headers.map(h => `<th>${vizEsc(h)}</th>`).join('')}</tr></thead>
+                <tbody>${rows.map(r => `<tr>${r.map(c => `<td>${vizEsc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+        }
+
+        function vizCard({ title, subtitle = '', body, table = '', wide = false }) {
+            return `<figure class="viz-card${wide ? ' wide' : ''}">
+                <figcaption class="viz-card-head">
+                    <div>
+                        <h4 class="viz-title">${vizEsc(title)}</h4>
+                        ${subtitle ? `<p class="viz-sub">${vizEsc(subtitle)}</p>` : ''}
+                    </div>
+                    ${table ? `<button type="button" class="viz-table-toggle" onclick="toggleVizTable(this)" aria-expanded="false">${t('표로 보기', 'Show table')}</button>` : ''}
+                </figcaption>
+                <div class="viz-body">${body}</div>
+                ${table ? `<div class="viz-table" hidden>${table}</div>` : ''}
+            </figure>`;
+        }
+
+        function toggleVizTable(btn) {
+            const tableEl = btn.closest('.viz-card').querySelector('.viz-table');
+            const open = tableEl.hidden;
+            tableEl.hidden = !open;
+            btn.setAttribute('aria-expanded', String(open));
+            btn.textContent = open ? t('표 숨기기', 'Hide table') : t('표로 보기', 'Show table');
+        }
+
+        function vizLegend(entries) {
+            return `<div class="viz-legend">${entries.map(([color, label]) =>
+                `<span class="viz-legend-item"><i class="viz-swatch" style="background:${color}"></i>${vizEsc(label)}</span>`).join('')}</div>`;
+        }
+
+        // 라벨 겹침 회피: 후보 위치 중 다른 라벨·점·예약 영역과 겹치지 않는 첫 자리를 고른다.
+        // 들어갈 자리가 없으면 라벨을 생략한다 (값은 툴팁과 표 보기로 확인 가능)
+        function vizPlaceLabels(points, bounds, reserved = []) {
+            const textWidth = text => [...text].reduce((w, ch) => w + (/[\u3131-\uD79D]/.test(ch) ? 11.5 : 6.8), 4);
+            const overlaps = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+            const placed = [...reserved];
+            return points.map(pt => {
+                const w = textWidth(pt.text), h = 14;
+                const candidates = [[9, -17], [9, 3], [-9 - w, -17], [-9 - w, 3], [-w / 2, -26], [-w / 2, 11]];
+                for (const [dx, dy] of candidates) {
+                    const box = { x: pt.cx + dx, y: pt.cy + dy, w, h };
+                    if (box.x < bounds.x0 || box.x + w > bounds.x1 || box.y < bounds.y0 || box.y + h > bounds.y1) continue;
+                    if (placed.some(b => overlaps(b, box))) continue;
+                    if (points.some(q => q !== pt && overlaps({ x: q.cx - 6, y: q.cy - 6, w: 12, h: 12 }, box))) continue;
+                    placed.push(box);
+                    return { x: box.x, y: box.y + 11 };
+                }
+                return null;
+            });
+        }
+
+        // ── 3C: Venn + competitor heatmap ──────────────────────────────────
+        function viz3C(d) {
+            const groups = [
+                ['Customer', t('고객 니즈', 'Customer needs'), vizList(d.customer, 4), 'var(--viz-1)'],
+                ['Competitor', t('경쟁 공백', 'Competitor gaps'), vizList(d.competitor, 4), 'var(--viz-2)'],
+                ['Company', t('자사 강점', 'Company strengths'), vizList(d.company, 4), 'var(--viz-3)']
+            ];
+            const venn = `
+                <svg class="viz-svg viz-venn" viewBox="0 0 360 300" aria-hidden="true">
+                    <circle cx="135" cy="118" r="92" fill="var(--viz-1)" fill-opacity="0.14" stroke="var(--viz-1)" stroke-width="1.5"/>
+                    <circle cx="225" cy="118" r="92" fill="var(--viz-2)" fill-opacity="0.14" stroke="var(--viz-2)" stroke-width="1.5"/>
+                    <circle cx="180" cy="196" r="92" fill="var(--viz-3)" fill-opacity="0.14" stroke="var(--viz-3)" stroke-width="1.5"/>
+                    <text x="88" y="70" class="viz-label-strong" text-anchor="middle">Customer</text>
+                    <text x="272" y="70" class="viz-label-strong" text-anchor="middle">Competitor</text>
+                    <text x="180" y="268" class="viz-label-strong" text-anchor="middle">Company</text>
+                    <text x="180" y="146" class="viz-label-strong" text-anchor="middle">★ White Space</text>
+                </svg>`;
+            const lists = groups.map(([, label, items, color]) => `
+                <div class="viz-3c-group">
+                    <div class="viz-3c-head"><i class="viz-swatch" style="background:${color}"></i>${vizEsc(label)}</div>
+                    <ul>${items.map(item => `<li>${vizEsc(item)}</li>`).join('')}</ul>
+                </div>`).join('');
+            const vennCard = vizCard({
+                title: t('3C 교집합 — 전략적 화이트 스페이스', '3C overlap — strategic white space'),
+                subtitle: d.whiteSpace ? `★ ${d.whiteSpace}` : '',
+                wide: true,
+                body: `<div class="viz-3c">${venn}<div class="viz-3c-lists">${lists}</div></div>`
+            });
+
+            const attrs = vizList(d.scores && d.scores.attributes, 6);
+            const rows = (d.scores && Array.isArray(d.scores.rows) ? d.scores.rows : []).slice(0, 6);
+            if (!attrs.length || !rows.length) return vennCard;
+            const heat = `
+                <div class="viz-heat" role="table" aria-label="${vizEsc(t('경쟁 비교 점수 (1~5)', 'Competitive scores (1-5)'))}">
+                    <div class="viz-heat-row viz-heat-header" role="row" style="--cols:${attrs.length}">
+                        <span role="columnheader"></span>${attrs.map(a => `<span role="columnheader">${vizEsc(a)}</span>`).join('')}
+                    </div>
+                    ${rows.map(row => {
+                        const isSelf = /자사|우리|self/i.test(row.name || '');
+                        return `<div class="viz-heat-row${isSelf ? ' self' : ''}" role="row" style="--cols:${attrs.length}">
+                            <span class="viz-heat-name" role="rowheader">${vizEsc(row.name)}</span>
+                            ${attrs.map((a, i) => {
+                                const v = vizClamp(Math.round(vizNum(row.values && row.values[i], 0)), 0, 5);
+                                const step = Math.max(1, v);
+                                return `<span class="viz-heat-cell" role="cell" style="background:var(--viz-seq-${step});color:var(--viz-seq-${step}-ink)"
+                                    ${vizTipAttrs(`${row.name} · ${a}\n${v} / 5`)}>${v}</span>`;
+                            }).join('')}
+                        </div>`;
+                    }).join('')}
+                    <div class="viz-heat-scale"><span>${t('낮음', 'Low')}</span>${[1, 2, 3, 4, 5].map(s => `<i style="background:var(--viz-seq-${s})"></i>`).join('')}<span>${t('높음', 'High')}</span></div>
+                </div>`;
+            const heatCard = vizCard({
+                title: t('경쟁 비교 히트맵', 'Competitive heatmap'),
+                subtitle: t('속성별 경쟁력 점수 (1~5)', 'Score per attribute (1-5)'),
+                wide: true,
+                body: heat
+            });
+            return vennCard + heatCard;
+        }
+
+        // ── SWOT 2×2 + TOWS cross-strategy 2×2 ─────────────────────────────
+        function vizSWOT(d) {
+            const quad = (key, label, color) => `
+                <div class="viz-quad">
+                    <div class="viz-quad-head"><i class="viz-swatch" style="background:${color}"></i><b>${key}</b> ${vizEsc(label)}</div>
+                    <ul>${vizList(d[key], 5).map(item => `<li>${vizEsc(item)}</li>`).join('')}</ul>
+                </div>`;
+            const swot = `
+                <div class="viz-2x2">
+                    <span></span>
+                    <span class="viz-axis-head">${t('긍정적 요인', 'Positive')}</span>
+                    <span class="viz-axis-head">${t('부정적 요인', 'Negative')}</span>
+                    <span class="viz-axis-head viz-axis-side">${t('내부', 'Internal')}</span>
+                    ${quad('S', t('강점', 'Strengths'), 'var(--viz-1)')}
+                    ${quad('W', t('약점', 'Weaknesses'), 'var(--viz-2)')}
+                    <span class="viz-axis-head viz-axis-side">${t('외부', 'External')}</span>
+                    ${quad('O', t('기회', 'Opportunities'), 'var(--viz-3)')}
+                    ${quad('T', t('위협', 'Threats'), 'var(--viz-4)')}
+                </div>`;
+            const swotCard = vizCard({ title: t('SWOT 4분면', 'SWOT quadrants'), body: swot });
+
+            const towsList = Array.isArray(d.tows) ? d.tows : [];
+            const byType = type => towsList.find(item => String(item.type || '').toUpperCase() === type) || {};
+            const priorityStep = { HIGH: 5, MEDIUM: 3, LOW: 1 };
+            const towsCell = (type, label) => {
+                const item = byType(type);
+                const priority = String(item.priority || '').toUpperCase();
+                const step = priorityStep[priority];
+                return `<div class="viz-quad viz-tows-cell">
+                    <div class="viz-quad-head"><b>${type}</b> ${vizEsc(label)}
+                        ${step ? `<span class="viz-priority" style="background:var(--viz-seq-${step});color:var(--viz-seq-${step}-ink)">${vizEsc(item.priority)}</span>` : ''}
+                    </div>
+                    <p>${vizEsc(item.strategy || '—')}</p>
+                    ${item.period ? `<span class="viz-meta"><i class="fa-regular fa-clock"></i> ${vizEsc(item.period)}</span>` : ''}
+                </div>`;
+            };
+            const tows = `
+                <div class="viz-2x2">
+                    <span></span>
+                    <span class="viz-axis-head">O ${t('기회', 'Opportunities')}</span>
+                    <span class="viz-axis-head">T ${t('위협', 'Threats')}</span>
+                    <span class="viz-axis-head viz-axis-side">S ${t('강점', 'Strengths')}</span>
+                    ${towsCell('SO', t('공격적 성장', 'Aggressive growth'))}
+                    ${towsCell('ST', t('위협 회피·다각화', 'Diversify'))}
+                    <span class="viz-axis-head viz-axis-side">W ${t('약점', 'Weaknesses')}</span>
+                    ${towsCell('WO', t('체질 개선', 'Turnaround'))}
+                    ${towsCell('WT', t('방어·위기관리', 'Defensive'))}
+                </div>`;
+            const towsCard = vizCard({
+                title: t('TOWS 교차 전략 매트릭스', 'TOWS cross-strategy matrix'),
+                subtitle: t('배지 = 실행 우선순위', 'Badge = execution priority'),
+                body: tows,
+                table: towsList.length ? vizTable(
+                    [t('전략', 'Type'), t('내용', 'Strategy'), t('우선순위', 'Priority'), t('기간', 'Period')],
+                    towsList.map(item => [item.type, item.strategy, item.priority, item.period])
+                ) : ''
+            });
+            return swotCard + towsCard;
+        }
+
+        // ── STP: segment bubble chart · TAM/SAM/SOM tiles · positioning map ─
+        function vizSTP(d) {
+            const unit = d.sizeUnit || (d.market && d.market.unit) || '';
+            const roleMeta = {
+                primary: ['var(--viz-1)', t('핵심 타깃', 'Primary target')],
+                secondary: ['var(--viz-2)', t('서브 타깃', 'Secondary target')],
+                other: ['var(--viz-muted)', t('기타 세그먼트', 'Other segment')]
+            };
+            const segs = (Array.isArray(d.segments) ? d.segments : []).slice(0, 6).map(s => ({
+                name: String(s.name || ''),
+                size: Math.max(0, vizNum(s.size)),
+                growth: vizNum(s.growth),
+                access: vizClamp(vizNum(s.access, 3), 1, 5),
+                role: roleMeta[s.role] ? s.role : 'other'
+            }));
+            let cards = '';
+
+            if (segs.length) {
+                const W = 900, H = 340, m = { l: 52, r: 24, t: 24, b: 46 }; // 넓은 카드 폭에 맞춘 좌표계 (글자 확대 방지)
+                const pw = W - m.l - m.r, ph = H - m.t - m.b;
+                const gMax = Math.max(...segs.map(s => s.growth), 1);
+                const gMin = Math.min(0, ...segs.map(s => s.growth));
+                const step = Math.max(5, Math.ceil((gMax - gMin) / 4 / 5) * 5);
+                const x0 = Math.floor(gMin / step) * step, x1 = Math.ceil((gMax * 1.15) / step) * step;
+                const sx = v => m.l + ((v - x0) / (x1 - x0)) * pw;
+                const sy = v => m.t + ph - ((v - 0.5) / 5) * ph;
+                const maxSize = Math.max(...segs.map(s => s.size), 1);
+                const sr = v => 8 + 30 * Math.sqrt(v / maxSize);
+                const xTicks = [];
+                for (let v = x0; v <= x1; v += step) xTicks.push(v);
+                const bubbles = [...segs].sort((a, b) => b.size - a.size).map(s => {
+                    const [color, roleLabel] = roleMeta[s.role];
+                    const cx = sx(s.growth), cy = sy(s.access), r = sr(s.size);
+                    const tip = `${s.name} (${roleLabel})\n${t('시장 규모', 'Size')} ${vizFmt(s.size)}${unit} · ${t('성장률', 'Growth')} ${vizFmt(s.growth)}% · ${t('접근성', 'Access')} ${s.access}/5`;
+                    return `<g class="viz-mark" ${vizTipAttrs(tip)}>
+                        <circle cx="${cx}" cy="${cy}" r="${Math.max(r, 12)}" fill="transparent"/>
+                        <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" fill-opacity="0.22" stroke="${color}" stroke-width="2"/>
+                        <circle cx="${cx}" cy="${cy}" r="4" fill="${color}" stroke="var(--viz-surface)" stroke-width="2"/>
+                        <text x="${cx}" y="${cy - r - 6}" class="viz-label" text-anchor="middle">${vizEsc(s.name)}</text>
+                    </g>`;
+                }).join('');
+                const svg = `<svg class="viz-svg" viewBox="0 0 ${W} ${H}">
+                    ${[1, 2, 3, 4, 5].map(v => `<line x1="${m.l}" x2="${W - m.r}" y1="${sy(v)}" y2="${sy(v)}" class="viz-gridline"/>
+                        <text x="${m.l - 10}" y="${sy(v) + 4}" class="viz-tick" text-anchor="end">${v}</text>`).join('')}
+                    ${xTicks.map(v => `<text x="${sx(v)}" y="${H - m.b + 18}" class="viz-tick" text-anchor="middle">${v}%</text>`).join('')}
+                    <line x1="${m.l}" x2="${W - m.r}" y1="${m.t + ph}" y2="${m.t + ph}" class="viz-axis"/>
+                    <text x="${m.l + pw / 2}" y="${H - 6}" class="viz-axis-title" text-anchor="middle">${t('연 성장률 (%) →', 'Annual growth (%) →')}</text>
+                    <text transform="translate(14 ${m.t + ph / 2}) rotate(-90)" class="viz-axis-title" text-anchor="middle">${t('접근성 (1–5) →', 'Accessibility (1-5) →')}</text>
+                    ${bubbles}
+                </svg>`;
+                const roles = ['primary', 'secondary', 'other'].filter(role => segs.some(s => s.role === role));
+                cards += vizCard({
+                    title: t('세그먼트 매력도', 'Segment attractiveness'),
+                    subtitle: t(`원 크기 = 시장 규모${unit ? ` (${unit})` : ''}`, `Bubble size = market size${unit ? ` (${unit})` : ''}`),
+                    wide: true,
+                    body: vizLegend(roles.map(role => roleMeta[role])) + svg,
+                    table: vizTable(
+                        [t('세그먼트', 'Segment'), t('역할', 'Role'), `${t('규모', 'Size')}${unit ? ` (${unit})` : ''}`, t('성장률 %', 'Growth %'), t('접근성', 'Access')],
+                        segs.map(s => [s.name, roleMeta[s.role][1], vizFmt(s.size), vizFmt(s.growth), s.access])
+                    )
+                });
+            }
+
+            const mk = d.market || {};
+            if (mk.tam || mk.sam || mk.som) {
+                const mUnit = mk.unit || unit;
+                const tiers = [['TAM', t('전체 시장', 'Total'), mk.tam], ['SAM', t('유효 시장', 'Serviceable'), mk.sam], ['SOM', t('획득 목표', 'Obtainable'), mk.som]];
+                const tiles = tiers.map(([key, label, value], i) => {
+                    const prev = i > 0 ? vizNum(tiers[i - 1][2]) : 0;
+                    const ratio = prev > 0 ? Math.round((vizNum(value) / prev) * 1000) / 10 : null;
+                    return `${i > 0 ? `<span class="viz-funnel-arrow" title="${tiers[i - 1][0]} → ${key}">→<small>${ratio !== null ? `${ratio}%` : ''}</small></span>` : ''}
+                        <div class="viz-stat">
+                            <span class="viz-stat-key">${key}</span>
+                            <span class="viz-stat-value">${vizFmt(value)}<small>${vizEsc(mUnit)}</small></span>
+                            <span class="viz-stat-label">${label}${ratio !== null ? `<span class="viz-sr-only"> (${tiers[i - 1][0]} ${t('대비', 'of')} ${ratio}%)</span>` : ''}</span>
+                        </div>`;
+                }).join('');
+                cards += vizCard({
+                    title: t('시장 규모 (TAM · SAM · SOM)', 'Market size (TAM · SAM · SOM)'),
+                    subtitle: t('자릿수 차이가 커서 막대 대신 수치로 표시', 'Shown as figures: magnitudes differ too much for bars'),
+                    body: `<div class="viz-stats">${tiles}</div>`
+                });
+            }
+
+            const pos = d.positioning || {};
+            const pts = (Array.isArray(pos.points) ? pos.points : []).slice(0, 8).map(p => ({
+                name: String(p.name || ''), x: vizClamp(vizNum(p.x, 5), 0, 10), y: vizClamp(vizNum(p.y, 5), 0, 10), self: !!p.self
+            }));
+            if (pts.length) {
+                const S = 340, m = 36, ps = S - m * 2;
+                const px = v => m + (v / 10) * ps, py = v => m + ps - (v / 10) * ps;
+                const self = pts.find(p => p.self);
+                const shade = self ? `<rect x="${self.x >= 5 ? px(5) : m}" y="${self.y >= 5 ? m : py(5)}" width="${ps / 2}" height="${ps / 2}" fill="var(--viz-1)" fill-opacity="0.06"/>` : '';
+                // 자사 라벨을 먼저 배치해 가장 좋은 자리를 준다
+                const ordered = [...pts].sort((a, b) => b.self - a.self).map(p => ({ ...p, cx: px(p.x), cy: py(p.y), text: p.name }));
+                const labels = vizPlaceLabels(ordered, { x0: 0, x1: S, y0: 0, y1: S });
+                const marks = ordered.map((p, i) => ({ p, label: labels[i] })).reverse().map(({ p, label }) => {
+                    const color = p.self ? 'var(--viz-1)' : 'var(--viz-muted)';
+                    const tip = `${p.name}\n${pos.xAxis || 'X'} ${p.x}/10 · ${pos.yAxis || 'Y'} ${p.y}/10`;
+                    return `<g class="viz-mark" ${vizTipAttrs(tip)}>
+                        <circle cx="${p.cx}" cy="${p.cy}" r="14" fill="transparent"/>
+                        <circle cx="${p.cx}" cy="${p.cy}" r="${p.self ? 7 : 5}" fill="${color}" stroke="var(--viz-surface)" stroke-width="2"/>
+                        ${label ? `<text x="${label.x}" y="${label.y}" class="${p.self ? 'viz-label-strong' : 'viz-label'}">${vizEsc(p.name)}</text>` : ''}
+                    </g>`;
+                }).join('');
+                const svg = `<svg class="viz-svg viz-square" viewBox="0 0 ${S} ${S}">
+                    <rect x="${m}" y="${m}" width="${ps}" height="${ps}" fill="none" class="viz-gridline"/>
+                    ${shade}
+                    <line x1="${px(5)}" x2="${px(5)}" y1="${m}" y2="${m + ps}" class="viz-axis"/>
+                    <line x1="${m}" x2="${m + ps}" y1="${py(5)}" y2="${py(5)}" class="viz-axis"/>
+                    <!-- 축 제목은 플롯 바깥에 두어 점 라벨과 겹치지 않게 한다 -->
+                    <text x="${m}" y="${m + ps + 18}" class="viz-tick">Low</text>
+                    <text x="${m + ps / 2}" y="${m + ps + 18}" class="viz-axis-title" text-anchor="middle">${vizEsc(pos.xAxis || 'X')} →</text>
+                    <text x="${m + ps}" y="${m + ps + 18}" class="viz-tick" text-anchor="end">High</text>
+                    <text x="${m}" y="${m - 12}" class="viz-axis-title">↑ ${vizEsc(pos.yAxis || 'Y')}</text>
+                    <text x="${m - 6}" y="${m + 10}" class="viz-tick" text-anchor="end">High</text>
+                    <text x="${m - 6}" y="${m + ps}" class="viz-tick" text-anchor="end">Low</text>
+                    ${marks}
+                </svg>`;
+                cards += vizCard({
+                    title: t('포지셔닝 맵', 'Positioning map'),
+                    subtitle: t('보라 = 자사, 회색 = 경쟁사 · 음영 = 자사 영역', 'Violet = us, gray = competitors · shaded = our zone'),
+                    body: svg,
+                    table: vizTable(['', pos.xAxis || 'X', pos.yAxis || 'Y'], pts.map(p => [p.name + (p.self ? ' ★' : ''), p.x, p.y]))
+                });
+            }
+            return cards;
+        }
+
+        // ── MECE logic tree · RICE ranking · Impact × Effort 2×2 ─────────────
+        function vizMECE(d) {
+            let cards = '';
+            const tree = (Array.isArray(d.tree) ? d.tree : []).slice(0, 6);
+            if (tree.length) {
+                cards += vizCard({
+                    title: t('MECE 로직 트리', 'MECE logic tree'),
+                    subtitle: t('중복 없이(ME), 빠짐없이(CE) 분해한 5대 도메인', 'Five domains, mutually exclusive & collectively exhaustive'),
+                    wide: true,
+                    body: `<div class="viz-tree">
+                        <div class="viz-tree-root">${t('상품 기획 전체', 'Whole plan')}</div>
+                        <div class="viz-tree-branches" style="--n:${tree.length}">
+                            ${tree.map(node => `<div class="viz-tree-branch">
+                                <div class="viz-tree-domain">${vizEsc(node.domain)}</div>
+                                ${vizList(node.items, 6).map(item => `<div class="viz-tree-leaf">${vizEsc(item)}</div>`).join('')}
+                            </div>`).join('')}
+                        </div>
+                    </div>`
+                });
+            }
+
+            const moscow = {
+                MUST: ['var(--viz-1)', 'Must'], SHOULD: ['var(--viz-2)', 'Should'],
+                COULD: ['var(--viz-3)', 'Could'], "WON'T": ['var(--viz-4)', "Won't"], WONT: ['var(--viz-4)', "Won't"]
+            };
+            const rice = (Array.isArray(d.rice) ? d.rice : []).slice(0, 12).map(r => {
+                const reach = Math.max(0, vizNum(r.reach)), impact = Math.max(0, vizNum(r.impact, 1));
+                const confidence = vizClamp(vizNum(r.confidence, 50), 0, 100), effort = Math.max(0.1, vizNum(r.effort, 1));
+                const key = String(r.moscow || '').toUpperCase().replace(/’/g, "'");
+                return { id: String(r.id || ''), feature: String(r.feature || ''), reach, impact, confidence, effort,
+                    moscow: moscow[key] || ['var(--viz-muted)', String(r.moscow || '—')],
+                    score: (reach * impact * (confidence / 100)) / effort };
+            }).sort((a, b) => b.score - a.score);
+            if (!rice.length) return cards;
+
+            const maxScore = Math.max(...rice.map(r => r.score), 1);
+            const bars = rice.map(r => {
+                const tip = `${r.id} ${r.feature}\nR ${vizFmt(r.reach)} × I ${r.impact} × C ${r.confidence}% ÷ E ${r.effort} = ${vizFmt(Math.round(r.score))}`;
+                return `<div class="viz-bar-row" ${vizTipAttrs(tip)}>
+                    <span class="viz-bar-label"><b>${vizEsc(r.id)}</b> ${vizEsc(r.feature)}</span>
+                    <span class="viz-bar-track">
+                        <span class="viz-bar" style="width:${Math.max(1.5, (r.score / maxScore) * 100)}%;background:${r.moscow[0]}"></span>
+                        <span class="viz-bar-value">${vizFmt(Math.round(r.score))}</span>
+                    </span>
+                </div>`;
+            }).join('');
+            const used = Object.values(moscow).filter(([c, label], i, all) => all.findIndex(x => x[1] === label) === i)
+                .filter(([, label]) => rice.some(r => r.moscow[1] === label));
+            cards += vizCard({
+                title: t('RICE 우선순위 점수', 'RICE priority score'),
+                subtitle: 'Reach × Impact × Confidence ÷ Effort',
+                body: vizLegend(used) + `<div class="viz-bars">${bars}</div>`,
+                table: vizTable(['ID', t('기능', 'Feature'), 'Reach', 'Impact', 'Confidence %', 'Effort', 'RICE', 'MoSCoW'],
+                    rice.map(r => [r.id, r.feature, vizFmt(r.reach), r.impact, r.confidence, r.effort, vizFmt(Math.round(r.score)), r.moscow[1]]))
+            });
+
+            // Impact × Effort: x = effort, y = impact (RICE 척도 0.25~3)
+            const S = 340, m = 40, ps = S - m * 2;
+            const eMax = Math.max(...rice.map(r => r.effort), 1) * 1.15;
+            const efforts = rice.map(r => r.effort).sort((a, b) => a - b);
+            const eSplit = efforts[Math.floor(efforts.length / 2)];
+            // 위쪽 여유 구간(3~3.8)은 4분면 라벨 자리
+            const px = v => m + (v / eMax) * ps, py = v => m + ps - (vizClamp(v, 0, 3.8) / 3.8) * ps;
+            const seen = {};
+            const pts = rice.map(r => {
+                const k = `${r.effort}|${r.impact}`;
+                const n = (seen[k] = (seen[k] || 0) + 1) - 1;
+                return { r, cx: px(r.effort) + n * 9, cy: py(r.impact) - n * 9, text: r.id };
+            });
+            const quadBoxes = [[m + 4, m + 4], [m + ps - 64, m + 4], [m + 4, m + ps - 20], [m + ps - 64, m + ps - 20]]
+                .map(([x, y]) => ({ x, y, w: 60, h: 16 }));
+            const labels = vizPlaceLabels(pts, { x0: m, x1: m + ps, y0: m, y1: m + ps }, quadBoxes);
+            const marks = pts.map(({ r, cx, cy }, i) => {
+                const tip = `${r.id} ${r.feature}\nImpact ${r.impact} · Effort ${r.effort} ${t('인월', 'PM')}`;
+                return `<g class="viz-mark" ${vizTipAttrs(tip)}>
+                    <circle cx="${cx}" cy="${cy}" r="13" fill="transparent"/>
+                    <circle cx="${cx}" cy="${cy}" r="5" fill="var(--viz-1)" stroke="var(--viz-surface)" stroke-width="2"/>
+                    ${labels[i] ? `<text x="${labels[i].x}" y="${labels[i].y}" class="viz-label">${vizEsc(r.id)}</text>` : ''}
+                </g>`;
+            }).join('');
+            const quads = [
+                [m + 8, m + 16, 'start', t('빠른 성과', 'Quick wins')],
+                [m + ps - 8, m + 16, 'end', t('큰 베팅', 'Big bets')],
+                [m + 8, m + ps - 8, 'start', t('틈새 작업', 'Fill-ins')],
+                [m + ps - 8, m + ps - 8, 'end', t('시간 낭비', 'Time sinks')]
+            ].map(([x, y, a, label]) => `<text x="${x}" y="${y}" class="viz-quad-label" text-anchor="${a}">${label}</text>`).join('');
+            const svg = `<svg class="viz-svg viz-square" viewBox="0 0 ${S} ${S}">
+                <rect x="${m}" y="${m}" width="${px(eSplit) - m}" height="${py(1.5) - m}" fill="var(--viz-1)" fill-opacity="0.06"/>
+                <rect x="${m}" y="${m}" width="${ps}" height="${ps}" fill="none" class="viz-gridline"/>
+                <line x1="${px(eSplit)}" x2="${px(eSplit)}" y1="${m}" y2="${m + ps}" class="viz-axis"/>
+                <line x1="${m}" x2="${m + ps}" y1="${py(1.5)}" y2="${py(1.5)}" class="viz-axis"/>
+                ${quads}
+                <text x="${m + ps / 2}" y="${S - 10}" class="viz-axis-title" text-anchor="middle">${t('노력 (인월) →', 'Effort (person-months) →')}</text>
+                <text transform="translate(14 ${m + ps / 2}) rotate(-90)" class="viz-axis-title" text-anchor="middle">${t('임팩트 →', 'Impact →')}</text>
+                ${marks}
+            </svg>`;
+            cards += vizCard({
+                title: t('임팩트 × 노력 매트릭스', 'Impact × effort matrix'),
+                subtitle: t('왼쪽 위(음영) = 빠른 성과: 노력은 적고 임팩트는 큰 기능', 'Top-left (shaded) = quick wins: low effort, high impact'),
+                body: svg,
+                table: vizTable(['ID', t('기능', 'Feature'), 'Impact', 'Effort'], rice.map(r => [r.id, r.feature, r.impact, r.effort]))
+            });
+            return cards;
+        }
+
+        function vizEmptyState(docKey, broken = false) {
+            const hasDoc = !!(generatedDocs && generatedDocs[docKey] && generatedDocs[docKey].trim());
+            if (!hasDoc) return '';
+            return `<section class="viz-panel viz-empty">
+                <div>
+                    <span class="viz-eyebrow"><i class="fa-solid fa-chart-simple"></i> VISUAL SUMMARY</span>
+                    <p>${broken
+                        ? t('시각화 데이터를 읽지 못했습니다. 다시 생성해 주세요.', 'Could not read the visualization data. Please regenerate it.')
+                        : t('이 문서에는 아직 시각화 데이터가 없습니다. 본문에서 차트 데이터를 추출해 그립니다.', 'No visualization data yet. Extract chart data from this document.')}</p>
+                </div>
+                <button type="button" class="btn-minimal" id="btn-viz-generate" onclick="generateVizForDoc('${docKey}')">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> ${t('시각화 생성', 'Generate charts')}
+                </button>
+            </section>`;
+        }
+
+        function renderFrameworkViz(docKey, data) {
+            if (!VIZ_DOC_KEYS.has(docKey)) return '';
+            if (!data) return vizEmptyState(docKey);
+            try {
+                const cards = ({ threec: viz3C, swot: vizSWOT, stp: vizSTP, mece: vizMECE })[docKey](data);
+                if (!cards) return vizEmptyState(docKey, true);
+                return `<section class="viz-panel" aria-label="${vizEsc(t('시각화 요약', 'Visual summary'))}">
+                    <span class="viz-eyebrow"><i class="fa-solid fa-chart-simple"></i> VISUAL SUMMARY</span>
+                    <div class="viz-grid">${cards}</div>
+                </section>`;
+            } catch (err) {
+                console.warn('[viz] render failed:', err);
+                return vizEmptyState(docKey, true);
+            }
+        }
+
+        // 시각화 데이터가 없는 기존 문서: 본문에서 claude -p로 추출해 문서 끝에 붙인다
+        async function generateVizForDoc(docKey) {
+            if (!generatedDocs || !generatedDocs[docKey]) return;
+            await window.PITL_PROXY_READY;
+            if (!window.PITL_USE_LOCAL_PROXY) { showLocalServerRequired(); return; }
+            const btn = document.getElementById('btn-viz-generate');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t('차트 데이터 추출 중…', 'Extracting chart data…')}`;
+            }
+            const body = splitVizBlock(generatedDocs[docKey]).markdown;
+            try {
+                const raw = await callClaudeLocal(
+                    '당신은 기획 문서에서 차트용 구조화 데이터를 정확히 추출하는 데이터 분석가입니다. 문서에 근거한 값을 쓰고, 수치가 없으면 문서 맥락에서 보수적으로 추정합니다. JSON 외의 텍스트는 출력하지 않습니다.',
+                    `다음 문서에서 아래 규격의 시각화 데이터를 추출하라. 유효한 JSON 하나만 출력하라.\n\n[규격]\n${VIZ_SCHEMAS[docKey]}\n\n[문서]\n${body}`
+                );
+                const data = parseVizJson(raw);
+                generatedDocs[docKey] = `${body.trimEnd()}\n\n\`\`\`pitl-viz\n${JSON.stringify(data, null, 2)}\n\`\`\`\n`;
+                saveClientHistoryLocally(generatedDocs, window.pitlActiveSessionDate);
+                switchDocument(docKey);
+            } catch (err) {
+                pitlAlert(t('시각화 생성에 실패했습니다: ', 'Failed to generate charts: ') + vizEsc(err.message), 'error', t('시각화 생성 실패', 'Chart generation failed'));
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> ${t('시각화 생성', 'Generate charts')}`;
+                }
+            }
+        }
+
+        // Shared tooltip for chart marks (hover + keyboard focus)
+        (function initVizTooltip() {
+            let tip = null;
+            const ensure = () => {
+                if (!tip) {
+                    tip = document.createElement('div');
+                    tip.id = 'viz-tooltip';
+                    tip.setAttribute('role', 'tooltip');
+                    tip.hidden = true;
+                    document.body.appendChild(tip);
+                }
+                return tip;
+            };
+            const place = (x, y) => {
+                const el = ensure();
+                const r = el.getBoundingClientRect();
+                el.style.left = `${Math.min(window.innerWidth - r.width - 8, x + 14)}px`;
+                el.style.top = `${Math.max(8, y - r.height - 12)}px`;
+            };
+            const show = (target, x, y) => {
+                const el = ensure();
+                el.textContent = target.getAttribute('data-tip');
+                el.hidden = false;
+                place(x, y);
+            };
+            const hide = () => { if (tip) tip.hidden = true; };
+            document.addEventListener('pointerover', e => {
+                const target = e.target.closest && e.target.closest('.viz-panel [data-tip]');
+                if (target) show(target, e.clientX, e.clientY);
+            });
+            document.addEventListener('pointermove', e => {
+                if (tip && !tip.hidden && e.target.closest && e.target.closest('.viz-panel [data-tip]')) place(e.clientX, e.clientY);
+            });
+            document.addEventListener('pointerout', e => {
+                const target = e.target.closest && e.target.closest('.viz-panel [data-tip]');
+                if (target && !target.contains(e.relatedTarget)) hide();
+            });
+            document.addEventListener('focusin', e => {
+                const target = e.target.closest && e.target.closest('.viz-panel [data-tip]');
+                if (!target) return;
+                const r = target.getBoundingClientRect();
+                show(target, r.left + r.width / 2, r.top);
+            });
+            document.addEventListener('focusout', hide);
+        })();
+
         function renderMarkdownEnhanced(mdRaw) {
             if (!mdRaw) return '';
             
@@ -9215,6 +10018,8 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
             const ideaTextarea = document.getElementById('idea-textarea');
             
             generatedDocs = data;
+            
+            window.pitlActiveSessionDate = date;
 
             // Restore original idea prompt into textarea
             if (ideaTextarea && data.idea) {
