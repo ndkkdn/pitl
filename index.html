@@ -3774,48 +3774,6 @@
         .pitl-modal-btn-danger:hover { background:rgba(239,68,68,0.25); }
     </style>
 
-    <!-- API Settings Modal Overlay -->
-    <div id="pitl-settings-overlay" class="password-overlay-wrapper" style="display: none; z-index: 10000;">
-
-        <div class="password-card" style="max-width: 450px;">
-            <div class="password-card-glow"></div>
-            <div class="password-header">
-                <div class="password-logo" style="background: var(--accent-neon); color: var(--bg-base);">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <h2 class="password-title" style="font-size: 20px;" data-i18n="api_settings_title">API Settings</h2>
-                <p class="password-subtitle" style="font-size: 13px;" data-i18n="api_settings_subtitle">
-                    Gemini API Key를 입력하면 AES-GCM으로 암호화하여 이 기기의 로컬 스토리지에만 저장합니다.
-                </p>
-            </div>
-            
-            <div class="password-input-group">
-                <div class="password-input-wrapper" style="position:relative;">
-                    <i class="fa-solid fa-key input-icon"></i>
-                    <input type="password" id="pitl-gemini-key-input" placeholder="Gemini API Key 입력" data-i18n-placeholder="api_key_placeholder" style="padding-right:42px;">
-                    <button onclick="document.getElementById('pitl-gemini-key-input').type = document.getElementById('pitl-gemini-key-input').type==='password'?'text':'password'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-secondary);cursor:pointer;font-size:14px;" title="보기/숨기기">
-                        <i class="fa-solid fa-eye"></i>
-                    </button>
-                </div>
-                <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 10px; line-height: 1.6; text-align: left; background: rgba(255,255,255,0.02); padding: 10px 12px; border-radius: 6px; border: 1px dashed rgba(255,255,255,0.08);" data-i18n="api_key_warning">
-                    <i class="fa-solid fa-shield-halved" style="color:var(--accent-neon);"></i> <strong>암호화 저장 안내</strong><br>
-                    입력한 API Key는 <strong>AES-GCM 256-bit</strong>으로 즉시 암호화된 뒤 이 기기(localStorage)에만 저장됩니다. 서버로 전송되지 않습니다.<br>
-                    공란 저장 시 저장된 키가 삭제됩니다.
-                </div>
-            </div>
-            
-            <div style="display: flex; gap: 12px; margin-top: 20px; width: 100%;">
-                <button class="password-submit-btn" style="flex: 1; margin-top: 0; height: 42px;" onclick="saveGeminiApiKey()">
-                    <span data-i18n="save_encrypted_btn">암호화 저장</span>
-                    <i class="fa-solid fa-lock"></i>
-                </button>
-                <button class="btn-minimal" style="flex: 1; justify-content: center; height: 42px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;" onclick="closeSettingsModal()">
-                    <span data-i18n="close_btn">닫기</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- 3D PERSPECTIVE BACKGROUND STACK -->
     <div class="perspective-container">
         <!-- Infinite flowing perspective grid floor -->
@@ -3919,7 +3877,7 @@
                 </div>
                 
                 <div class="sidebar-settings-wrap" style="position: relative;">
-                    <button class="sidebar-gear-btn" id="btn-sidebar-gear" onclick="toggleSidebarSettingsPopover(event)" title="설정 (테마 / API Key)">
+                    <button class="sidebar-gear-btn" id="btn-sidebar-gear" onclick="toggleSidebarSettingsPopover(event)" title="설정 (테마)">
                         <i class="fa-solid fa-gear"></i>
                         <span id="proxy-badge-sidebar" style="display:none;position:absolute;top:-2px;right:-2px;width:10px;height:10px;background:var(--sb-accent,#00754A);border-radius:50%;border:2px solid var(--bg-base,#0b1613);"></span>
                     </button>
@@ -3929,10 +3887,6 @@
                         <button class="settings-popover-item" onclick="toggleTheme(); hideSidebarSettingsPopover();">
                             <i class="fa-solid fa-circle-half-stroke"></i>
                             <span>테마 전환 (Light/Dark)</span>
-                        </button>
-                        <button class="settings-popover-item" onclick="openSettingsModal(); hideSidebarSettingsPopover();">
-                            <i class="fa-solid fa-key"></i>
-                            <span>Gemini API Key 설정</span>
                         </button>
                     </div>
                 </div>
@@ -4172,13 +4126,7 @@
                 password_placeholder: '암호 입력',
                 password_error: '올바르지 않은 암호입니다. 다시 입력해 주세요.',
                 unlock_btn: '잠금 해제',
-                api_settings_title: 'API Settings',
-                api_settings_subtitle: 'Gemini API 키를 입력하면 AES-GCM으로 암호화하여 이 기기의 로컬 저장소에만 안전하게 보관합니다.',
-                api_key_placeholder: 'Gemini API Key 입력',
-                api_key_warning: '<i class="fa-solid fa-shield-halved" style="color:var(--accent-neon);"></i> <strong>보안 저장 안내</strong><br>입력한 API 키는 <strong>AES-GCM 256-bit</strong>으로 즉시 암호화되어 이 기기(localStorage)에만 저장됩니다. 외부 서버로 전송되지 않습니다.<br>빈칸으로 저장하면 기존 저장된 키가 삭제됩니다.',
-                save_encrypted_btn: '암호화 저장',
                 close_btn: '닫기',
-                landing_nav_api_settings: '<i class="fa-solid fa-key"></i> API 설정',
                 landing_nav_dashboard: '<i class="fa-solid fa-desktop"></i> 워크스페이스 대시보드',
                 badge_autonomous_agent: '<i class="fa-solid fa-wand-magic-sparkles"></i> Autonomous AI Agent Team',
                 landing_title: 'Planning-in-the-Loop <span>Agent</span>',
@@ -4216,13 +4164,7 @@
                 password_placeholder: 'Enter Password',
                 password_error: 'Incorrect password. Please try again.',
                 unlock_btn: 'Unlock Workspace',
-                api_settings_title: 'API Settings',
-                api_settings_subtitle: 'Enter your Gemini API Key. It will be encrypted using AES-GCM and stored only in your browser\'s local storage.',
-                api_key_placeholder: 'Enter Gemini API Key',
-                api_key_warning: '<i class="fa-solid fa-shield-halved" style="color:var(--accent-neon);"></i> <strong>Encrypted Storage Notice</strong><br>The API Key is immediately encrypted with <strong>AES-GCM 256-bit</strong> and stored locally in your browser. It is never sent to the server.<br>Leaving it blank deletes the stored key.',
-                save_encrypted_btn: 'Save Encrypted',
                 close_btn: 'Close',
-                landing_nav_api_settings: '<i class="fa-solid fa-key"></i> API Settings',
                 landing_nav_dashboard: '<i class="fa-solid fa-desktop"></i> Workspace Dashboard',
                 badge_autonomous_agent: '<i class="fa-solid fa-wand-magic-sparkles"></i> Autonomous AI Agent Team',
                 landing_title: 'Planning-in-the-Loop <span>Agent</span>',
@@ -4522,93 +4464,6 @@
             }
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        //  AES-GCM 암호화 헬퍼 (Web Crypto API — 서버 전송 없음, 로컬 전용)
-        // ═══════════════════════════════════════════════════════════════
-        const PITL_CRYPTO_KEY = 'pitl_enc_api_key';
-
-        /** 기기 핑거프린트 기반의 256-bit 파생 키 생성 */
-        async function _deriveCryptoKey() {
-            // 브라우저 환경이 고유한 소금(salt): UA + 화면 크기 조합
-            const fingerprint = (navigator.userAgent || '') +
-                '|' + screen.width + 'x' + screen.height +
-                '|PITL-AES-SALT-v1';
-            const enc = new TextEncoder();
-            const keyMaterial = await crypto.subtle.importKey(
-                'raw', enc.encode(fingerprint), 'PBKDF2', false, ['deriveKey']
-            );
-            return crypto.subtle.deriveKey(
-                {
-                    name: 'PBKDF2',
-                    salt: enc.encode('pitl-gemini-key-salt'),
-                    iterations: 100000,
-                    hash: 'SHA-256'
-                },
-                keyMaterial,
-                { name: 'AES-GCM', length: 256 },
-                false,
-                ['encrypt', 'decrypt']
-            );
-        }
-
-        /** 평문 API 키를 AES-GCM으로 암호화하고 base64 payload 반환 */
-        async function _encryptApiKey(plainKey) {
-            const cryptoKey = await _deriveCryptoKey();
-            const iv = crypto.getRandomValues(new Uint8Array(12));  // 96-bit IV
-            const enc = new TextEncoder();
-            const cipherBuffer = await crypto.subtle.encrypt(
-                { name: 'AES-GCM', iv },
-                cryptoKey,
-                enc.encode(plainKey)
-            );
-            // 결과: [iv(12B) + ciphertext] → base64
-            const combined = new Uint8Array(iv.byteLength + cipherBuffer.byteLength);
-            combined.set(iv, 0);
-            combined.set(new Uint8Array(cipherBuffer), iv.byteLength);
-            return btoa(String.fromCharCode(...combined));
-        }
-
-        /** base64 payload를 복호화하여 평문 API 키 반환. 실패 시 null 반환 */
-        async function _decryptApiKey(payload) {
-            try {
-                const cryptoKey = await _deriveCryptoKey();
-                const combined = Uint8Array.from(atob(payload), c => c.charCodeAt(0));
-                const iv = combined.slice(0, 12);
-                const cipherBuffer = combined.slice(12);
-                const plainBuffer = await crypto.subtle.decrypt(
-                    { name: 'AES-GCM', iv },
-                    cryptoKey,
-                    cipherBuffer
-                );
-                return new TextDecoder().decode(plainBuffer);
-            } catch (e) {
-                console.warn('[PITL] 복호화 실패 (다른 기기의 키이거나 손상된 데이터):', e.message);
-                return null;
-            }
-        }
-
-        /** 저장된 암호화 키를 복호화하여 반환. 없거나 실패 시 null */
-        async function getDecryptedApiKey() {
-            const stored = localStorage.getItem(PITL_CRYPTO_KEY);
-            if (!stored) return null;
-            return _decryptApiKey(stored);
-        }
-
-        /** 페이지 로드 시 구버전 평문 키가 있으면 자동 마이그레이션 (암호화 재저장) */
-        async function _initApiKeyCard() {
-            const legacy = localStorage.getItem('pitl_gemini_api_key');
-            if (legacy) {
-                try {
-                    const enc = await _encryptApiKey(legacy);
-                    localStorage.setItem(PITL_CRYPTO_KEY, enc);
-                    localStorage.removeItem('pitl_gemini_api_key');
-                    console.info('[PITL] 평문 API 키 → AES-GCM 자동 마이그레이션 완료');
-                } catch(e) { /* 마이그레이션 실패 시 평문 키 유지 */ }
-            }
-        }
-
-        // ───────────────────────────────────────────────────────────────
-        //  모달 (설정 버튼용 보조 진입점) — 내부적으로 암호화 사용
         // ───────────────────────────────────────────────────────────────
         // Custom Alert Modal (replaces native alert())
         // Usage: pitlAlert(message, type='info'|'warn'|'error'|'success', title='')
@@ -4658,221 +4513,48 @@
 
         // ───────────────────────────────────────────────────────────────
 
-        async function openSettingsModal() {
-            const overlay = document.getElementById('pitl-settings-overlay');
-            const input = document.getElementById('pitl-gemini-key-input');
-            if (overlay) {
-                overlay.style.display = 'flex';
-                overlay.style.opacity = '1';
-                overlay.style.transform = 'scale(1)';
-            }
-            if (input) {
-                // 복호화된 키를 모달에 표시
-                const plain = await getDecryptedApiKey();
-                input.value = plain || '';
-                input.type = 'password';
-                input.focus();
-            }
-            // 로컬 프록시 상태 안내 배너
-            let proxyInfo = document.getElementById('pitl-proxy-status-banner');
-            if (!proxyInfo) {
-                proxyInfo = document.createElement('div');
-                proxyInfo.id = 'pitl-proxy-status-banner';
-                proxyInfo.style.cssText = 'margin:12px 0 0;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.5;display:none;';
-                const form = overlay ? overlay.querySelector('.password-card') || overlay : overlay;
-                const saveBtn = overlay ? overlay.querySelector('button') : null;
-                if (saveBtn) saveBtn.parentNode.insertBefore(proxyInfo, saveBtn);
-            }
-            if (window.PITL_USE_LOCAL_PROXY) {
-                proxyInfo.style.display = 'block';
-                proxyInfo.style.background = 'rgba(16,185,129,0.12)';
-                proxyInfo.style.border = '1px solid rgba(16,185,129,0.35)';
-                proxyInfo.style.color = '#10b981';
-                proxyInfo.innerHTML = '<i class="fa-solid fa-circle-check"></i> <strong>로컬 서버 연결됨</strong> — API Key 불필요<br><span style="color:var(--text-secondary,#888);font-size:11px;">서버의 .env GEMINI_API_KEY가 자동으로 사용됩니다.</span>';
-            } else {
-                proxyInfo.style.display = 'none';
-            }
-        }
-
-        function closeSettingsModal() {
-            const overlay = document.getElementById('pitl-settings-overlay');
-            if (overlay) {
-                overlay.style.display = 'none';
-            }
-        }
-
-        function _showApiKeyToast(msg, isError = false) {
-            let t = document.getElementById('api-key-toast');
-            if (!t) {
-                t = document.createElement('div');
-                t.id = 'api-key-toast';
-                t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);' +
-                    'background:rgba(15,15,20,0.95);backdrop-filter:blur(12px);' +
-                    'border:1px solid rgba(255,255,255,0.12);border-radius:10px;' +
-                    'padding:12px 20px;font-size:13px;color:#fff;z-index:99999;' +
-                    'box-shadow:0 8px 32px rgba(0,0,0,0.5);transition:opacity .3s;';
-                document.body.appendChild(t);
-            }
-            t.style.borderColor = isError ? 'rgba(239,68,68,0.4)' : 'rgba(16,185,129,0.4)';
-            t.textContent = msg;
-            t.style.opacity = '1';
-            clearTimeout(t._timer);
-            t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3200);
-        }
-
-        async function saveGeminiApiKey() {
-            const input = document.getElementById('pitl-gemini-key-input');
-            if (!input) return;
-            const key = input.value.trim();
-            if (key) {
-                try {
-                    const enc = await _encryptApiKey(key);
-                    localStorage.setItem(PITL_CRYPTO_KEY, enc);
-                    localStorage.removeItem('pitl_gemini_api_key');
-                    closeSettingsModal();
-                    _showApiKeyToast('🔒 API Key가 AES-GCM으로 암호화 저장되었습니다.');
-                } catch (e) {
-                    pitlAlert('암호화 저장 실패: ' + e.message, 'error', 'API Key 저장 오류');
-                }
-            } else {
-                localStorage.removeItem(PITL_CRYPTO_KEY);
-                localStorage.removeItem('pitl_gemini_api_key');
-                closeSettingsModal();
-                _showApiKeyToast('🗑️ 저장된 API Key가 삭제되었습니다.');
-            }
-        }
-
-        // --- CLIENT-SIDE DIRECT GEMINI ORCHESTRATION ---
+        // --- LOCAL CLAUDE ORCHESTRATION (브라우저 → 로컬 서버 /api/llm → claude -p) ---
         const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+        // 서버 측 claude -p 타임아웃(기본 10분)보다 약간 길게 둔다
+        const CLAUDE_CLIENT_TIMEOUT_MS = 11 * 60 * 1000;
 
-        async function callGeminiClientSide(apiKey, systemInstruction, userPrompt, logCallback = null, customMaxTokens = 8192) {
-            // ── Localhost Test Mode (API Key missing fallback support) ──────────
-            if (!apiKey || apiKey === 'LOCAL_TEST_DEMO_KEY') {
-                if (logCallback) logCallback(t('[ℹ️ 로컬호스트 테스트 모드] API Key 없이 로컬 고성능 기획 엔진으로 즉시 생성합니다.', '[ℹ️ Localhost Test Mode] Generating via local high-performance planning engine without API key.'));
-                throw new Error('Localhost demo fallback trigger');
-            }
+        function showLocalServerRequired() {
+            pitlAlert(
+                t('로컬 PITL 서버에 연결할 수 없거나 Claude CLI를 찾을 수 없습니다.<br>터미널에서 <code>npm start</code>로 서버를 실행한 뒤 <code>http://localhost:4000</code> 으로 접속해 주세요.',
+                  'Cannot reach the local PITL server or the Claude CLI.<br>Run <code>npm start</code> and open <code>http://localhost:4000</code>.'),
+                'error', t('로컬 서버 필요', 'Local Server Required'));
+        }
 
-            // ── Local Proxy Mode (OAuth-like) ──────────────────────────────────
-            // localhost에서 실행 중이면 서버 프록시를 통해 API Key 없이 호출
-            if (window.PITL_USE_LOCAL_PROXY) {
-                const currentLangP = localStorage.getItem('pitl_lang') || 'ko';
-                let finalPromptP = userPrompt;
-                if (currentLangP === 'en') finalPromptP += '\n\nCRITICAL: You must write the entire output/content/report in English. Do not write any Korean.';
-                
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 35000); // 35s strict client-side timeout
-
-                try {
-                    const res = await fetch('/api/proxy-gemini', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ systemInstruction, userPrompt: finalPromptP, maxTokens: customMaxTokens }),
-                        signal: controller.signal
-                    });
-                    clearTimeout(timeoutId);
-
-                    if (!res.ok) {
-                        const errData = await res.json().catch(() => ({}));
-                        throw new Error(errData.error || `Proxy error: ${res.status}`);
-                    }
-                    const data = await res.json();
-                    if (!data.text) throw new Error('프록시 서버에서 응답 텍스트를 받지 못했습니다.');
-                    return data.text;
-                } catch (proxyErr) {
-                    clearTimeout(timeoutId);
-                    const isAbort = proxyErr.name === 'AbortError';
-                    const errMsg = isAbort ? '프록시 서버 응답 시간 초과 (35초 경과). 백업 템플릿으로 전환합니다.' : proxyErr.message;
-                    if (logCallback) logCallback(`[로컬 프록시 경고] ${errMsg}`);
-                    throw new Error(errMsg);
-                }
-            }
-            // ── Direct Gemini Call (GitHub Pages / API Key mode) ────────────────
+        async function callClaudeLocal(systemInstruction, userPrompt, logCallback = null) {
             const currentLang = localStorage.getItem('pitl_lang') || 'ko';
             let finalPrompt = userPrompt;
-            if (currentLang === 'en') {
-                finalPrompt += "\n\nCRITICAL: You must write the entire output/content/report in English. Do not write any Korean.";
-            }
+            if (currentLang === 'en') finalPrompt += '\n\nCRITICAL: You must write the entire output/content/report in English. Do not write any Korean.';
 
-            if (!window.pitlPreferredModelIndex) {
-                window.pitlPreferredModelIndex = 0;
-            }
-            const modelsToTry = [
-                'gemini-2.5-flash',
-                'gemini-2.0-flash',
-                'gemini-2.0-flash-lite'
-            ];
-            let lastError = null;
-            
-            for (let offset = 0; offset < modelsToTry.length; offset++) {
-                const modelIdx = (window.pitlPreferredModelIndex + offset) % modelsToTry.length;
-                const model = modelsToTry[modelIdx];
-                // All modern models use v1beta for generateContent
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-                
-                const requestBody = {
-                    contents: [
-                        {
-                            role: "user",
-                            parts: [{ text: `${systemInstruction}\n\nUser Request/Context:\n${finalPrompt}` }]
-                        }
-                    ],
-                    generationConfig: {
-                        temperature: 0.2,
-                        maxOutputTokens: customMaxTokens
-                    }
-                };
-                
-                let retries = 3;
-                let delay = 3000; // Start with 3s delay
-                
-                while (retries > 0) {
-                    try {
-                        const response = await fetch(url, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(requestBody)
-                        });
-                        
-                        if (response.status === 429) {
-                            throw new Error("QUOTA_EXCEEDED");
-                        }
-                        
-                        if (!response.ok) {
-                            const errData = await response.json().catch(() => ({}));
-                            const errMsg = errData.error?.message || `HTTP error! status: ${response.status}`;
-                            if (errMsg.toLowerCase().includes('quota') || errMsg.toLowerCase().includes('rate limit') || errMsg.toLowerCase().includes('exceeded')) {
-                                throw new Error("QUOTA_EXCEEDED");
-                            }
-                            throw new Error(errMsg);
-                        }
-                        
-                        const data = await response.json();
-                        const candidate = data.candidates?.[0];
-                        const text = candidate?.content?.parts?.[0]?.text;
-                        if (!text) {
-                            throw new Error("No response text from Gemini API");
-                        }
-                        window.pitlPreferredModelIndex = modelIdx;
-                        return text;
-                    } catch (error) {
-                        if (error.message === "QUOTA_EXCEEDED" && retries > 1) {
-                            if (logCallback) {
-                                logCallback(t(`[⚠️ 할당량 초과 감지] API 호출 제한에 도달했습니다. ${delay/1000}초 후 자동 재시도합니다... (남은 재시도: ${retries - 1}회)`, `[⚠️ Quota Exceeded] Rate limit reached. Auto retrying in ${delay/1000}s... (Retries left: ${retries - 1})`));
-                            }
-                            await sleep(delay);
-                            retries--;
-                            delay *= 2; // Exponential backoff
-                            continue;
-                        }
-                        
-                        console.warn(`[Model Fallback Retry] ${model} retry error: ${error.message}`);
-                        lastError = error;
-                        break;
-                    }
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), CLAUDE_CLIENT_TIMEOUT_MS);
+            try {
+                const res = await fetch('/api/llm', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ systemInstruction, userPrompt: finalPrompt }),
+                    signal: controller.signal
+                });
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.error || `Local server error: ${res.status}`);
                 }
+                const data = await res.json();
+                if (!data.text) throw new Error(t('로컬 Claude 엔진에서 응답 텍스트를 받지 못했습니다.', 'No response text from local Claude engine.'));
+                return data.text;
+            } catch (err) {
+                const errMsg = err.name === 'AbortError'
+                    ? t('로컬 Claude 응답 시간 초과. 백업 템플릿으로 전환합니다.', 'Local Claude timed out. Switching to backup template.')
+                    : err.message;
+                if (logCallback) logCallback(`[로컬 Claude 경고] ${errMsg}`);
+                throw new Error(errMsg);
+            } finally {
+                clearTimeout(timeoutId);
             }
-            
-            throw new Error(t(`모든 모델 호출 및 재시도에 실패했습니다. 최종 에러: ${lastError.message}`, `All model calls and retries failed. Final error: ${lastError.message}`));
         }
 
         function generateFallbackDoc(type, title, idea) {
@@ -5758,7 +5440,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
             }
         }
 
-        async function startProductPlanningClientSide(idea, apiKey) {
+        async function startProductPlanningClientSide(idea) {
             if (!idea || typeof idea !== 'string') {
                 console.error('[Pipeline Error] Invalid idea parameter:', idea);
                 return;
@@ -6034,8 +5716,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 
                 let onePagerContent = "";
                 try {
-                    onePagerContent = await callGeminiClientSide(
-                        apiKey,
+                    onePagerContent = await callClaudeLocal(
                         "당신은 15년 이상 실무 경력의 전략 컨설턴트 출신 CPO(Chief Product Officer)이자, DHK 5단계 기획 방법론에 정통한 Product Strategist 에이전트입니다. 단순 설명이 아닌, 현장 관찰에서 원칙으로 올라가는 성찰적 분석을 수행합니다. 정량적 근거와 구체적 수치를 동반한 명세를 작성하며, AI 특유의 상투어구 없이 자연스럽고 명료한 한글로 작성합니다.",
                         strategistPrompt,
                         (msg) => logAgentClientSide('strategist', msg)
@@ -6108,8 +5789,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 
                 let threeCContent = "";
                 try {
-                    threeCContent = await callGeminiClientSide(
-                        apiKey,
+                    threeCContent = await callClaudeLocal(
                         "당신은 오마에 겐이치의 3C 프레임워크와 마이클 포터의 5 Forces를 융합 적용하는 15년 경력의 전략 컨설턴트입니다. 시장의 미시적 행동 데이터와 거시적 트렌드를 교차 분석하여, Customer-Competitor-Company 교집합의 '전략적 공백 지대(Strategic White Space)'를 정밀 도출합니다. AI 티 없이 자연스럽고 명료한 한글로 작성합니다.",
                         threeCPrompt,
                         (msg) => logAgentClientSide('strategist', msg)
@@ -6200,8 +5880,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 
                 let swotContent = "";
                 try {
-                    swotContent = await callGeminiClientSide(
-                        apiKey,
+                    swotContent = await callClaudeLocal(
                         "당신은 BCG 매트릭스, GE-McKinsey 9-Box, 그리고 TOWS 교차 전략 매트릭스에 정통한 전략 기획 전문가입니다. 내부 역량과 외부 환경을 입체적으로 교차 분석하여, 실행 가능한 SO/ST/WO/WT 전략 로드맵과 정량적 우선순위를 도출합니다. AI 티 없이 자연스러운 한국어로 작성합니다.",
                         swotPrompt,
                         (msg) => logAgentClientSide('strategist', msg)
@@ -6261,8 +5940,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 
                 let stpContent = "";
                 try {
-                    stpContent = await callGeminiClientSide(
-                        apiKey,
+                    stpContent = await callClaudeLocal(
                         "당신은 코틀러의 STP 프레임워크와 크리스텐슨의 JTBD 이론을 융합 적용하는 마케팅 전략가입니다. 세그먼트별 TAM/SAM/SOM 시장 규모를 합리적으로 추정하고, 페르소나의 하루 일과 속 구체적 터치포인트를 매핑하며, 2축 포지셔닝 맵을 정밀 설계합니다.",
                         stpPrompt,
                         (msg) => logAgentClientSide('strategist', msg)
@@ -6337,8 +6015,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 
                 let meceContent = "";
                 try {
-                    meceContent = await callGeminiClientSide(
-                        apiKey,
+                    meceContent = await callClaudeLocal(
                         "당신은 McKinsey의 Issue Tree와 Hypothesis-Driven 방법론에 정통한 전략 분석가입니다. 상호 배제(ME)와 전체 포괄(CE) 원칙을 수학적 엄밀함으로 적용하여, 5대 도메인의 논리적 완결성을 보장합니다. 각 분해 레벨에서 '이 외에 빠진 것은 없는가?'를 반복 자문하여 구조적 완전성을 검증합니다.",
                         mecePrompt,
                         (msg) => logAgentClientSide('strategist', msg)
@@ -6354,7 +6031,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 
                 // Save 50% interim state for resumption
                 window.pitlPendingState = {
-                    apiKey, cleanTitle, idea, onePagerContent, threeCContent, swotContent, stpContent, meceContent
+                    cleanTitle, idea, onePagerContent, threeCContent, swotContent, stpContent, meceContent
                 };
                 window.pitlWaitingGate50 = true;
 
@@ -6396,7 +6073,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
         async function resumePlanningAfterMece() {
             if (!window.pitlPendingState) return;
             window.pitlWaitingGate50 = false;
-            const { apiKey, cleanTitle, idea, onePagerContent, threeCContent, swotContent, stpContent, meceContent } = window.pitlPendingState;
+            const { cleanTitle, idea, onePagerContent, threeCContent, swotContent, stpContent, meceContent } = window.pitlPendingState;
             const textarea = document.getElementById('user-idea-input') || document.getElementById('idea-textarea');
 
             // Lock UI during resumption
@@ -6439,8 +6116,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 
                 let prdContent = "";
                 try {
-                    prdContent = await callGeminiClientSide(
-                        apiKey,
+                    prdContent = await callClaudeLocal(
                         "당신은 Google/Meta 수준의 PRD 작성 역량을 보유한 시니어 Product Manager입니다. 기능 요구사항마다 고유 REQ-ID를 부여하고, 각 요건에 대해 인수 조건(Acceptance Criteria)을 Given-When-Then 형식으로 명시합니다. 엣지 케이스와 에러 시나리오를 빠짐없이 정의하며, 정량적 성공 지표(Primary/Secondary KPIs)를 테이블로 구조화합니다.",
                         prdPrompt,
                         (msg) => logAgentClientSide('analyst', msg)
@@ -6466,8 +6142,7 @@ ${idea} 사업의 내부 자원 분석 및 외부 마케팅 환경 변화를 바
                 
                 let uxContent = "";
                 try {
-                    uxContent = await callGeminiClientSide(
-                        apiKey,
+                    uxContent = await callClaudeLocal(
                         "당신은 ASCII 와이어프레임을 텍스트 아트로 정밀 설계하는 UX Architect 에이전트입니다.",
                         uxPrompt,
                         (msg) => logAgentClientSide('architect', msg)
@@ -6515,8 +6190,7 @@ ${uxContent.slice(0, 2500)}
                 
                 let prototypeContent = "";
                 try {
-                    const rawProto = await callGeminiClientSide(
-                        apiKey,
+                    const rawProto = await callClaudeLocal(
                         "당신은 PRD와 와이어프레임을 바탕으로 삼성 갤럭시 Z 폴드 8(Galaxy Z Fold 8) 대화면 및 커버 스크린에 최적화된 인터랙티브 HTML5 프로토타입 코드를 작성하는 수석 프론트엔드 엔지니어입니다. 설명이나 마크다운 백틱 없이 오직 <!DOCTYPE html>로 시작하는 완성된 단일 HTML 코드만 출력합니다.",
                         prototypePrompt,
                         (msg) => logAgentClientSide('architect', msg),
@@ -6569,8 +6243,7 @@ ${uxContent.slice(0, 2500)}
                 
                 let auditContent = "";
                 try {
-                    auditContent = await callGeminiClientSide(
-                        apiKey,
+                    auditContent = await callClaudeLocal(
                         "당신은 기획-설계-개발 전 단계의 삼각 정합성(Triangular Consistency)을 검증하는 시니어 QA 에이전트입니다. 1-Pager의 비즈니스 목표 → PRD의 REQ-ID → 와이어프레임의 CTA 버튼까지 추적 가능성(Traceability)을 100% 보장하며, 누락·모순·과잉 요건을 식별하여 정량적 매칭률을 산출합니다.",
                         reviewerPrompt,
                         (msg) => logAgentClientSide('reviewer', msg)
@@ -6631,7 +6304,7 @@ ${uxContent.slice(0, 2500)}
                 if (textarea) textarea.disabled = false;
             }
         }
-        async function startCascadingRegenerationClientSide(resumeFrom, apiKey) {
+        async function startCascadingRegenerationClientSide(resumeFrom) {
             currentConsoleLogs = [];
             document.getElementById('badge-qa-status').style.display = 'none';
             document.getElementById('btn-copy').disabled = true;
@@ -6747,8 +6420,7 @@ ${uxContent.slice(0, 2500)}
                     ## Appendix
                     `;
                     
-                    prdContent = await callGeminiClientSide(
-                        apiKey,
+                    prdContent = await callClaudeLocal(
                         "당신은 Google/Meta 수준의 PRD 작성 역량을 보유한 시니어 Product Manager입니다. 기능 요구사항마다 고유 REQ-ID를 부여하고, 각 요건에 대해 인수 조건(Acceptance Criteria)을 Given-When-Then 형식으로 명시합니다. 엣지 케이스와 에러 시나리오를 빠짐없이 정의하며, 정량적 성공 지표(Primary/Secondary KPIs)를 테이블로 구조화합니다.",
                         prdPrompt,
                         (msg) => logAgentClientSide('analyst', msg)
@@ -6772,8 +6444,7 @@ ${uxContent.slice(0, 2500)}
                     반드시 마크다운 블록 내에 테두리선(┌, ┐, │, ─, └, ┘)과 대괄호([])를 이용한 정밀한 ASCII 텍스트 아트를 완성하라.
                     `;
                     
-                    uxContent = await callGeminiClientSide(
-                        apiKey,
+                    uxContent = await callClaudeLocal(
                         "당신은 ASCII 와이어프레임을 텍스트 아트로 설계하는 UX Architect 에이전트입니다.",
                         uxPrompt,
                         (msg) => logAgentClientSide('architect', msg)
@@ -6824,8 +6495,7 @@ ${uxContent.slice(0, 2500)}
                 - 즉시 조치 필요(Critical), 개선 권고(Major), 참고 사항(Minor) 3등급으로 분류하여 제시하라.
                 `;
                 
-                auditContent = await callGeminiClientSide(
-                    apiKey,
+                auditContent = await callClaudeLocal(
                     "당신은 기획-설계-개발 전 단계의 삼각 정합성(Triangular Consistency)을 검증하는 시니어 QA 에이전트입니다. 1-Pager의 비즈니스 목표 → PRD의 REQ-ID → 와이어프레임의 CTA 버튼까지 추적 가능성(Traceability)을 100% 보장하며, 누락·모순·과잉 요건을 식별하여 정량적 매칭률을 산출합니다.",
                     reviewerPrompt,
                     (msg) => logAgentClientSide('reviewer', msg)
@@ -6863,8 +6533,7 @@ ${uxTrimmed}
 
 IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no code fences, no explanation text before or after.`;
                     
-                    let rawProto = await callGeminiClientSide(
-                        apiKey,
+                    let rawProto = await callClaudeLocal(
                         "당신은 PRD와 와이어프레임을 실제 동작하는 인터랙티브 HTML 프로토타입으로 변환하는 프론트엔드 개발 에이전트입니다.",
                         prototypePromptClient,
                         (msg) => logAgentClientSide('architect', msg),
@@ -7276,21 +6945,20 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
         resizeCanvas();
         animateStars();
         loadHistoryList();
-        _initApiKeyCard();  // API 키 카드 상태 초기화 + 구버전 키 자동 마이그레이션
 
         // ── Local Proxy Detection (OAuth-like) ─────────────────────────────────
-        // localhost:4000/api/proxy-status 를 조용히 호출하여 로컬 서버 유무 감지
+        // 같은 origin의 /api/proxy-status 를 호출하여 로컬 서버 + Claude CLI 사용 가능 여부 감지
         window.PITL_USE_LOCAL_PROXY = false;
         async function detectLocalProxy() {
             // GitHub Pages 등 외부 도메인에서는 시도하지 않음
             if (!window.location.hostname.match(/^(localhost|127\.0\.0\.1)$/)) return;
             try {
-                const res = await fetch('http://localhost:4000/api/proxy-status', { signal: AbortSignal.timeout(2000) });
+                const res = await fetch('/api/proxy-status', { signal: AbortSignal.timeout(3000) });
                 if (!res.ok) return;
                 const data = await res.json();
                 if (data.ok && data.proxyAvailable) {
                     window.PITL_USE_LOCAL_PROXY = true;
-                    console.info('[PITL Proxy] 로컬 서버 감지 완료 — API Key 없이 서버 프록시 모드로 동작합니다.');
+                    console.info('[PITL] 로컬 서버 감지 완료 — claude -p 엔진으로 동작합니다.');
                     // 뱃지 표시
                     const n = document.getElementById('proxy-badge-nav');
                     const s = document.getElementById('proxy-badge-sidebar');
@@ -7298,15 +6966,15 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                     if (s) s.style.display = 'block';
                     // API 설정 버튼 tooltip 갱신
                     const btnNav = document.getElementById('btn-api-settings-nav');
-                    if (btnNav) btnNav.title = '🟢 로컬 서버 연결됨 (API Key 불필요)';
+                    if (btnNav) btnNav.title = '🟢 로컬 서버 연결됨 (Claude CLI)';
                     const btnSide = document.getElementById('btn-api-settings-sidebar');
-                    if (btnSide) btnSide.title = '🟢 로컬 서버 연결됨 (API Key 불필요)';
+                    if (btnSide) btnSide.title = '🟢 로컬 서버 연결됨 (Claude CLI)';
                 }
             } catch (e) {
-                // 서버 없음 — 정상 흐름 (GitHub Pages 등)
+                // 서버 없음 — 생성 시 안내 모달 표시
             }
         }
-        detectLocalProxy();
+        window.PITL_PROXY_READY = detectLocalProxy();
         
         // Timeout to ensure DOM finishes rendering
         setTimeout(init3dTiltEffects, 200);
@@ -7804,250 +7472,13 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                 return;
             }
 
-            // Check if client-side Gemini API key is configured
-            const geminiApiKey = await getDecryptedApiKey();
-            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '';
-
-            if (geminiApiKey) {
-                startProductPlanningClientSide(idea, geminiApiKey);
+            // 로컬 서버(claude -p 엔진) 연결 확인 후 실행
+            await window.PITL_PROXY_READY;
+            if (!window.PITL_USE_LOCAL_PROXY) {
+                showLocalServerRequired();
                 return;
             }
-
-            // ── 로컬호스트 / 로컬 프록시 모드: API Key가 없어도 바로 즉시 테스트 가동 ──
-            if (isLocalhost || window.PITL_USE_LOCAL_PROXY) {
-                console.log('[Localhost Test Mode] API Key not set, running in instant localhost test mode.');
-                startProductPlanningClientSide(idea, 'LOCAL_TEST_DEMO_KEY');
-                return;
-            }
-
-            if (window.location.hostname.includes('github.io')) {
-                startProductPlanningClientSide(idea, 'LOCAL_TEST_DEMO_KEY');
-                return;
-            }
-
-            // Reset workspace states
-            generatedDocs = null;
-            currentConsoleLogs = [];
-            currentActiveStep = 0;
-            document.getElementById('badge-qa-status').style.display = 'none';
-            document.getElementById('btn-copy').disabled = true;
-            document.getElementById('btn-pdf').disabled = true;
-            document.getElementById('btn-edit').disabled = true;
-
-            // Opacity and styling lock of buttons
-            document.getElementById('btn-copy').style.opacity = '0.5';
-            document.getElementById('btn-pdf').style.opacity = '0.5';
-            document.getElementById('btn-edit').style.opacity = '0.5';
-            document.getElementById('btn-copy').style.cursor = 'not-allowed';
-            document.getElementById('btn-pdf').style.cursor = 'not-allowed';
-            document.getElementById('btn-edit').style.cursor = 'not-allowed';
-
-            // Disable prompt submission button on landing (if returned to)
-            document.getElementById('btn-submit-planning').disabled = true;
-            textarea.disabled = true;
-
-            // Lock all browser tabs initially
-            document.querySelectorAll('.chrome-tab').forEach(el => {
-                el.classList.add('disabled');
-                el.classList.remove('active');
-            });
-            const navFirst4 = document.getElementById('nav-1pager');
-            navFirst4.classList.remove('disabled');
-            navFirst4.classList.add('active');
-
-            document.getElementById('mock-browser-url').value = 'pitl.ai/workspace/strategist-1pager';
-
-            // Inject first System orchestrator notification in Middle panel
-            const chatContainer = document.getElementById('chat-messages-container');
-            if (chatContainer) {
-                chatContainer.innerHTML = `
-                    <div class="system-notification" data-i18n-msg="기획 스트리밍 프로세스 시작">
-                        <i class="fa-solid fa-play"></i> <span class="msg-text">${t("기획 스트리밍 프로세스 시작", "Starting Planning Stream Process")}</span>
-                    </div>
-                `;
-            }
-
-            // Inject terminal shell container with animated Progress Bar in Right Panel Computer viewer
-            const targetArea = document.getElementById('viewer-main-content');
-            targetArea.innerHTML = `
-                <div class="document-wrapper" style="padding: 20px;">
-                    <!-- Animated Progress Bar Container -->
-                    <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 20px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <span class="status-dot-pulse"></span>
-                                <span id="progress-stage-label" style="font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-primary);">
-                                    ${t("기획 수정안 연쇄 재기획 진행 중...", "Cascading regeneration in progress...")}
-                                </span>
-                            </div>
-                            <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800; color: var(--accent-neon); letter-spacing: -0.5px;">
-                                0%
-                            </span>
-                        </div>
-                        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; position: relative;">
-                            <div id="pipeline-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue)); border-radius: 4px; transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="terminal-container">
-                        <div class="terminal-header">
-                            <div class="terminal-buttons">
-                                <div class="t-btn tb-red"></div>
-                                <div class="t-btn tb-yellow"></div>
-                                <div class="t-btn tb-green"></div>
-                            </div>
-                            <div class="terminal-title">bash - pitl-orchestrator.sh</div>
-                            <div></div>
-                        </div>
-                        <div class="terminal-body" id="live-console-target" style="max-height: 440px; overflow-y: auto;">
-                            <div class="console-log-area" id="console-logs-container">
-                                <!-- Streamed raw terminal logs go here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Start SSE Event Source Connection
-            const currentLang = localStorage.getItem('pitl_lang') || 'ko';
-            const eventSource = new EventSource(`/api/generate-stream?idea=${encodeURIComponent(idea)}&lang=${currentLang}`);
-            const logsContainer = document.getElementById('console-logs-container');
-
-            eventSource.addEventListener('log', (event) => {
-                const log = JSON.parse(event.data);
-                currentConsoleLogs.push({
-                    type: 'log',
-                    time: log.time,
-                    agent: log.agent,
-                    msg: log.msg
-                });
-                
-                // 1. Log in computer raw terminal log tab
-                const logsTarget = document.getElementById('console-logs-container');
-                if (logsTarget) {
-                    const entry = document.createElement('div');
-                    entry.className = 'log-entry';
-                    entry.innerHTML = `
-                        <div>
-                            <span class="log-time">[${log.time}]</span>
-                            <span class="log-agent ${log.agent}">&lt;${log.agent}&gt;</span>
-                            <span style="color: white; font-weight: 500;">INFO</span>
-                        </div>
-                        <div class="log-msg">${translateMessage(log.msg)}</div>
-                    `;
-                    logsTarget.appendChild(entry);
-                    const scrollArea = document.getElementById('live-console-target');
-                    if (scrollArea) scrollArea.scrollTop = scrollArea.scrollHeight;
-                }
-
-                // 2. Stream as beautiful chat bubbles in middle conversational panel
-                appendAgentChatMessage(log);
-            });
-
-            eventSource.addEventListener('complete', (event) => {
-                const result = JSON.parse(event.data);
-                generatedDocs = result;
-
-                // Stop SSE
-                eventSource.close();
-
-                // Unlock Inputs
-                document.getElementById('btn-submit-planning').disabled = false;
-                textarea.disabled = false;
-
-                // Unlock Browser Tabs
-                document.querySelectorAll('.chrome-tab').forEach(el => el.classList.remove('disabled'));
-                
-                // Show QA Pass badge
-                document.getElementById('badge-qa-status').style.display = 'flex';
-                
-                // Enable action buttons
-                document.getElementById('btn-copy').disabled = false;
-                document.getElementById('btn-pdf').disabled = false;
-                document.getElementById('btn-copy').style.opacity = '1';
-                document.getElementById('btn-pdf').style.opacity = '1';
-                document.getElementById('btn-copy').style.cursor = 'pointer';
-                document.getElementById('btn-pdf').style.cursor = 'pointer';
-
-                // Complete all steps in timeline checklist
-                completeAllPipelineSteps();
-
-                // Append Final system success chat message
-                const chatContainer = document.getElementById('chat-messages-container');
-                if (chatContainer) {
-                    const successNotif = document.createElement('div');
-                    successNotif.className = 'system-notification';
-                    successNotif.setAttribute('data-i18n-msg', '에이전트 기획안 연쇄 완공 완료');
-                    successNotif.style.background = 'rgba(16, 185, 129, 0.08)';
-                    successNotif.style.borderColor = 'rgba(16, 185, 129, 0.2)';
-                    successNotif.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> <span class="msg-text">${t("에이전트 기획안 연쇄 완공 완료", "Agent planning documents completed successfully")}</span>`;
-                    chatContainer.appendChild(successNotif);
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
-                }
-
-                // Show toast notification
-                showCompletionToast(t("기획안 생성이 성공적으로 완공되었습니다!", "Planning documents generated successfully!"));
-
-                // Switch to 1-pager document tab instantly
-                switchDocument('1pager');
-                loadHistoryList();
-            });
-
-            eventSource.addEventListener('error', (event) => {
-                eventSource.close();
-                document.getElementById('btn-submit-planning').disabled = false;
-                textarea.disabled = false;
-                
-                let msg = t("기획 생성에 실패했습니다. 백엔드 Node.js 서버 작동 여부와 API 키 유효성을 확인해주세요.", "Failed to generate plan. Please verify that the backend Node.js server is running and the API Key is valid.");
-                if (event.data) {
-                    try {
-                        const err = JSON.parse(event.data);
-                        msg = err.message || msg;
-                    } catch(e){}
-                }
-                
-                currentConsoleLogs.push({
-                    type: 'error',
-                    msg: msg
-                });
-                
-                // Inject error inside right raw terminal
-                const logsTarget = document.getElementById('console-logs-container');
-                if (logsTarget) {
-                    const entry = document.createElement('div');
-                    entry.className = 'log-entry';
-                    entry.style.borderLeftColor = 'var(--accent-red)';
-                    entry.innerHTML = `
-                        <div>
-                            <span style="color: var(--accent-red); font-weight: bold;">[ERROR]</span>
-                            <span style="color: white; font-weight: 500;">FAILURE</span>
-                        </div>
-                        <div class="log-msg" style="color: var(--accent-red); font-weight: bold;">${translateMessage(msg)}</div>
-                    `;
-                    logsTarget.appendChild(entry);
-                }
-
-                // Stream error message bubble inside middle panel
-                const chatContainer = document.getElementById('chat-messages-container');
-                if (chatContainer) {
-                    const errorBubble = document.createElement('div');
-                    errorBubble.className = 'chat-bubble agent-system';
-                    errorBubble.innerHTML = `
-                        <div class="bubble-avatar" style="background: var(--accent-red)">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                        </div>
-                        <div class="bubble-content" style="border-color: rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.03);">
-                            <div class="bubble-header">
-                                <span class="bubble-author" style="color: var(--accent-red)">PITL Orchestrator</span>
-                                <span class="bubble-time">${new Date().toLocaleTimeString()}</span>
-                            </div>
-                            <div class="bubble-text" style="color: var(--accent-red); font-weight: 500;">${t("기획 프로세스 연쇄 도중 에러가 감지되었습니다", "An error was detected during the planning process")}: ${translateMessage(msg)}</div>
-                        </div>
-                    `;
-                    chatContainer.appendChild(errorBubble);
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
-                }
-            });
+            startProductPlanningClientSide(idea);
         }
 
         // Switch Computer Browser active document tab
@@ -8471,278 +7902,17 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                 return;
             }
             
-            // 로컬 프록시 모드
-            if (window.PITL_USE_LOCAL_PROXY) {
-                generatedDocs[docKey] = content;
-                isEditing = false;
-                const btnEdit2 = document.getElementById('btn-edit');
-                if (btnEdit2) { btnEdit2.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> 기획 수정'; btnEdit2.classList.remove('active'); }
-                saveClientHistoryLocally(generatedDocs);
-                startCascadingRegenerationClientSide(resumeFrom, null);
+            if (!window.PITL_USE_LOCAL_PROXY) {
+                showLocalServerRequired();
                 return;
             }
 
-            const geminiApiKey = await getDecryptedApiKey();
-            if (geminiApiKey || window.location.hostname.includes('github.io')) {
-                if (!geminiApiKey) {
-                    pitlAlert("GitHub Pages 환경에서는 <strong>Gemini API Key</strong>가 필요합니다.<br>아래 'Gemini API Key 설정' 카드에 API Key를 먼저 저장해 주세요.", 'warn', 'API Key 필요');
-                    return;
-                }
-                
-                // Save locally in active memory
-                generatedDocs[docKey] = content;
-                isEditing = false;
-                
-                const btnEdit = document.getElementById('btn-edit');
-                if (btnEdit) {
-                    btnEdit.innerHTML = `<i class="fa-regular fa-pen-to-square"></i> 기획 수정`;
-                    btnEdit.classList.remove('active');
-                }
-                
-                // Save history item locally
-                saveClientHistoryLocally(generatedDocs);
-                
-                // Start client cascading regeneration
-                startCascadingRegenerationClientSide(resumeFrom, geminiApiKey);
-                return;
-            }
-
-            const btnSave = document.querySelector('button[onclick="saveAndRegenerateCascade()"]');
-            btnSave.disabled = true;
-            btnSave.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 저장 및 동기화 중...`;
-            
-            fetch('/api/save-edit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ docKey, content })
-            })
-            .then(res => {
-                if (!res.ok) throw new Error("네트워크 서버 통신 오류");
-                return res.json();
-            })
-            .then(data => {
-                if (data.error) throw new Error(data.error);
-                
-                generatedDocs[docKey] = content;
-                isEditing = false;
-                
-                const btnEdit = document.getElementById('btn-edit');
-                if (btnEdit) {
-                    btnEdit.innerHTML = `<i class="fa-regular fa-pen-to-square"></i> 기획 수정`;
-                    btnEdit.classList.remove('active');
-                }
-                
-                // Start live SSE cascading stream
-                startCascadingRegeneration(resumeFrom);
-            })
-            .catch(error => {
-                pitlAlert('저장 및 연쇄 수정 요청에 실패했습니다:<br><code style="font-size:11px;color:#f87171">' + error.message + '</code>', 'error', '수정 실패');
-                btnSave.disabled = false;
-                btnSave.innerHTML = `<i class="fa-solid fa-rotate"></i> 변경사항 적용 및 이후 단계 자동 수정`;
-            });
-        }
-
-        // SSE Cascade stream
-        function startCascadingRegeneration(resumeFrom) {
-            currentConsoleLogs = [];
-            document.getElementById('badge-qa-status').style.display = 'none';
-            document.getElementById('btn-copy').disabled = true;
-            document.getElementById('btn-pdf').disabled = true;
-            document.getElementById('btn-edit').disabled = true;
-
-            document.getElementById('btn-copy').style.opacity = '0.5';
-            document.getElementById('btn-pdf').style.opacity = '0.5';
-            document.getElementById('btn-edit').style.opacity = '0.5';
-
-            // Lock inputs
-            document.getElementById('btn-submit-planning').disabled = true;
-            document.getElementById('idea-textarea').disabled = true;
-
-            // Lock browser tabs
-            document.querySelectorAll('.chrome-tab').forEach(el => {
-                el.classList.add('disabled');
-                el.classList.remove('active');
-            });
-            const navFirst5 = document.getElementById('nav-1pager');
-            navFirst5.classList.remove('disabled');
-            navFirst5.classList.add('active');
-
-            document.getElementById('mock-browser-url').value = 'pitl.ai/workspace/strategist-1pager';
-
-            // Add cascading start log in middle panel
-            const stageLabels = {
-                'prd': t('PRD 요구사항 정의', 'PRD Requirements Definition'),
-                'wireframe': t('와이어프레임 3안 시안', '3 wireframe options'),
-                'audit': t('종합 정합성 검수 보고서', 'Consistency QA audit report')
-            };
-            const chatContainer = document.getElementById('chat-messages-container');
-            if (chatContainer) {
-                const cascadeNotif = document.createElement('div');
-                cascadeNotif.className = 'system-notification';
-                const koMsg = `${stageLabels[resumeFrom]} 단계부터 연쇄 갱신 시작`;
-                cascadeNotif.setAttribute('data-i18n-msg', koMsg);
-                cascadeNotif.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> <span class="msg-text">${stageLabels[resumeFrom]} ${t("단계부터 연쇄 갱신 시작", "cascading update started")}</span>`;
-                chatContainer.appendChild(cascadeNotif);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-
-            const targetArea = document.getElementById('viewer-main-content');
-            targetArea.innerHTML = `
-                <div class="document-wrapper" style="padding: 20px;">
-                    <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Live Agent Team Cascading Re-planning</h2>
-                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">${t(`이전 단계 변경에 따라 <strong>${stageLabels[resumeFrom]}</strong>부터 이후 산출물을 실시간 동기화/재구축 중입니다.`, `Synchronizing subsequent documents from <strong>${stageLabels[resumeFrom]}</strong> due to changes in prior stage.`)}</p>
-                    
-                    <div class="terminal-container">
-                        <div class="terminal-header">
-                            <div class="terminal-buttons">
-                                <div class="t-btn tb-red"></div>
-                                <div class="t-btn tb-yellow"></div>
-                                <div class="t-btn tb-green"></div>
-                            </div>
-                            <div class="terminal-title">bash - pitl-cascade-update.sh</div>
-                            <div></div>
-                        </div>
-                        <div class="terminal-body" id="live-console-target" style="max-height: 480px; overflow-y: auto;">
-                            <div class="console-log-area" id="console-logs-container">
-                                <!-- Logs will stream here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            const currentLang = localStorage.getItem('pitl_lang') || 'ko';
-            const eventSource = new EventSource(`/api/generate-stream?idea=REGENERATE&resumeFrom=${resumeFrom}&lang=${currentLang}`);
-            const logsContainer = document.getElementById('console-logs-container');
-
-            eventSource.addEventListener('log', (event) => {
-                const log = JSON.parse(event.data);
-                currentConsoleLogs.push({
-                    type: 'log',
-                    time: log.time,
-                    agent: log.agent,
-                    msg: log.msg
-                });
-                
-                // 1. Raw terminal log in Right panel
-                const logsTarget = document.getElementById('console-logs-container');
-                if (logsTarget) {
-                    const entry = document.createElement('div');
-                    entry.className = 'log-entry';
-                    entry.innerHTML = `
-                        <div>
-                            <span class="log-time">[${log.time}]</span>
-                            <span class="log-agent ${log.agent}">&lt;${log.agent}&gt;</span>
-                            <span style="color: white; font-weight: 500;">INFO</span>
-                        </div>
-                        <div class="log-msg">${translateMessage(log.msg)}</div>
-                    `;
-                    logsTarget.appendChild(entry);
-                    const scrollArea = document.getElementById('live-console-target');
-                    if (scrollArea) scrollArea.scrollTop = scrollArea.scrollHeight;
-                }
-
-                // 2. Chat bubble in middle panel
-                appendAgentChatMessage(log);
-            });
-
-            eventSource.addEventListener('complete', (event) => {
-                const result = JSON.parse(event.data);
-                generatedDocs = result;
-
-                eventSource.close();
-
-                // Unlock
-                document.getElementById('btn-submit-planning').disabled = false;
-                document.getElementById('idea-textarea').disabled = false;
-
-                document.querySelectorAll('.chrome-tab').forEach(el => el.classList.remove('disabled'));
-                document.getElementById('badge-qa-status').style.display = 'flex';
-                
-                document.getElementById('btn-copy').disabled = false;
-                document.getElementById('btn-pdf').disabled = false;
-                document.getElementById('btn-copy').style.opacity = '1';
-                document.getElementById('btn-pdf').style.opacity = '1';
-                document.getElementById('btn-copy').style.cursor = 'pointer';
-                document.getElementById('btn-pdf').style.cursor = 'pointer';
-                
-                // Checklist fill complete
-                completeAllPipelineSteps();
-
-                // Success message
-                const chatContainer = document.getElementById('chat-messages-container');
-                if (chatContainer) {
-                    const successNotif = document.createElement('div');
-                    successNotif.className = 'system-notification';
-                    successNotif.setAttribute('data-i18n-msg', '에이전트 연쇄 재기획 및 갱신 완료');
-                    successNotif.style.background = 'rgba(16, 185, 129, 0.08)';
-                    successNotif.style.borderColor = 'rgba(16, 185, 129, 0.2)';
-                    successNotif.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> <span class="msg-text">${t("에이전트 연쇄 재기획 및 갱신 완료", "Agent cascading update and regeneration completed")}</span>`;
-                    chatContainer.appendChild(successNotif);
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
-                }
-
-                // Show toast notification
-                showCompletionToast(t("기획안 연쇄 재기획 및 갱신이 완료되었습니다!", "Cascading update and regeneration of the planning documents completed successfully!"));
-
-                // Show the newly updated/regenerated stage
-                switchDocument(resumeFrom);
-                loadHistoryList();
-            });
-
-            eventSource.addEventListener('error', (event) => {
-                eventSource.close();
-                document.getElementById('btn-submit-planning').disabled = false;
-                document.getElementById('idea-textarea').disabled = false;
-                
-                let msg = t("연쇄 동기화 작업 도중 오류가 발생했습니다. 백엔드 연결을 검토해주세요.", "An error occurred during cascading synchronization. Please check the backend connection.");
-                if (event.data) {
-                    try {
-                        const err = JSON.parse(event.data);
-                        msg = err.message || msg;
-                    } catch(e){}
-                }
-                
-                currentConsoleLogs.push({
-                    type: 'error',
-                    msg: msg
-                });
-                
-                // raw terminal error
-                const logsTarget = document.getElementById('console-logs-container');
-                if (logsTarget) {
-                    const entry = document.createElement('div');
-                    entry.className = 'log-entry';
-                    entry.style.borderLeftColor = 'var(--accent-red)';
-                    entry.innerHTML = `
-                        <div>
-                            <span style="color: var(--accent-red); font-weight: bold;">[ERROR]</span>
-                            <span style="color: white; font-weight: 500;">FAILURE</span>
-                        </div>
-                        <div class="log-msg" style="color: var(--accent-red); font-weight: bold;">${translateMessage(msg)}</div>
-                    `;
-                    logsTarget.appendChild(entry);
-                }
-
-                // middle timeline error
-                const chatContainer = document.getElementById('chat-messages-container');
-                if (chatContainer) {
-                    const errorBubble = document.createElement('div');
-                    errorBubble.className = 'chat-bubble agent-system';
-                    errorBubble.innerHTML = `
-                        <div class="bubble-avatar" style="background: var(--accent-red)">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                        </div>
-                        <div class="bubble-content" style="border-color: rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.03);">
-                            <div class="bubble-header">
-                                <span class="bubble-author" style="color: var(--accent-red)">PITL Orchestrator</span>
-                                <span class="bubble-time">${new Date().toLocaleTimeString()}</span>
-                            </div>
-                            <div class="bubble-text" style="color: var(--accent-red); font-weight: 500;">${t("기획 연쇄 수정 도중 에러가 감지되었습니다", "An error was detected during cascading planning updates")}: ${translateMessage(msg)}</div>
-                        </div>
-                    `;
-                }
-            });
+            generatedDocs[docKey] = content;
+            isEditing = false;
+            const btnEdit = document.getElementById('btn-edit');
+            if (btnEdit) { btnEdit.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> 기획 수정'; btnEdit.classList.remove('active'); }
+            saveClientHistoryLocally(generatedDocs);
+            startCascadingRegenerationClientSide(resumeFrom);
         }
 
         // Render history log terminal
@@ -9252,14 +8422,6 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
 
         // Planning history fetching
         async function loadHistoryList() {
-            const geminiApiKey = await getDecryptedApiKey();
-            if (window.PITL_USE_LOCAL_PROXY || geminiApiKey || window.location.hostname.includes('github.io')) {
-                let clientHistory = localStorage.getItem('pitl_client_history');
-                clientHistory = clientHistory ? JSON.parse(clientHistory) : [];
-                renderHistoryLists(clientHistory);
-                return;
-            }
-
             fetch('/api/history')
             .then(res => {
                 if (!res.ok) throw new Error();
@@ -9333,19 +8495,12 @@ IMPORTANT: Output ONLY valid HTML starting with <!DOCTYPE html>. No markdown, no
                 `;
             }
 
-            const geminiApiKey = await getDecryptedApiKey();
-            if (window.PITL_USE_LOCAL_PROXY || geminiApiKey || window.location.hostname.includes('github.io')) {
-                let clientHistory = localStorage.getItem('pitl_client_history');
-                clientHistory = clientHistory ? JSON.parse(clientHistory) : [];
-                const foundItem = clientHistory.find(item => item.title === title && item.date === date);
-                if (foundItem && foundItem.docs) {
-                    setupLoadedSession(foundItem.docs, title, date);
-                } else {
-                    pitlAlert(t('히스토리 로드에 실패했습니다.<br>해당 항목을 로컬 저장소에서 찾을 수 없습니다.', 'History load failed.<br>Item not found in local storage.'), 'error', t('히스토리 로드 실패', 'History Load Failed'));
-                    if (btnSubmit) btnSubmit.disabled = false;
-                    if (ideaTextarea) ideaTextarea.disabled = false;
-                    resetToLanding();
-                }
+            // 이 브라우저에서 생성한 기획(localStorage)을 먼저 찾고, 없으면 서버 outputs/에서 로드
+            let localHistory = localStorage.getItem('pitl_client_history');
+            localHistory = localHistory ? JSON.parse(localHistory) : [];
+            const localItem = localHistory.find(item => item.title === title && item.date === date);
+            if (localItem && localItem.docs) {
+                setupLoadedSession(localItem.docs, title, date);
                 return;
             }
 
