@@ -1,11 +1,11 @@
 import express from 'express';
-import cors from 'cors';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 import { fileURLToPath } from 'url';
-import { exec } from 'child_process';
+import os from 'os';
+import { spawn, spawnSync } from 'child_process';
 
 dotenv.config();
 
@@ -13,12 +13,42 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 4000;
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const PORT = Number(process.env.PORT) || 4000;
+const HOST = '127.0.0.1';
 
-app.use(cors());
-app.use(express.json());
-app.use(express.static(__dirname));
+// ── Claude CLI (claude -p) engine config ─────────────────────────────────────
+const CLAUDE_BIN = process.env.CLAUDE_BIN || 'claude';
+const CLAUDE_MODEL = process.env.CLAUDE_MODEL || '';
+const CLAUDE_TIMEOUT_MS = Number(process.env.CLAUDE_TIMEOUT_MS) || 10 * 60 * 1000;
+// 프로젝트의 CLAUDE.md·스킬·훅이 끼어들지 않도록 빈 작업 폴더에서 실행
+const claudeCwd = path.join(os.tmpdir(), 'pitl-claude-cwd');
+fs.mkdirSync(claudeCwd, { recursive: true });
+
+const claudeCheck = spawnSync(CLAUDE_BIN, ['--version'], { encoding: 'utf-8', timeout: 15000 });
+const CLAUDE_VERSION = claudeCheck.status === 0 ? claudeCheck.stdout.trim() : null;
+
+// ── Local-only guard ─────────────────────────────────────────────────────────
+// 브라우저 요청은 원격 사이트에서 와도 IP가 127.0.0.1이므로, Host/Origin 헤더로
+// 같은 로컬 origin에서 온 요청만 허용한다 (CSRF / DNS rebinding 차단).
+const ALLOWED_HOSTS = new Set([`localhost:${PORT}`, `127.0.0.1:${PORT}`]);
+function localOnlyGuard(req, res, next) {
+    if (!ALLOWED_HOSTS.has(req.headers.host)) {
+        return res.status(403).json({ error: '허용되지 않은 Host입니다.' });
+    }
+    const origin = req.headers.origin;
+    if (origin && !ALLOWED_HOSTS.has(origin.replace(/^http:\/\//, ''))) {
+        return res.status(403).json({ error: '허용되지 않은 Origin입니다.' });
+    }
+    next();
+}
+
+app.use(localOnlyGuard);
+app.use(express.json({ limit: '5mb' }));
+
+// 정적 파일은 앱 화면(index.html)만 제공한다 (소스·문서·outputs 노출 방지)
+const sendIndex = (req, res) => res.sendFile(path.join(__dirname, 'index.html'));
+app.get('/', sendIndex);
+app.get('/index.html', sendIndex);
 
 // Ensure directories exist
 const workspaceDir = path.join(__dirname, '_workspace');
@@ -26,64 +56,64 @@ const outputsDir = path.join(__dirname, 'outputs');
 if (!fs.existsSync(workspaceDir)) fs.mkdirSync(workspaceDir);
 if (!fs.existsSync(outputsDir)) fs.mkdirSync(outputsDir);
 
-// Helper to call Gemini API
-let preferredModelIndex = 0;
-const modelsToTry = [
-    'gemini-2.5-flash',
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-lite',
-    'gemini-1.5-flash-latest'
-];
-
-async function callGemini(systemInstruction, userPrompt, logCallback = null) {
-    let lastError = null;
-    
-    for (let offset = 0; offset < modelsToTry.length; offset++) {
-        const modelIdx = (preferredModelIndex + offset) % modelsToTry.length;
-        const model = modelsToTry[modelIdx];
-        // 2.5-flash requires v1beta; others use v1beta as well for standard compatibility
-        const apiVersion = model.startsWith('gemini-2.5') ? 'v1beta' : 'v1beta';
-        const url = `https://generativelanguage.googleapis.com/${apiVersion}/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
-
-        const requestBody = {
-            contents: [
-                {
-                    role: "user",
-                    parts: [{ text: `${systemInstruction}\n\nUser Request/Context:\n${userPrompt}` }]
-                }
-            ],
-            generationConfig: {
-                temperature: 0.2,
-                maxOutputTokens: 8192
-            }
-        };
-
-        try {
-            const response = await axios.post(url, requestBody, {
-                headers: { 'Content-Type': 'application/json' },
-                timeout: 30000 // 30s strict timeout to prevent indefinite hangs
-            });
-            
-            const candidate = response.data?.candidates?.[0];
-            const text = candidate?.content?.parts?.[0]?.text;
-            if (!text) {
-                throw new Error("No response text from Gemini API");
-            }
-            preferredModelIndex = modelIdx; // Update preferred index on success!
-            return text;
-        } catch (error) {
-            const errMsg = error.response?.data?.error?.message || error.message;
-            console.warn(`[Model Fallback] ${model} failed: ${errMsg}`);
-            if (logCallback) {
-                logCallback(`[부하/에러 감지] ${model} 모델 호출 실패. 다음 대체 모델로 우회 진행 중...`);
-            }
-            lastError = error;
-            // Short backoff before trying next model to allow rate limit windows to adjust
-            await new Promise(resolve => setTimeout(resolve, 1200));
+// Helper to call Claude via the local CLI (claude -p)
+// 도구·MCP·설정·슬래시 커맨드를 모두 끈 순수 텍스트 생성 모드로 실행한다.
+function callClaude(systemInstruction, userPrompt, logCallback = null) {
+    return new Promise((resolve, reject) => {
+        if (!CLAUDE_VERSION) {
+            return reject(new Error(`Claude CLI(${CLAUDE_BIN})를 찾을 수 없습니다. 설치 및 로그인 여부를 확인하세요.`));
         }
-    }
-    
-    throw new Error(`모든 모델 호출에 실패했습니다. 최종 에러: ${lastError?.response?.data?.error?.message || lastError?.message || '알 수 없는 에러'}`);
+        const args = [
+            '-p',
+            '--output-format', 'json',
+            '--tools', '',
+            '--setting-sources', '',
+            '--strict-mcp-config',
+            '--disable-slash-commands',
+            '--no-session-persistence',
+            '--system-prompt', systemInstruction
+        ];
+        if (CLAUDE_MODEL) args.push('--model', CLAUDE_MODEL);
+
+        const child = spawn(CLAUDE_BIN, args, { cwd: claudeCwd, stdio: ['pipe', 'pipe', 'pipe'] });
+        let stdout = '';
+        let stderr = '';
+        let timedOut = false;
+        const timer = setTimeout(() => {
+            timedOut = true;
+            child.kill('SIGTERM');
+        }, CLAUDE_TIMEOUT_MS);
+
+        // 청크 경계에서 한글(멀티바이트 UTF-8)이 깨지지 않도록 스트림 디코딩
+        child.stdout.setEncoding('utf8');
+        child.stderr.setEncoding('utf8');
+        child.stdout.on('data', chunk => { stdout += chunk; });
+        child.stderr.on('data', chunk => { stderr += chunk; });
+        child.on('error', err => {
+            clearTimeout(timer);
+            reject(new Error(`Claude CLI 실행 실패: ${err.message}`));
+        });
+        child.on('close', code => {
+            clearTimeout(timer);
+            if (timedOut) {
+                if (logCallback) logCallback(`[타임아웃] claude -p 응답이 ${CLAUDE_TIMEOUT_MS / 1000}초를 넘었습니다.`);
+                return reject(new Error(`claude -p 응답 시간 초과 (${CLAUDE_TIMEOUT_MS / 1000}s)`));
+            }
+            let parsed;
+            try {
+                parsed = JSON.parse(stdout);
+            } catch {
+                return reject(new Error(`claude -p 출력 파싱 실패 (exit ${code}): ${(stderr || stdout).slice(0, 300)}`));
+            }
+            if (parsed.is_error || code !== 0 || !parsed.result) {
+                if (logCallback) logCallback(`[에러 감지] claude -p 호출 실패: ${parsed.result || parsed.subtype || code}`);
+                return reject(new Error(`claude -p 호출 실패: ${parsed.result || parsed.subtype || `exit ${code}`}`));
+            }
+            resolve(parsed.result);
+        });
+
+        child.stdin.end(userPrompt);
+    });
 }
 
 // Security: Sanitize Filenames
@@ -482,6 +512,9 @@ app.get('/api/history/load', (req, res) => {
     if (!title || !date) {
         return res.status(400).json({ error: "title and date are required" });
     }
+    if (typeof title !== 'string' || sanitizeFilename(title) !== title || !/^\d{6}$/.test(String(date))) {
+        return res.status(400).json({ error: "invalid title or date" });
+    }
 
     try {
         const onePagerPath = path.join(outputsDir, `1pager_${title}_${date}.md`);
@@ -555,8 +588,8 @@ app.get('/api/generate-stream', async (req, res) => {
             res.write(': heartbeat\n\n');
         }, 15000);
 
-        if (!GEMINI_API_KEY) {
-            throw new Error("GEMINI_API_KEY is not configured in the .env file");
+        if (!CLAUDE_VERSION) {
+            throw new Error(`Claude CLI(${CLAUDE_BIN})를 찾을 수 없습니다.`);
         }
         let originalIdea = idea;
         const isRegen = (resumeFrom === 'prd' || resumeFrom === 'wireframe' || resumeFrom === 'audit');
@@ -634,7 +667,7 @@ app.get('/api/generate-stream', async (req, res) => {
             ## 8. 중요도 및 긴급도 (상/중/하 + 이유)
             `;
             
-            onePagerContent = await callGemini(
+            onePagerContent = await callClaude(
                 "당신은 상품 기획의 존재 이유(Why)를 정의하는 Product Strategist 에이전트입니다." + langSuffix, 
                 strategistPrompt,
                 (msg) => logAgent('strategist', msg)
@@ -694,7 +727,7 @@ app.get('/api/generate-stream', async (req, res) => {
             | **Company** | ... | ... | ... |
             | **교집합 (Concept)** | 지속 가능한 차별화 기회와 핵심 컨셉 | 제품 컨셉 및 가치 제안 | **Must Have** |
             `;
-            threeCContent = await callGemini(
+            threeCContent = await callClaude(
                 "당신은 시장 환경 분석을 3C 프레임워크로 전문 설계하는 Product Strategist 에이전트입니다." + langSuffix,
                 threeCPrompt,
                 (msg) => logAgent('strategist', msg)
@@ -756,7 +789,7 @@ app.get('/api/generate-stream', async (req, res) => {
             ## 7. 구조적 완결성 검토 (Structural Integrity Audit)
             - 작성된 5대 MECE 프레임워크가 상호 배제(Mutually Exclusive)되고 전체 포괄(Collectively Exhaustive)되었는지 자체 검증한 정성/정량 결과를 서술하라.
             `;
-            meceContent = await callGemini(
+            meceContent = await callClaude(
                 "당신은 논리적 구조화와 MECE 정합성에 통달한 McKinsey 출신의 Product Strategist 에이전트입니다." + langSuffix,
                 mecePrompt,
                 (msg) => logAgent('strategist', msg)
@@ -803,7 +836,7 @@ app.get('/api/generate-stream', async (req, res) => {
             ## Appendix
             `;
 
-            prdContent = await callGemini(
+            prdContent = await callClaude(
                 "당신은 상세 요건 명세를 정의하는 PRD Analyst 에이전트입니다." + langSuffix,
                 prdPrompt,
                 (msg) => logAgent('analyst', msg)
@@ -830,7 +863,7 @@ app.get('/api/generate-stream', async (req, res) => {
             반드시 마크다운 블록 내에 테두리선(┌, ┐, │, ─, └, ┘)과 대괄호([])를 이용한 정밀한 ASCII 텍스트 아트를 완성하라.
             `;
 
-            uxContent = await callGemini(
+            uxContent = await callClaude(
                 "당신은 ASCII 와이어프레임을 텍스트 아트로 설계하는 UX Architect 에이전트입니다." + langSuffix,
                 uxPrompt,
                 (msg) => logAgent('architect', msg)
@@ -866,7 +899,7 @@ app.get('/api/generate-stream', async (req, res) => {
         ## 2. 정성적 품질 평가 총평
         `;
 
-        auditContent = await callGemini(
+        auditContent = await callClaude(
             "당신은 완결된 기획의 삼각 정합성을 최종 감사하는 Product Reviewer QA 에이전트입니다." + langSuffix,
             reviewerPrompt,
             (msg) => logAgent('reviewer', msg)
@@ -900,13 +933,13 @@ app.get('/api/generate-stream', async (req, res) => {
         반드시 <!DOCTYPE html>로 시작하는 완전한 단일 HTML 파일만 출력하라. 마크다운 코드블록(\`\`\`) 없이 순수 HTML만 출력.
         `;
 
-        prototypeContent = await callGemini(
+        prototypeContent = await callClaude(
             "당신은 PRD와 와이어프레임을 실제 동작하는 인터랙티브 HTML 프로토타입으로 변환하는 프론트엔드 개발 에이전트입니다.",
             prototypePrompt,
             (msg) => logAgent('architect', msg)
         );
 
-        // Strip markdown code fences if Gemini wraps output
+        // Strip markdown code fences if the model wraps output
         prototypeContent = prototypeContent
             .replace(/^```html\s*/i, '')
             .replace(/^```\s*/i, '')
@@ -968,53 +1001,44 @@ app.get('/api/generate-stream', async (req, res) => {
     }
 });
 
-// ── Localhost-only security guard middleware ─────────────────────────────────
-function localOnlyGuard(req, res, next) {
-    const ip = req.ip || req.connection.remoteAddress || '';
-    const isLocal = ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1' || ip === 'localhost';
-    if (!isLocal) {
-        return res.status(403).json({ error: '로컬 접근만 허용됩니다.' });
-    }
-    next();
-}
-
 // ── GET /api/proxy-status ─────────────────────────────────────────────────────
-// 브라우저가 로컬 서버 실행 여부 및 API Key 보유 여부를 감지하는 엔드포인트
-app.get('/api/proxy-status', localOnlyGuard, (req, res) => {
-    const hasKey = !!(GEMINI_API_KEY && GEMINI_API_KEY.trim().length > 10);
+// 브라우저가 로컬 서버 실행 여부 및 Claude CLI 사용 가능 여부를 감지하는 엔드포인트
+app.get('/api/proxy-status', (req, res) => {
     res.json({
         ok: true,
-        proxyAvailable: hasKey,
+        proxyAvailable: !!CLAUDE_VERSION,
+        engine: 'claude-cli',
+        version: CLAUDE_VERSION,
         port: PORT,
-        message: hasKey
-            ? '✅ 로컬 서버 실행 중 — API Key 불필요 (서버에서 자동 처리)'
-            : '⚠️ 서버 실행 중이나 .env에 GEMINI_API_KEY가 없습니다.'
+        message: CLAUDE_VERSION
+            ? `✅ 로컬 서버 실행 중 — claude -p (${CLAUDE_VERSION})`
+            : `⚠️ 서버 실행 중이나 Claude CLI(${CLAUDE_BIN})를 찾을 수 없습니다.`
     });
 });
 
-// ── POST /api/proxy-gemini ────────────────────────────────────────────────────
-// 클라이언트 대신 서버의 .env API Key로 Gemini를 호출하는 투명 프록시
-app.post('/api/proxy-gemini', localOnlyGuard, async (req, res) => {
-    if (!GEMINI_API_KEY || GEMINI_API_KEY.trim().length < 10) {
-        return res.status(503).json({ error: '.env에 GEMINI_API_KEY가 설정되지 않았습니다.' });
-    }
-
-    const { systemInstruction, userPrompt, maxTokens } = req.body;
-    if (!systemInstruction || !userPrompt) {
+// ── POST /api/llm ─────────────────────────────────────────────────────────────
+// 브라우저 대신 로컬 claude -p 로 생성하는 엔드포인트
+app.post('/api/llm', async (req, res) => {
+    const { systemInstruction, userPrompt } = req.body || {};
+    if (typeof systemInstruction !== 'string' || typeof userPrompt !== 'string' || !systemInstruction || !userPrompt) {
         return res.status(400).json({ error: 'systemInstruction 과 userPrompt 가 필요합니다.' });
+    }
+    if (!CLAUDE_VERSION) {
+        return res.status(503).json({ error: `Claude CLI(${CLAUDE_BIN})를 찾을 수 없습니다.` });
     }
 
     try {
-        const text = await callGemini(systemInstruction, userPrompt);
+        const text = await callClaude(systemInstruction, userPrompt);
         res.json({ ok: true, text });
     } catch (err) {
-        const msg = err.response?.data?.error?.message || err.message;
-        res.status(500).json({ ok: false, error: msg });
+        res.status(500).json({ ok: false, error: err.message });
     }
 });
 
 // Start Server
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
     console.log(`[PITL Engine] Server is running on http://localhost:${PORT}`);
-    console.log(`[PITL Proxy]  Local proxy active → /api/proxy-status  /api/proxy-gemini`);
+    console.log(CLAUDE_VERSION
+        ? `[PITL Engine] claude -p engine ready (${CLAUDE_VERSION})`
+        : `[PITL Engine] ⚠️ Claude CLI (${CLAUDE_BIN}) not found — generation is disabled`);
 });
