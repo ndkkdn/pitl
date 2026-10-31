@@ -79,6 +79,7 @@
             --surface-rgb: 31, 29, 38;
             --hairline-rgb: 240, 238, 233;
             --accent-neon: #8B6CFF;      /* primary accent (legacy token name) */
+            --accent-text: #A5FC8D;      /* point text color (links, labels, emphasis) */
             --accent-strong: #A891FF;    /* accent text on dark surfaces */
             --accent-soft: #B6A4FF;
             --accent-coral: #FF7A90;
@@ -139,6 +140,7 @@
             --surface-rgb: 250, 249, 246;
             --hairline-rgb: 27, 26, 31;
             --accent-neon: #5B3BF0;
+            --accent-text: #287113;      /* #A5FC8D 계열의 진한 녹색: 라이트 배경 AA 대비 */
             --accent-strong: #4A2BD6;
             --accent-soft: #8F75FF;
             --accent-coral: #C9245A;
@@ -188,7 +190,7 @@
             background: #ffffff;
             border-color: var(--accent-strong);
             box-shadow: 0 0 16px rgba(var(--accent-rgb), 0.3);
-            color: var(--accent-strong);
+            color: var(--accent-text);
         }
 
         [data-theme="light"] .circle-tab-label {
@@ -197,7 +199,7 @@
         }
 
         [data-theme="light"] .circle-tab-item.active .circle-tab-label {
-            color: var(--accent-strong);
+            color: var(--accent-text);
         }
 
         [data-theme="light"] .active-indicator-triangle::after {
@@ -358,7 +360,7 @@
 
         [data-theme="light"] .markdown-body code {
             background: #f1f5f9;
-            color: var(--accent-strong);
+            color: var(--accent-text);
         }
 
         /* Landing Prompt Box */
@@ -646,7 +648,7 @@
         }
 
         .landing-logo i {
-            color: var(--accent-neon);
+            color: var(--accent-text);
             animation: fa-spin 4s linear infinite;
         }
 
@@ -739,7 +741,7 @@
         .badge-tag {
             background: rgba(var(--accent-rgb), 0.06);
             border: 1px solid rgba(var(--accent-rgb), 0.15);
-            color: var(--accent-neon);
+            color: var(--accent-text);
             padding: var(--sp-1) var(--sp-2); /* 8px 16px */
             border-radius: var(--radius-sm); /* disciplined square */
             font-size: var(--type-10);
@@ -902,7 +904,7 @@
         }
 
         .suggestion-pill:hover {
-            color: var(--accent-neon);
+            color: var(--accent-text);
             background: rgba(var(--accent-rgb), 0.08);
             border-color: rgba(var(--accent-rgb), 0.3);
             transform: translateY(-2px);
@@ -1015,7 +1017,7 @@
 
         .landing-card-badge {
             background: rgba(var(--accent-rgb), 0.08);
-            color: var(--accent-neon);
+            color: var(--accent-text);
             padding: 2px var(--sp-1);
             border-radius: var(--radius-sm);
             font-size: var(--type-10);
@@ -1246,7 +1248,7 @@
             font-size: 9px;
             font-weight: 600;
             letter-spacing: 0.5px;
-            color: var(--accent-neon);
+            color: var(--accent-text);
             display: flex;
             align-items: center;
             gap: 4px;
@@ -1547,7 +1549,7 @@
             box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.4), inset 0 0 10px rgba(var(--accent-rgb), 0.1);
         }
         .circle-step-item.active .node-icon { opacity: 0; }
-        .circle-step-item.active .node-percent { opacity: 1; color: var(--accent-neon); }
+        .circle-step-item.active .node-percent { opacity: 1; color: var(--accent-text); }
 
         /* COMPLETED state */
         .circle-step-item.completed .ring-fill {
@@ -1576,13 +1578,13 @@
             transition: color 0.3s ease;
             text-align: center;
         }
-        .circle-step-item.active   .circle-step-label { color: var(--accent-neon); }
+        .circle-step-item.active   .circle-step-label { color: var(--accent-text); }
         .circle-step-item.completed .circle-step-label { color: var(--text-primary); }
 
         .circle-step-sublabel {
             font-size: 10px;
             font-weight: 600;
-            color: var(--accent-neon);
+            color: var(--accent-text);
             opacity: 0;
             height: 0;
             overflow: hidden;
@@ -1682,7 +1684,7 @@
 
         .step-item.active .step-icon {
             background: rgba(var(--accent-rgb), 0.15);
-            color: var(--accent-neon);
+            color: var(--accent-text);
             box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.25);
         }
 
@@ -1805,7 +1807,7 @@
         }
 
         .system-notification i {
-            color: var(--accent-neon);
+            color: var(--accent-text);
         }
 
         /* Follow-up status bar */
@@ -1824,7 +1826,7 @@
         }
 
         .chat-follow-up-bar i {
-            color: var(--accent-neon);
+            color: var(--accent-text);
         }
 
         /* PANEL 3: RIGHT COMPUTER PANEL (Workspace Viewer) */
@@ -1941,7 +1943,7 @@
 
         .step-pill-badge.stage1 {
             background: rgba(var(--accent-rgb), 0.14);
-            color: var(--accent-neon);
+            color: var(--accent-text);
             border: 1px solid rgba(var(--accent-rgb), 0.3);
         }
 
@@ -1960,7 +1962,7 @@
 
         [data-theme="light"] .step-pill-badge.stage1 {
             background: rgba(var(--accent-rgb), 0.1);
-            color: var(--accent-strong);
+            color: var(--accent-text);
             border-color: rgba(var(--accent-rgb), 0.3);
         }
 
@@ -2110,10 +2112,10 @@
             color: var(--accent-soft); 
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 8px rgba(var(--accent-rgb), 0.8);
         }
-        .circle-tab-item.active .circle-tab-label { color: var(--accent-neon); }
+        .circle-tab-item.active .circle-tab-label { color: var(--accent-text); }
 
         [data-theme="light"] .circle-tab-item.active .node-percent {
-            color: var(--accent-strong);
+            color: var(--accent-text);
             text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9), 0 0 6px rgba(var(--hairline-rgb), 0.9);
         }
 
@@ -2603,7 +2605,7 @@
             font-weight: 600;
             cursor: pointer;
         }
-        .flow-step b { color: var(--accent-neon); font-size: 11px; }
+        .flow-step b { color: var(--accent-text); font-size: 11px; }
         .flow-step:hover { color: var(--text-primary); border-color: rgba(var(--accent-rgb), 0.4); }
         .flow-step.active { color: var(--text-primary); border-color: rgba(var(--accent-rgb), 0.6); background: rgba(var(--accent-rgb), 0.08); }
         .flow-arrow { color: var(--text-muted); font-size: 11px; }
@@ -2657,7 +2659,7 @@
             font-family: 'Fira Code', monospace;
             font-size: var(--type-12);
             line-height: var(--lh);
-            color: var(--accent-neon);
+            color: var(--accent-text);
             white-space: pre;
         }
 
@@ -2691,7 +2693,7 @@
             margin-right: var(--sp-1);
         }
 
-        .log-agent.strategist { color: var(--accent-neon); }
+        .log-agent.strategist { color: var(--accent-text); }
         .log-agent.analyst { color: var(--accent-purple); }
         .log-agent.architect { color: #f59e0b; }
         .log-agent.reviewer { color: var(--accent-green); }
@@ -2909,7 +2911,7 @@
         .chrome-tab.active {
             background: var(--bg-editor);
             border-color: var(--border-color);
-            color: var(--accent-neon);
+            color: var(--accent-text);
         }
 
         .chrome-address-bar {
@@ -3009,7 +3011,7 @@
 
         .sidebar-toggle-btn:hover {
             background: rgba(0, 0, 0, 0.05);
-            color: var(--accent-neon);
+            color: var(--accent-text);
         }
         body.dark-theme .sidebar-toggle-btn:hover {
             background: rgba(255, 255, 255, 0.05);
@@ -3402,7 +3404,7 @@
             height: 24px;
             border-radius: 50%;
             background: rgba(var(--accent-rgb), 0.12);
-            color: var(--accent-neon);
+            color: var(--accent-text);
             font-size: 13px;
             box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.2);
             animation: pulse-neon 2s infinite;
@@ -3813,7 +3815,7 @@
             align-items: center;
             justify-content: center;
             background: rgba(var(--accent-rgb), 0.12);
-            color: var(--accent-neon);
+            color: var(--accent-text);
             font-size: 17px;
         }
         .tile-title {
@@ -3841,7 +3843,7 @@
             align-self: flex-end;
             font-size: 12px;
             font-weight: 600;
-            color: var(--accent-neon);
+            color: var(--accent-text);
         }
         .tile-cta i { margin-left: 4px; transition: transform 0.25s var(--ease-out); }
         .tile-card:hover .tile-cta i { transform: translateX(3px); }
@@ -4178,7 +4180,7 @@
             font-size: 12px;
             font-weight: 700;
             letter-spacing: 1.5px;
-            color: var(--accent-neon);
+            color: var(--accent-text);
             margin-bottom: 12px;
         }
         .viz-grid {
@@ -4261,7 +4263,7 @@
         .viz-heat-header span { font-size: 11.5px; font-weight: 600; color: var(--text-secondary); padding: 4px 6px; text-align: center; }
         .viz-heat-name { font-size: 12.5px; color: var(--text-secondary); padding: 8px 6px; display: flex; align-items: center; }
         .viz-heat-row.self .viz-heat-name { color: var(--text-primary); font-weight: 700; }
-        .viz-heat-row.self .viz-heat-name::before { content: '★'; color: var(--accent-neon); margin-right: 4px; }
+        .viz-heat-row.self .viz-heat-name::before { content: '★'; color: var(--accent-text); margin-right: 4px; }
         .viz-heat-cell { display: flex; align-items: center; justify-content: center; min-height: 36px; border-radius: 6px; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; outline: none; }
         .viz-heat-cell:focus-visible { box-shadow: 0 0 0 2px var(--viz-surface), 0 0 0 4px var(--focus-ring); }
         .viz-heat-scale { display: flex; align-items: center; gap: 2px; justify-content: flex-end; margin-top: 8px; font-size: 11px; color: var(--text-muted); }
@@ -4398,7 +4400,7 @@
             font-variant-numeric: tabular-nums;
             white-space: nowrap;
         }
-        .circle-tab-item.active .circle-tab-time { color: var(--accent-neon); }
+        .circle-tab-item.active .circle-tab-time { color: var(--accent-text); }
         /* 소요시간 줄이 생긴 만큼 상단 단계 바 높이를 내용에 맞춘다 (원형 노드 상단 잘림 방지) */
         .computer-chrome .chrome-title-bar {
             height: auto !important;
@@ -4436,8 +4438,8 @@
             font-size: 13px;
             color: var(--text-secondary);
         }
-        .archive-bar i { color: var(--accent-neon); margin-right: 4px; }
-        .archive-bar a { color: var(--accent-neon); font-weight: 600; }
+        .archive-bar i { color: var(--accent-text); margin-right: 4px; }
+        .archive-bar a { color: var(--accent-text); font-weight: 600; }
     </style>
 </head>
 <body class="state-landing dark-theme">
@@ -4498,7 +4500,7 @@
                 width:52px;height:52px;border-radius:14px;
                 display:flex;align-items:center;justify-content:center;
                 font-size:22px;margin:0 auto 18px;
-                background:rgba(var(--accent-rgb), 0.1); color:var(--accent-neon);">
+                background:rgba(var(--accent-rgb), 0.1); color:var(--accent-text);">
                 <i id="pitl-alert-icon" class="fa-solid fa-circle-info"></i>
             </div>
             <!-- Title -->
@@ -4882,7 +4884,7 @@
                     </div>
                     
                     <div class="chrome-url-box">
-                        <i class="fa-solid fa-lock" style="color: var(--accent-neon);"></i>
+                        <i class="fa-solid fa-lock" style="color: var(--accent-text);"></i>
                         <input type="text" id="mock-browser-url" value="pitl.ai/workspace/strategist-1pager">
                     </div>
                     
@@ -6218,7 +6220,7 @@ ${idea.slice(0, 2000)}`
                         
                         <!-- Top Glowing Sparkle Wand Icon (Attached Image Matched 100%) -->
                         <div style="width: 76px; height: 76px; border-radius: 50%; background: rgba(var(--accent-rgb), 0.12); border: 1.5px solid rgba(var(--accent-rgb), 0.35); display: flex; align-items: center; justify-content: center; margin-bottom: 28px; box-shadow: 0 0 35px rgba(var(--accent-rgb), 0.28);">
-                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 34px; color: var(--accent-neon); animation: pulse 2s infinite ease-in-out;"></i>
+                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 34px; color: var(--accent-text); animation: pulse 2s infinite ease-in-out;"></i>
                         </div>
 
                         <!-- Main Title -->
@@ -6235,10 +6237,10 @@ ${idea.slice(0, 2000)}`
                         <div class="running-progress-box">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                                 <span style="color: var(--text-secondary); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-                                    <i class="fa-solid fa-arrows-spin fa-spin" style="color: var(--accent-neon); --fa-animation-duration: 3s;"></i>
+                                    <i class="fa-solid fa-arrows-spin fa-spin" style="color: var(--accent-text); --fa-animation-duration: 3s;"></i>
                                     ${t("전체 기획 파이프라인 진행률", "Overall Pipeline Progress")}
                                 </span>
-                                <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--accent-neon);">${currentPct}%</span>
+                                <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--accent-text);">${currentPct}%</span>
                             </div>
                             <div style="width: 100%; height: 12px; background: rgba(255,255,255,0.06); border-radius: 6px; overflow: hidden; position: relative;">
                                 <div id="pipeline-progress-fill" style="width: ${currentPct}%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue, #3b82f6)); border-radius: 6px; transition: width 0.4s ease;"></div>
@@ -6706,7 +6708,7 @@ ${idea.slice(0, 2000)}`
                         
                         <!-- Top Glowing Orb Icon -->
                         <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(var(--accent-rgb), 0.1); border: 1px solid rgba(var(--accent-rgb), 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.25);">
-                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 32px; color: var(--accent-neon); animation: pulse 2s infinite ease-in-out;"></i>
+                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 32px; color: var(--accent-text); animation: pulse 2s infinite ease-in-out;"></i>
                         </div>
 
                         <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 800; color: #ffffff; margin-bottom: 12px; border: none; padding: 0;">
@@ -6721,10 +6723,10 @@ ${idea.slice(0, 2000)}`
                         <div style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px 24px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                                 <span style="color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">
-                                    <i class="fa-solid fa-arrows-spin fa-spin" style="color: var(--accent-neon); --fa-animation-duration: 3s;"></i>
+                                    <i class="fa-solid fa-arrows-spin fa-spin" style="color: var(--accent-text); --fa-animation-duration: 3s;"></i>
                                     ${t("전체 기획 파이프라인 진행률", "Overall Pipeline Progress")}
                                 </span>
-                                <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800; color: var(--accent-neon);">0%</span>
+                                <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800; color: var(--accent-text);">0%</span>
                             </div>
                             <div style="width: 100%; height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; overflow: hidden; position: relative;">
                                 <div id="pipeline-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue)); border-radius: 5px; transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);"></div>
@@ -6841,10 +6843,10 @@ ${idea.slice(0, 2000)}`
                         <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700;">
                                 <span style="color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">
-                                    <i class="fa-solid fa-arrows-spin fa-spin" style="color: var(--accent-neon); --fa-animation-duration: 3s;"></i>
+                                    <i class="fa-solid fa-arrows-spin fa-spin" style="color: var(--accent-text); --fa-animation-duration: 3s;"></i>
                                     전체 기획 파이프라인 진행률
                                 </span>
-                                <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--accent-neon);">0%</span>
+                                <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--accent-text);">0%</span>
                             </div>
                             <div style="width: 100%; height: 12px; background: rgba(255,255,255,0.06); border-radius: 6px; overflow: hidden; position: relative;">
                                 <div id="pipeline-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue)); border-radius: 6px; transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);"></div>
@@ -8554,7 +8556,7 @@ ${idea.slice(0, 2000)}`
                 } else if (state === 'active') {
                     el.classList.add('active');
                     el.classList.remove('completed');
-                    statusEl.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin" style="color: var(--accent-neon);"></i>`;
+                    statusEl.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin" style="color: var(--accent-text);"></i>`;
                 } else if (state === 'complete') {
                     el.classList.add('completed');
                     el.classList.remove('active');
@@ -9479,7 +9481,7 @@ ${idea.slice(0, 2000)}`
             body { margin: 0; background: var(--bg-base); color: var(--text-primary); font-family: 'Pretendard Variable', 'Noto Sans KR', -apple-system, sans-serif; line-height: 1.7; }
             .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
             .hero { padding: 56px 0 28px; }
-            .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; color: var(--accent-neon); }
+            .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; color: var(--accent-text); }
             .hero h1 { font-size: clamp(28px, 4vw, 42px); line-height: 1.25; margin: 10px 0 14px; letter-spacing: -0.02em; }
             .idea { color: var(--text-secondary); white-space: pre-wrap; margin: 0 0 18px; max-width: 760px; }
             .meta { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -9503,7 +9505,7 @@ ${idea.slice(0, 2000)}`
             .markdown-body blockquote { margin: 14px 0; padding: 10px 16px; border-left: 3px solid var(--accent-neon); background: var(--bg-base); border-radius: 0 10px 10px 0; color: var(--text-secondary); }
             .proto-frame { height: min(80vh, 820px); border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden; background: #fff; }
             .proto-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
-            .doc a.open { display: inline-block; margin-top: 12px; font-size: 13px; font-weight: 600; color: var(--accent-neon); }
+            .doc a.open { display: inline-block; margin-top: 12px; font-size: 13px; font-weight: 600; color: var(--accent-text); }
             footer { padding: 24px 0 56px; color: var(--text-muted); font-size: 12.5px; }
             :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
             @media (max-width: 640px) { .hero { padding-top: 36px; } .doc { border-radius: 14px; } }
@@ -9867,7 +9869,7 @@ function toggleVizTable(btn) {
             targetArea.innerHTML = `
                 <div class="document-wrapper" style="padding: 24px;">
                     <div style="margin-bottom: 24px;">
-                        <span style="font-size: 14px; font-weight: 700; color: var(--accent-neon); letter-spacing: 1.5px; text-transform: uppercase;">
+                        <span style="font-size: 14px; font-weight: 700; color: var(--accent-text); letter-spacing: 1.5px; text-transform: uppercase;">
                             <i class="fa-solid fa-layer-group"></i> Architecture Overview
                         </span>
                         <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: var(--text-primary); margin-top: 4px; margin-bottom: 6px;">
@@ -9939,7 +9941,7 @@ function toggleVizTable(btn) {
                 <div class="document-wrapper" style="display: flex; flex-direction: column; gap: 20px; padding: 20px;">
                     <div>
                         <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">
-                            <i class="fa-regular fa-pen-to-square" style="color: var(--accent-neon); margin-right: 8px;"></i>${docLabels[activeDoc]} 수정 모드
+                            <i class="fa-regular fa-pen-to-square" style="color: var(--accent-text); margin-right: 8px;"></i>${docLabels[activeDoc]} 수정 모드
                         </h2>
                         <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
                             ${docDescriptions[activeDoc]}
@@ -10021,7 +10023,7 @@ function toggleVizTable(btn) {
                                     ${t("에이전트 로그 스트리밍 중...", "Streaming agent logs...")}
                                 </span>
                             </div>
-                            <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800; color: var(--accent-neon); letter-spacing: -0.5px;">
+                            <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 800; color: var(--accent-text); letter-spacing: -0.5px;">
                                 100%
                             </span>
                         </div>
@@ -10148,7 +10150,7 @@ function toggleVizTable(btn) {
             if (!rawContent) {
                 targetArea.innerHTML = `
                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:16px; color:var(--text-secondary); padding:40px; text-align:center;">
-                        <i class="fa-solid fa-route" style="font-size:52px; opacity:0.3; color:var(--accent-neon);"></i>
+                        <i class="fa-solid fa-route" style="font-size:52px; opacity:0.3; color:var(--accent-text);"></i>
                         <p style="font-size:16px; font-weight:700; color:var(--text-primary);">${t('서비스 UX 프로토타입이 아직 생성되지 않았습니다.', 'The service UX prototype has not been generated yet.')}</p>
                         <p style="font-size:13px; opacity:0.7;">${t('기획과 와이어프레임 분석이 끝나면 핵심 사용자 흐름을 따라 조작해 볼 수 있는 프로토타입이 자동으로 만들어집니다.', 'Once planning is complete, a clickable prototype of the core user journey is generated automatically.')}</p>
                     </div>`;
@@ -10378,7 +10380,7 @@ function toggleVizTable(btn) {
             if (target) {
                 target.innerHTML = `
                     <h3 style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin: 20px 0 6px 0;">Type ${type} ${t("시안 아키텍처", "Layout Architecture")}</h3>
-                    <p style="color: var(--accent-neon); font-size: 13px; font-style: italic; margin-bottom: 14px;">"${concept}"</p>
+                    <p style="color: var(--accent-text); font-size: 13px; font-style: italic; margin-bottom: 14px;">"${concept}"</p>
                     
                     <div class="terminal-container">
                         <div class="terminal-header">
@@ -10416,7 +10418,7 @@ function toggleVizTable(btn) {
 
         function simulatePDFDownload() {
             if (!generatedDocs) return;
-            pitlAlert(t(`PDF 빌드가 완공되었습니다.<br><code style="font-size:11px;color:var(--accent-neon)">outputs/${generatedDocs.title}_wireframes.pdf</code>`, `PDF build complete.<br><code style="font-size:11px;color:var(--accent-neon)">outputs/${generatedDocs.title}_wireframes.pdf</code>`), 'success', t('PDF 내보내기 완료', 'PDF Export Complete'));
+            pitlAlert(t(`PDF 빌드가 완공되었습니다.<br><code style="font-size:11px;color:var(--accent-text)">outputs/${generatedDocs.title}_wireframes.pdf</code>`, `PDF build complete.<br><code style="font-size:11px;color:var(--accent-text)">outputs/${generatedDocs.title}_wireframes.pdf</code>`), 'success', t('PDF 내보내기 완료', 'PDF Export Complete'));
         }
 
         // Delete single history item
@@ -10496,7 +10498,7 @@ function toggleVizTable(btn) {
                         <div class="history-item-card" onclick="loadHistoryItem('${item.title}', '${item.date}')">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
                                 <div class="history-card-title" style="user-select:text; flex: 1;" onclick="event.stopPropagation()">
-                                    <i class="fa-regular fa-file-lines" style="color: var(--accent-neon); user-select:none; flex-shrink: 0;"></i> <span>${item.displayTitle}</span>
+                                    <i class="fa-regular fa-file-lines" style="color: var(--accent-text); user-select:none; flex-shrink: 0;"></i> <span>${item.displayTitle}</span>
                                 </div>
                                 <button class="btn-delete-history" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}">
                                     <i class="fa-regular fa-trash-can"></i>
@@ -10533,7 +10535,7 @@ function toggleVizTable(btn) {
                             <div class="landing-card-content">
                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
                                     <div class="landing-card-title" style="user-select:text; flex: 1;" onclick="event.stopPropagation()">
-                                        <i class="fa-regular fa-file-lines" style="color: var(--accent-neon); margin-right: 6px; user-select:none;"></i> ${item.displayTitle}
+                                        <i class="fa-regular fa-file-lines" style="color: var(--accent-text); margin-right: 6px; user-select:none;"></i> ${item.displayTitle}
                                     </div>
                                     <button class="btn-delete-history" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}">
                                         <i class="fa-regular fa-trash-can"></i>
