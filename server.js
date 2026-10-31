@@ -1031,6 +1031,144 @@ app.get('/api/generate-stream', async (req, res) => {
     }
 });
 
+// ── Artifact archive publishing (GitHub Pages repo) ──────────────────────────
+// 분석이 끝난 기획서를 ARCHIVE_REPO에 커밋해 GitHub Pages 아카이브에 게시한다.
+// 인증: GITHUB_TOKEN 환경변수, 없으면 로그인된 gh CLI 토큰
+const ARCHIVE_REPO = process.env.ARCHIVE_REPO || 'ndkkdn/artifactarchives';
+const ARCHIVE_BRANCH = process.env.ARCHIVE_BRANCH || 'main';
+const [archiveOwner, archiveName] = ARCHIVE_REPO.split('/');
+const ARCHIVE_SITE_URL = (process.env.ARCHIVE_SITE_URL || `https://${archiveOwner}.github.io/${archiveName}/`).replace(/\/?$/, '/');
+const ARCHIVE_AUTO_PUBLISH = process.env.ARCHIVE_AUTO_PUBLISH !== 'false';
+const ARCHIVE_SLUG_RE = /^p-\d{8}-[a-z0-9]{6}$/;
+
+function githubToken() {
+    if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN.trim();
+    const r = spawnSync('gh', ['auth', 'token'], { encoding: 'utf-8', timeout: 10000 });
+    return r.status === 0 ? r.stdout.trim() : '';
+}
+
+async function archiveApi(method, pathname, body) {
+    const token = githubToken();
+    if (!token) throw new Error('GitHub 인증 정보가 없습니다. .env의 GITHUB_TOKEN 또는 `gh auth login`을 설정하세요.');
+    const res = await fetch(`https://api.github.com/repos/${ARCHIVE_REPO}${pathname}`, {
+        method,
+        headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'Content-Type': 'application/json'
+        },
+        body: body ? JSON.stringify(body) : undefined
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+        const err = new Error(`GitHub API ${method} ${pathname} → ${res.status}: ${data.message || 'error'}`);
+        err.status = res.status;
+        throw err;
+    }
+    return data;
+}
+
+// 아카이브 index.html의 ITEMS 배열에 항목을 넣는다 (같은 href가 있으면 교체)
+function upsertArchiveItem(html, entry) {
+    const marker = 'const ITEMS = [';
+    const at = html.indexOf(marker);
+    if (at < 0) throw new Error('아카이브 index.html에서 ITEMS 목록을 찾지 못했습니다.');
+    // </script> 주입을 막기 위해 '<'를 이스케이프한 JSON 문자열로 넣는다
+    const js = value => JSON.stringify(value).replace(/</g, '\\u003c');
+    const hrefLiteral = js(entry.href);
+    const existing = new RegExp(`\\n\\s*\\{\\s*\\n\\s*href: ${hrefLiteral.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')},[\\s\\S]*?\\n\\s*\\},?`);
+    let out = html.replace(existing, '');
+    const block = `
+    {
+      href: ${hrefLiteral},
+      title: ${js(entry.title)},
+      desc: ${js(entry.desc)},
+      type: ${js(entry.type)},
+      tags: [${entry.tags.map(js).join(', ')}],
+      date: ${js(entry.date)},
+      thumb: ${js(entry.thumb)}
+    },`;
+    const insertAt = out.indexOf(marker) + marker.length;
+    return out.slice(0, insertAt) + block + out.slice(insertAt);
+}
+
+app.get('/api/archive/status', (req, res) => {
+    res.json({
+        repo: ARCHIVE_REPO,
+        branch: ARCHIVE_BRANCH,
+        siteUrl: ARCHIVE_SITE_URL,
+        autoPublish: ARCHIVE_AUTO_PUBLISH,
+        authenticated: !!githubToken()
+    });
+});
+
+app.post('/api/archive/publish', async (req, res) => {
+    const { slug, item, files, dryRun } = req.body || {};
+    const isStr = (v, max) => typeof v === 'string' && v.length > 0 && v.length <= max;
+    if (!isStr(slug, 40) || !ARCHIVE_SLUG_RE.test(slug)) return res.status(400).json({ error: 'invalid slug' });
+    if (!item || !isStr(item.title, 120) || typeof item.desc !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(item.date || '')) {
+        return res.status(400).json({ error: 'invalid item' });
+    }
+    if (!files || !isStr(files.report, 4 * 1024 * 1024)) return res.status(400).json({ error: 'report html is required' });
+
+    const base = `plans/${slug}`;
+    const entry = {
+        href: `${base}/`,
+        title: item.title,
+        desc: item.desc.slice(0, 160),
+        type: '기획서',
+        tags: (Array.isArray(item.tags) ? item.tags : []).filter(tag => typeof tag === 'string').slice(0, 6).map(tag => tag.slice(0, 20)),
+        date: item.date,
+        thumb: files.thumbJpegBase64 ? `thumbs/${slug}.jpg` : 'thumbs/llm-guide.jpg'
+    };
+
+    const commitOnce = async () => {
+        const ref = await archiveApi('GET', `/git/ref/heads/${ARCHIVE_BRANCH}`);
+        const baseCommit = await archiveApi('GET', `/git/commits/${ref.object.sha}`);
+        const indexFile = await archiveApi('GET', `/contents/index.html?ref=${ARCHIVE_BRANCH}`);
+        const indexHtml = Buffer.from(indexFile.content, 'base64').toString('utf-8');
+
+        const tree = [
+            { path: `${base}/index.html`, mode: '100644', type: 'blob', content: files.report },
+            { path: 'index.html', mode: '100644', type: 'blob', content: upsertArchiveItem(indexHtml, entry) }
+        ];
+        if (isStr(files.prototype, 4 * 1024 * 1024)) {
+            tree.push({ path: `${base}/prototype.html`, mode: '100644', type: 'blob', content: files.prototype });
+        }
+        if (isStr(files.thumbJpegBase64, 2 * 1024 * 1024)) {
+            const blob = await archiveApi('POST', '/git/blobs', { content: files.thumbJpegBase64, encoding: 'base64' });
+            tree.push({ path: `thumbs/${slug}.jpg`, mode: '100644', type: 'blob', sha: blob.sha });
+        }
+        const newTree = await archiveApi('POST', '/git/trees', { base_tree: baseCommit.tree.sha, tree });
+        // dryRun: 인증·목록 갱신·트리 생성까지만 확인하고 커밋/브랜치 갱신은 하지 않는다 (공개 아카이브에 반영 안 됨)
+        if (dryRun) return { sha: newTree.sha, dryRun: true, files: tree.map(entry => entry.path) };
+        const commit = await archiveApi('POST', '/git/commits', {
+            message: `Add plan: ${entry.title}\n\nPublished automatically by PITL (Planning-in-the-Loop).`,
+            tree: newTree.sha,
+            parents: [ref.object.sha]
+        });
+        await archiveApi('PATCH', `/git/refs/heads/${ARCHIVE_BRANCH}`, { sha: commit.sha, force: false });
+        return { sha: commit.sha };
+    };
+
+    try {
+        let result;
+        try {
+            result = await commitOnce();
+        } catch (err) {
+            // 그 사이 브랜치가 앞서 나간 경우(fast-forward 불가) 한 번 더 시도
+            if (err.status !== 422 && err.status !== 409) throw err;
+            result = await commitOnce();
+        }
+        console.log(`[Archive] ${result.dryRun ? 'Dry run' : 'Published'} ${entry.title} → ${ARCHIVE_SITE_URL}${base}/ (${result.sha.slice(0, 7)})`);
+        return res.json({ ok: true, url: `${ARCHIVE_SITE_URL}${base}/`, commit: result.dryRun ? null : result.sha, dryRun: !!result.dryRun, files: result.files });
+    } catch (err) {
+        console.error('[Archive] Publish failed:', err.message);
+        return res.status(502).json({ error: err.message });
+    }
+});
+
 // ── GET /api/proxy-status ─────────────────────────────────────────────────────
 // 브라우저가 로컬 서버 실행 여부 및 Claude CLI 사용 가능 여부를 감지하는 엔드포인트
 app.get('/api/proxy-status', (req, res) => {
