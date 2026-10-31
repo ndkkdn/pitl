@@ -3835,6 +3835,8 @@
             overflow: hidden;
         }
         .tile-card.wide .tile-snippet { -webkit-line-clamp: 4; }
+        .tile-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .tile-time { font-size: 11.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
         .tile-cta {
             align-self: flex-end;
             font-size: 12px;
@@ -4380,6 +4382,60 @@
         .review-toggle-text { display: flex; flex-direction: column; gap: 1px; line-height: 1.35; }
         .review-toggle-text b { font-size: 13px; color: var(--text-primary); }
         .review-toggle-text small { font-size: 11.5px; color: var(--text-secondary); }
+
+        /* ── Pipeline timing: per-step durations & totals ── */
+        .circle-tab-time {
+            display: block;
+            min-height: 12px;
+            margin-top: 1px;
+            font-size: 9.5px;
+            font-weight: 600;
+            line-height: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+        .circle-tab-item.active .circle-tab-time { color: var(--accent-neon); }
+        /* 소요시간 줄이 생긴 만큼 상단 단계 바 높이를 내용에 맞춘다 (원형 노드 상단 잘림 방지) */
+        .computer-chrome .chrome-title-bar {
+            height: auto !important;
+            min-height: 96px;
+            padding-top: 8px !important;
+            padding-bottom: 6px !important;
+        }
+        .timing-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 18px;
+            margin-top: 12px;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+        }
+        .timing-stats b {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            margin-left: 4px;
+        }
+
+        /* ── Archive publish bar (tile dashboard) ── */
+        .archive-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 0 0 16px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .archive-bar i { color: var(--accent-neon); margin-right: 4px; }
+        .archive-bar a { color: var(--accent-neon); font-weight: 600; }
     </style>
 </head>
 <body class="state-landing dark-theme">
@@ -4640,6 +4696,7 @@
                                     </div>
                                 </div>
                                 <span class="circle-tab-label">1-Pager</span>
+                                <span class="circle-tab-time" data-node-time="1pager" aria-live="off"></span>
                                 <div class="active-indicator-triangle"></div>
                             </div>
 
@@ -4656,6 +4713,7 @@
                                     </div>
                                 </div>
                                 <span class="circle-tab-label">3C</span>
+                                <span class="circle-tab-time" data-node-time="threec" aria-live="off"></span>
                                 <div class="active-indicator-triangle"></div>
                             </div>
 
@@ -4672,6 +4730,7 @@
                                     </div>
                                 </div>
                                 <span class="circle-tab-label">SWOT</span>
+                                <span class="circle-tab-time" data-node-time="swot" aria-live="off"></span>
                                 <div class="active-indicator-triangle"></div>
                             </div>
 
@@ -4688,6 +4747,7 @@
                                     </div>
                                 </div>
                                 <span class="circle-tab-label">STP</span>
+                                <span class="circle-tab-time" data-node-time="stp" aria-live="off"></span>
                                 <div class="active-indicator-triangle"></div>
                             </div>
 
@@ -4704,13 +4764,14 @@
                                     </div>
                                 </div>
                                 <span class="circle-tab-label">MECE</span>
+                                <span class="circle-tab-time" data-node-time="mece" aria-live="off"></span>
                                 <div class="active-indicator-triangle"></div>
                             </div>
                         </div>
 
                         <!-- Gate Approval Thumbs-Up Connector Circle Node (Between 1단계 & 2단계) -->
                         <div class="gate-thumb-connector">
-                            <div class="circle-tab-item pending disabled nav-item" id="nav-gate50" onclick="handleGate50Click()" title="50% Gate: [1단계 구조화] 승인 ➔ [2단계 구체화] 계속 진행">
+                            <div class="circle-tab-item pending disabled nav-item" id="nav-gate50" onclick="handleGate50Click()" title="중간 검토: [1단계 구조화] 승인 ➔ [2단계 구체화] 계속 진행">
                                 <div class="circle-tab-node">
                                     <svg class="ring-svg" viewBox="0 0 40 40">
                                         <circle class="ring-track" cx="20" cy="20" r="17"/>
@@ -4719,10 +4780,11 @@
                                     <div class="node-inner" style="background: rgba(245, 158, 11, 0.14);">
                                         <div class="node-liquid" id="node-liquid-gate50"></div>
                                         <i class="fa-solid fa-thumbs-up node-icon" style="color: var(--accent-amber, #f59e0b);"></i>
-                                        <span class="node-percent" id="node-pct-gate50">50%</span>
+                                        <span class="node-percent" id="node-pct-gate50">⏸</span>
                                     </div>
                                 </div>
                                 <span class="circle-tab-label" style="color: var(--accent-amber, #f59e0b); font-weight: 700;">승인 & 계속</span>
+                                <span class="circle-tab-time" data-node-time="gate50" aria-live="off"></span>
                                 <div class="active-indicator-triangle"></div>
                             </div>
                         </div>
@@ -4744,6 +4806,7 @@
                                     </div>
                                 </div>
                                 <span class="circle-tab-label">PRD Spec</span>
+                                <span class="circle-tab-time" data-node-time="prd" aria-live="off"></span>
                                 <div class="active-indicator-triangle"></div>
                             </div>
 
@@ -4760,6 +4823,7 @@
                                     </div>
                                 </div>
                                 <span class="circle-tab-label">Wireframe</span>
+                                <span class="circle-tab-time" data-node-time="wireframe" aria-live="off"></span>
                                 <div class="active-indicator-triangle"></div>
                             </div>
 
@@ -4776,6 +4840,7 @@
                                     </div>
                                 </div>
                                 <span class="circle-tab-label">Prototype</span>
+                                <span class="circle-tab-time" data-node-time="prototype" aria-live="off"></span>
                                 <div class="active-indicator-triangle"></div>
                             </div>
 
@@ -4792,6 +4857,7 @@
                                     </div>
                                 </div>
                                 <span class="circle-tab-label">QA Audit</span>
+                                <span class="circle-tab-time" data-node-time="audit" aria-live="off"></span>
                                 <div class="active-indicator-triangle"></div>
                             </div>
                         </div>
@@ -5907,6 +5973,7 @@ ${idea.slice(0, 2000)}`
                     title: cleanTitle,
                     idea: docs.idea || '',
                     summaryTitle: docs.summaryTitle || '',
+                    timings: docs.timings || null,
                     '1pager': docs['1pager'] || '',
                     'threec': docs['threec'] || '',
                     'swot': docs['swot'] || '',
@@ -6167,6 +6234,7 @@ ${idea.slice(0, 2000)}`
                                 <div id="pipeline-progress-fill" style="width: ${currentPct}%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue, #3b82f6)); border-radius: 6px; transition: width 0.4s ease;"></div>
                             </div>
                         </div>
+                            ${timingStatsHtml()}
 
                     </div>
                 </div>
@@ -6193,7 +6261,184 @@ ${idea.slice(0, 2000)}`
             }
         }
 
-        // Smooth Progressive Pipeline Progress Animator
+        // ═══════════════════════════════════════════════════════════════════
+        //  Pipeline progress & timing
+        //  전체 진행률 = (완료 단계 가중치 + 진행 단계 가중치 × 경과 비율) ÷ 전체 가중치
+        //  · 가중치 = 단계별 예상 소요시간(초). 실제 소요시간으로 매 실행 보정(지수 이동 평균)
+        //  · 진행 단계 비율 = 실제 경과 ÷ 예상 (예상 도달 시 90%, 초과하면 97%까지 천천히 수렴)
+        //  · 중간 검토(gate50) 대기는 작업이 아니므로 진행률·분석 소요시간에서 제외
+        // ═══════════════════════════════════════════════════════════════════
+        const PIPELINE_STEPS = ['1pager', 'threec', 'swot', 'stp', 'mece', 'gate50', 'prd', 'wireframe', 'prototype', 'audit'];
+        const WORK_STEPS = PIPELINE_STEPS.filter(key => key !== 'gate50');
+        const STEP_EXPECTED_DEFAULT = { '1pager': 90, threec: 90, swot: 75, stp: 80, mece: 100, prd: 110, wireframe: 100, prototype: 360, audit: 70 };
+        const STEP_LABELS = { '1pager': '1-Pager', threec: '3C', swot: 'SWOT', stp: 'STP', mece: 'MECE', prd: 'PRD', wireframe: t('와이어프레임', 'Wireframe'), prototype: t('프로토타입', 'Prototype'), audit: t('QA 감사', 'QA Audit') };
+        const STEP_LEARN_MIN_SECONDS = 10; // 백업 템플릿처럼 즉시 끝난 단계는 예상치 학습에서 제외
+
+        function fmtDuration(ms) {
+            const sec = Math.max(0, Math.round((ms || 0) / 1000));
+            if (sec < 60) return t(`${sec}초`, `${sec}s`);
+            const min = Math.floor(sec / 60), rest = sec % 60;
+            if (min < 60) return t(`${min}분 ${String(rest).padStart(2, '0')}초`, `${min}m ${String(rest).padStart(2, '0')}s`);
+            return t(`${Math.floor(min / 60)}시간 ${min % 60}분`, `${Math.floor(min / 60)}h ${min % 60}m`);
+        }
+
+        function loadStepEstimates() {
+            let learned = {};
+            try { learned = JSON.parse(localStorage.getItem('pitl_step_estimates') || '{}'); } catch (e) { /* 기본값 사용 */ }
+            const est = {};
+            WORK_STEPS.forEach(key => {
+                const v = Number(learned[key]);
+                est[key] = v >= 5 && v <= 3600 ? v : STEP_EXPECTED_DEFAULT[key];
+            });
+            return est;
+        }
+
+        function learnStepEstimate(key, seconds) {
+            if (!WORK_STEPS.includes(key) || !(seconds >= STEP_LEARN_MIN_SECONDS)) return;
+            try {
+                const learned = JSON.parse(localStorage.getItem('pitl_step_estimates') || '{}');
+                const prev = Number(learned[key]) || STEP_EXPECTED_DEFAULT[key];
+                learned[key] = Math.round(prev * 0.6 + seconds * 0.4);
+                localStorage.setItem('pitl_step_estimates', JSON.stringify(learned));
+            } catch (e) { /* 저장 불가 시 기본값 유지 */ }
+        }
+
+        window.pitlTiming = null;
+
+        function timingBegin() {
+            window.pitlTiming = { est: loadStepEstimates(), steps: {}, active: null, activeStart: 0, reviewWaitMs: 0, startedAt: Date.now(), finishedAt: null };
+        }
+
+        // 활성 단계 전환: 이전 단계의 소요시간을 확정하고 기록한다
+        function timingEnter(key) {
+            const tm = window.pitlTiming;
+            if (!tm) return;
+            const now = performance.now();
+            if (tm.active && tm.active !== key) {
+                const ms = now - tm.activeStart;
+                if (tm.active === 'gate50') {
+                    tm.reviewWaitMs += ms;
+                } else {
+                    tm.steps[tm.active] = ms;
+                    learnStepEstimate(tm.active, ms / 1000);
+                    if (typeof logAgentClientSide === 'function') {
+                        logAgentClientSide('system', t(`⏱ ${STEP_LABELS[tm.active]} 단계 소요 ${fmtDuration(ms)}`, `⏱ ${STEP_LABELS[tm.active]} took ${fmtDuration(ms)}`));
+                    }
+                }
+            }
+            if (key === 'completed_all') {
+                tm.active = null;
+                tm.finishedAt = Date.now();
+                const snap = timingSnapshot();
+                if (typeof logAgentClientSide === 'function') {
+                    logAgentClientSide('system', t(`⏱ 총 분석 소요시간 ${fmtDuration(snap.totalMs)}${snap.reviewWaitMs >= 1000 ? ` (중간 검토 대기 ${fmtDuration(snap.reviewWaitMs)} 제외)` : ''}`,
+                        `⏱ Total analysis time ${fmtDuration(snap.totalMs)}${snap.reviewWaitMs >= 1000 ? ` (excluding ${fmtDuration(snap.reviewWaitMs)} review wait)` : ''}`));
+                }
+                return;
+            }
+            if (tm.active !== key) {
+                tm.active = key;
+                tm.activeStart = now;
+            }
+        }
+
+        function timingSnapshot() {
+            const tm = window.pitlTiming;
+            if (!tm) return null;
+            const steps = {};
+            WORK_STEPS.forEach(key => { if (tm.steps[key] != null) steps[key] = Math.round(tm.steps[key]); });
+            return {
+                steps,
+                totalMs: Object.values(steps).reduce((a, b) => a + b, 0),
+                reviewWaitMs: Math.round(tm.reviewWaitMs),
+                startedAt: tm.startedAt,
+                finishedAt: tm.finishedAt
+            };
+        }
+
+        // 진행 중 단계의 완료 비율 (0~0.97): 실제 경과 시간 기준
+        function activeStepFraction(elapsedSec, expectedSec) {
+            const ratio = elapsedSec / Math.max(1, expectedSec);
+            if (ratio <= 1) return 0.9 * ratio;
+            return 0.9 + 0.07 * (1 - Math.exp(-(ratio - 1)));
+        }
+
+        function computeProgress() {
+            const tm = window.pitlTiming;
+            if (!tm) return null;
+            const total = WORK_STEPS.reduce((sum, key) => sum + tm.est[key], 0);
+            let done = 0, remaining = 0, activeElapsedMs = 0, activeFraction = 0;
+            const activeIdx = tm.active ? PIPELINE_STEPS.indexOf(tm.active) : PIPELINE_STEPS.length;
+            WORK_STEPS.forEach(key => {
+                const idx = PIPELINE_STEPS.indexOf(key);
+                if (tm.steps[key] != null && idx < activeIdx) {
+                    done += tm.est[key];
+                } else if (key === tm.active) {
+                    activeElapsedMs = performance.now() - tm.activeStart;
+                    activeFraction = activeStepFraction(activeElapsedMs / 1000, tm.est[key]);
+                    done += tm.est[key] * activeFraction;
+                    remaining += Math.max(5, tm.est[key] - activeElapsedMs / 1000);
+                } else if (idx > activeIdx) {
+                    remaining += tm.est[key];
+                }
+            });
+            if (tm.active === 'gate50') activeElapsedMs = performance.now() - tm.activeStart;
+            const completedMs = Object.values(tm.steps).reduce((a, b) => a + b, 0);
+            return {
+                percent: tm.finishedAt ? 100 : Math.min(99, (done / total) * 100),
+                activeFraction,
+                activeElapsedMs,
+                totalElapsedMs: completedMs + (tm.active && tm.active !== 'gate50' ? activeElapsedMs : 0),
+                etaSec: tm.finishedAt ? 0 : remaining
+            };
+        }
+
+        // 원형 탭 아래 단계별 소요시간 표시
+        function renderNodeTimes(timings) {
+            const tm = window.pitlTiming;
+            PIPELINE_STEPS.forEach(key => {
+                const el = document.querySelector(`[data-node-time="${key}"]`);
+                if (!el) return;
+                let text = '';
+                if (key === 'gate50') {
+                    const wait = timings ? timings.reviewWaitMs : (tm ? tm.reviewWaitMs + (tm.active === 'gate50' ? performance.now() - tm.activeStart : 0) : 0);
+                    text = wait >= 1000 ? t(`대기 ${fmtDuration(wait)}`, `wait ${fmtDuration(wait)}`) : '';
+                } else if (timings && timings.steps && timings.steps[key] != null) {
+                    text = fmtDuration(timings.steps[key]);
+                } else if (tm && tm.steps[key] != null) {
+                    text = fmtDuration(tm.steps[key]);
+                } else if (tm && tm.active === key) {
+                    text = fmtDuration(performance.now() - tm.activeStart);
+                }
+                el.textContent = text;
+            });
+        }
+
+        // 진행 카드의 소요시간 요약 (현재 단계 · 총 소요 · 예상 남은 시간)
+        function renderTimingStats(stats, timings) {
+            const set = (role, text) => document.querySelectorAll(`[data-timing="${role}"]`).forEach(el => { el.textContent = text; });
+            const tm = window.pitlTiming;
+            if (timings) {
+                set('step', t('완료', 'Done'));
+                set('total', fmtDuration(timings.totalMs));
+                set('eta', '—');
+                return;
+            }
+            if (!stats || !tm) return;
+            set('step', tm.active === 'gate50' ? t(`검토 대기 ${fmtDuration(stats.activeElapsedMs)}`, `Review wait ${fmtDuration(stats.activeElapsedMs)}`)
+                : tm.active ? `${STEP_LABELS[tm.active]} ${fmtDuration(stats.activeElapsedMs)}` : t('완료', 'Done'));
+            set('total', fmtDuration(stats.totalElapsedMs));
+            set('eta', tm.finishedAt ? '—' : t(`약 ${fmtDuration(stats.etaSec * 1000)}`, `~${fmtDuration(stats.etaSec * 1000)}`));
+        }
+
+        function timingStatsHtml() {
+            return `<div class="timing-stats">
+                <span><i class="fa-regular fa-clock"></i> ${t('현재 단계', 'Current step')} <b data-timing="step">—</b></span>
+                <span>${t('총 분석 소요', 'Total analysis')} <b data-timing="total">—</b></span>
+                <span>${t('예상 남은 시간', 'Estimated remaining')} <b data-timing="eta">—</b></span>
+            </div>`;
+        }
+
         window.pitlProgressTimer = null;
         window.pitlCurrentProgress = 0;
 
@@ -6204,37 +6449,23 @@ ${idea.slice(0, 2000)}`
                     window.pitlProgressTimer = null;
                 }
 
+                // 새 실행의 시작이면 타이밍을 초기화하고, 이후 단계 전환마다 소요시간을 확정한다
+                if (activeKey === '1pager') timingBegin();
+                const running = !!(window.pitlTiming && (window.pitlTiming.active || activeKey !== 'completed_all'));
+                if (running) timingEnter(activeKey);
+
                 const CIRCUMFERENCE = 106.81; // 2π × r=17
-                const fillEl = document.getElementById('pipeline-progress-fill');
-                const percentEl = document.getElementById('progress-percent-label');
-
-                const stepKeys = ['1pager', 'threec', 'swot', 'stp', 'mece', 'gate50', 'prd', 'wireframe', 'prototype', 'audit'];
-                const activeIdx = activeKey === 'completed_all' ? 10 : stepKeys.indexOf(activeKey);
-
-                // Overall pipeline progress updates ONLY when a step is completed
-                const completedSteps = activeKey === 'completed_all' ? 10 : Math.max(0, activeIdx);
-                const overallTarget = Math.min(100, Math.round((completedSteps / 10) * 100));
-
-                const startPercent = window.pitlCurrentProgress || 0;
-                let currentOverall = startPercent;
-                const duration = 300;
-                const intervalTime = 20;
-                const steps = Math.max(1, Math.round(duration / intervalTime));
-                const overallIncrement = (overallTarget - startPercent) / steps;
-
-                let count = 0;
-                const overallTimer = setInterval(() => {
-                    count++;
-                    currentOverall += overallIncrement;
-                    if (count >= steps || (overallIncrement >= 0 && currentOverall >= overallTarget)) {
-                        currentOverall = overallTarget;
-                        clearInterval(overallTimer);
-                    }
-                    window.pitlCurrentProgress = currentOverall;
-                    const roundedOverall = Math.min(100, Math.max(0, Math.round(currentOverall)));
-                    if (fillEl) fillEl.style.width = roundedOverall + '%';
-                    if (percentEl) percentEl.innerText = roundedOverall + '%';
-                }, intervalTime);
+                const stepKeys = PIPELINE_STEPS;
+                const activeIdx = activeKey === 'completed_all' ? stepKeys.length : stepKeys.indexOf(activeKey);
+                const setOverall = pct => {
+                    const rounded = Math.min(100, Math.max(0, Math.round(pct)));
+                    window.pitlCurrentProgress = pct;
+                    const fillEl = document.getElementById('pipeline-progress-fill');
+                    const percentEl = document.getElementById('progress-percent-label');
+                    if (fillEl) fillEl.style.width = rounded + '%';
+                    if (percentEl) percentEl.innerText = rounded + '%';
+                };
+                const gateText = state => (state === 'completed' ? '✓' : '⏸');
 
                 if (!activeKey || activeKey === 'completed_all') {
                     if (activeKey === 'completed_all') {
@@ -6253,9 +6484,14 @@ ${idea.slice(0, 2000)}`
                                 };
                             }
                             if (ringEl) ringEl.style.strokeDashoffset = '0';
-                            if (pctEl) pctEl.textContent = key === 'gate50' ? '50%' : '100%';
+                            if (pctEl) pctEl.textContent = key === 'gate50' ? gateText('completed') : '100%';
                             if (liquidEl) liquidEl.style.height = '100%';
                         });
+                        setOverall(100);
+                        // 방금 끝난 실행이면 실행 기록을, 히스토리를 연 경우면 저장된 기록을 보여준다
+                        const saved = running ? timingSnapshot() : (generatedDocs && generatedDocs.timings) || null;
+                        renderNodeTimes(saved);
+                        renderTimingStats(null, saved);
                     }
                     return;
                 }
@@ -6289,17 +6525,16 @@ ${idea.slice(0, 2000)}`
                             else switchDocument(key);
                         };
                         if (ringEl)   ringEl.style.strokeDashoffset = '0';
-                        if (pctEl)    pctEl.textContent = key === 'gate50' ? '50%' : '100%';
+                        if (pctEl)    pctEl.textContent = key === 'gate50' ? gateText('completed') : '100%';
                         if (liquidEl) liquidEl.style.height = '100%';
                     } else if (idx > activeIdx) {
                         itemEl.className = 'circle-tab-item pending disabled nav-item';
                         if (ringEl)   ringEl.style.strokeDashoffset = String(CIRCUMFERENCE);
-                        if (pctEl)    pctEl.textContent = key === 'gate50' ? '50%' : '0%';
+                        if (pctEl)    pctEl.textContent = key === 'gate50' ? gateText('pending') : '0%';
                         if (liquidEl) liquidEl.style.height = '0%';
                     }
                 });
 
-                // Smoothly fill current Active Step node from 0% -> 100% while AI is working
                 const activeItemEl   = document.getElementById(`nav-${activeKey}`);
                 const activeRingEl   = document.getElementById(`ring-fill-${activeKey}`);
                 const activePctEl    = document.getElementById(`node-pct-${activeKey}`);
@@ -6319,34 +6554,25 @@ ${idea.slice(0, 2000)}`
                     };
                 }
 
-                let stepPct = 0;
-
-                const updateActiveStepUI = (val) => {
-                    const clampedVal = Math.min(99, Math.max(0, val));
-                    const offset = CIRCUMFERENCE * (1 - clampedVal / 100);
-                    if (activeRingEl)   activeRingEl.style.strokeDashoffset = String(offset);
-                    if (activePctEl)    activePctEl.textContent = Math.round(clampedVal) + '%';
-                    if (activeLiquidEl) activeLiquidEl.style.height = clampedVal + '%';
-
-                    if (activeItemEl) {
-                        activeItemEl.classList.add('organizing');
+                // 실제 경과 시간으로 활성 단계 %, 전체 %, 소요시간 표시를 갱신한다
+                const tick = () => {
+                    const stats = computeProgress();
+                    if (!stats) return;
+                    setOverall(stats.percent);
+                    if (activeKey === 'gate50') {
+                        if (activePctEl) activePctEl.textContent = gateText('active');
+                    } else {
+                        const pct = Math.min(99, stats.activeFraction * 100);
+                        if (activeRingEl)   activeRingEl.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - pct / 100));
+                        if (activePctEl)    activePctEl.textContent = Math.round(pct) + '%';
+                        if (activeLiquidEl) activeLiquidEl.style.height = pct + '%';
+                        if (activeItemEl)   activeItemEl.classList.add('organizing');
                     }
+                    renderNodeTimes(null);
+                    renderTimingStats(stats, null);
                 };
-
-                updateActiveStepUI(0);
-                window.pitlProgressTimer = setInterval(() => {
-                    if (stepPct < 99) {
-                        let inc = 0;
-                        if (stepPct < 35)      inc = 1.8;
-                        else if (stepPct < 70) inc = 1.2;
-                        else if (stepPct < 92) inc = 0.6;
-                        else                   inc = 0.25;
-
-                        stepPct += inc;
-                        if (stepPct > 99) stepPct = 99;
-                        updateActiveStepUI(stepPct);
-                    }
-                }, 100);
+                tick();
+                window.pitlProgressTimer = setInterval(tick, 500);
 
             } catch (e) {
                 console.warn('[Progress] Update failed:', e);
@@ -6470,6 +6696,7 @@ ${idea.slice(0, 2000)}`
                                 <div id="pipeline-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue)); border-radius: 5px; transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);"></div>
                             </div>
                         </div>
+                            ${timingStatsHtml()}
 
                     </div>
                 </div>
@@ -6589,6 +6816,7 @@ ${idea.slice(0, 2000)}`
                                 <div id="pipeline-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue)); border-radius: 6px; transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);"></div>
                             </div>
                         </div>
+                            ${timingStatsHtml()}
 
                     </div>
                 </div>
@@ -6994,8 +7222,8 @@ ${idea.slice(0, 2000)}`
                 logAgentClientSide('strategist', `맥킨지 MECE 전략 분석 보고서 적재 완료.`);
                 const midReview = isMidReviewEnabled();
                 if (midReview) {
-                    logAgentClientSide('strategist', `⏸️ [50% Gate 관문 도출] MECE 단계까지의 기획 분석 생성이 완료되었습니다.`);
-                    logAgentClientSide('system', `상단 [50% 계속] 원형 탭 또는 MECE 상세 페이지 하단의 알약 버튼을 클릭하면 PRD 등 후속 4단계 생성을 계속 진행합니다.`);
+                    logAgentClientSide('strategist', `⏸️ [중간 검토 관문] MECE 단계까지의 기획 분석 생성이 완료되었습니다.`);
+                    logAgentClientSide('system', `상단 [승인 & 계속] 원형 탭 또는 MECE 상세 페이지 하단의 알약 버튼을 클릭하면 PRD 등 후속 4단계 생성을 계속 진행합니다.`);
                 } else {
                     logAgentClientSide('system', t('중간 검토 OFF — 검토 대기 없이 2단계(PRD → 와이어프레임 → 프로토타입 → QA)를 바로 이어서 진행합니다.', 'Mid-review OFF — continuing straight to phase 2 (PRD → wireframes → prototype → QA).'));
                 }
@@ -7056,7 +7284,7 @@ ${idea.slice(0, 2000)}`
             if (textarea) textarea.disabled = true;
 
             try {
-                logAgentClientSide('system', `▶️ [50% Gate 승인 확인] 후속 4단계(PRD, 와이어프레임, 프로토타입, QA 감사) 생성을 개시합니다.`);
+                logAgentClientSide('system', `▶️ [중간 검토 승인] 후속 4단계(PRD, 와이어프레임, 프로토타입, QA 감사) 생성을 개시합니다.`);
 
                 // STAGE 2: PRD Analyst (PRD)
                 safeUpdateProgress(65, 'prd');
@@ -7208,6 +7436,7 @@ ${idea.slice(0, 2000)}`
                 const resultDocs = {
                     title: cleanTitle,
                     summaryTitle,
+                    timings: timingSnapshot(),
                     idea: idea,
                     '1pager': onePagerContent,
                     'threec': threeCContent,
@@ -7222,6 +7451,8 @@ ${idea.slice(0, 2000)}`
                 
                 generatedDocs = resultDocs;
                 saveClientHistoryLocally(resultDocs);
+                // 분석이 끝난 기획서를 아카이브에 자동 게시 (실패해도 기획 결과에는 영향 없음)
+                publishPlanToArchive(resultDocs, { auto: true });
                 
                 completeAllPipelineSteps();
                 
@@ -9176,6 +9407,283 @@ ${idea.slice(0, 2000)}`
             document.addEventListener('focusout', hide);
         })();
 
+        // ═══════════════════════════════════════════════════════════════════
+        //  Artifact archive publishing — 분석이 끝난 기획서를 GitHub Pages 아카이브에 게시
+        //  (서버 /api/archive/publish 가 아카이브 저장소에 커밋 1개로 반영)
+        // ═══════════════════════════════════════════════════════════════════
+        const ARCHIVE_DOCS = [
+            ['1pager', '1-Pager 비즈니스 요약'], ['threec', '3C 환경 분석'], ['swot', 'SWOT · TOWS 전략'],
+            ['stp', 'STP 타깃 포지셔닝'], ['mece', 'MECE · RICE 구조화'], ['prd', 'PRD 요구사항 명세'],
+            ['wireframe', '와이어프레임 3안'], ['audit', 'QA 정합성 감사'], ['prototype', '서비스 UX 프로토타입']
+        ];
+
+        // 앱 스타일시트에서 색상 토큰(라이트/다크)과 차트 스타일을 그대로 가져온다 → 게시 페이지도 같은 디자인
+        function collectArchiveCss() {
+            const dark = {}, light = {}, rules = [];
+            const take = (target, style) => { for (let i = 0; i < style.length; i++) { const prop = style[i]; if (prop.startsWith('--')) target[prop] = style.getPropertyValue(prop).trim(); } };
+            for (const sheet of document.styleSheets) {
+                let list;
+                try { list = sheet.cssRules; } catch (e) { continue; } // 외부 CDN 스타일시트는 건너뜀
+                for (const rule of list) {
+                    if (rule.selectorText === ':root') take(dark, rule.style);
+                    else if (rule.selectorText === '[data-theme="light"], body.light-theme') take(light, rule.style);
+                    else if (/\.viz-|#viz-tooltip/.test(rule.cssText)) rules.push(rule.cssText);
+                }
+            }
+            const decl = map => Object.entries(map).map(([k, v]) => `${k}: ${v};`).join(' ');
+            return `:root { color-scheme: light; ${decl({ ...dark, ...light })} }
+                @media (prefers-color-scheme: dark) { :root { color-scheme: dark; ${decl(dark)} } }
+                ${rules.join('\n')}`;
+        }
+
+        const ARCHIVE_PAGE_CSS = `
+            * { box-sizing: border-box; }
+            body { margin: 0; background: var(--bg-base); color: var(--text-primary); font-family: 'Pretendard Variable', 'Noto Sans KR', -apple-system, sans-serif; line-height: 1.7; }
+            .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+            .hero { padding: 56px 0 28px; }
+            .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; color: var(--accent-neon); }
+            .hero h1 { font-size: clamp(28px, 4vw, 42px); line-height: 1.25; margin: 10px 0 14px; letter-spacing: -0.02em; }
+            .idea { color: var(--text-secondary); white-space: pre-wrap; margin: 0 0 18px; max-width: 760px; }
+            .meta { display: flex; flex-wrap: wrap; gap: 8px; }
+            .chip { font-size: 12.5px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-secondary); }
+            nav.toc { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg-base) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); }
+            nav.toc .wrap { display: flex; gap: 6px; overflow-x: auto; padding-block: 10px; }
+            nav.toc a { flex-shrink: 0; font-size: 12.5px; font-weight: 600; text-decoration: none; color: var(--text-secondary); padding: 5px 12px; border-radius: 999px; border: 1px solid var(--border-color); background: var(--bg-card); }
+            nav.toc a:hover, nav.toc a:focus-visible { color: var(--text-primary); border-color: var(--accent-neon); }
+            .doc { margin: 28px 0; padding: 28px clamp(18px, 3vw, 36px); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; scroll-margin-top: 64px; }
+            .doc > h2 { display: flex; align-items: center; gap: 10px; font-size: 22px; margin: 0 0 4px; }
+            .doc > h2::before { content: ''; width: 6px; height: 22px; border-radius: 3px; background: var(--cta-gradient); }
+            .doc-time { font-size: 12px; color: var(--text-muted); margin: 0 0 18px; }
+            .markdown-body h1 { font-size: 20px; } .markdown-body h2 { font-size: 18px; margin-top: 28px; } .markdown-body h3 { font-size: 15.5px; margin-top: 22px; }
+            .table-wrap { overflow-x: auto; margin: 14px 0; border: 1px solid var(--border-color); border-radius: 12px; }
+            .markdown-body table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+            .markdown-body tr:last-child td { border-bottom: 0; }
+            .markdown-body th { background: rgba(var(--accent-rgb), 0.07); text-align: left; }
+            .markdown-body th, .markdown-body td { padding: 8px 12px; border-bottom: 1px solid var(--border-color); vertical-align: top; }
+            .markdown-body pre { background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; overflow-x: auto; font-size: 12.5px; line-height: 1.45; }
+            .markdown-body code { font-family: 'JetBrains Mono', 'Fira Code', monospace; }
+            .markdown-body blockquote { margin: 14px 0; padding: 10px 16px; border-left: 3px solid var(--accent-neon); background: var(--bg-base); border-radius: 0 10px 10px 0; color: var(--text-secondary); }
+            .proto-frame { height: min(80vh, 820px); border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden; background: #fff; }
+            .proto-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+            .doc a.open { display: inline-block; margin-top: 12px; font-size: 13px; font-weight: 600; color: var(--accent-neon); }
+            footer { padding: 24px 0 56px; color: var(--text-muted); font-size: 12.5px; }
+            :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+            @media (max-width: 640px) { .hero { padding-top: 36px; } .doc { border-radius: 14px; } }
+        `;
+
+        function buildArchiveReportHtml(docs) {
+            const esc = vizEsc;
+            const title = docs.summaryTitle || summarizeIdeaToTitle(docs.idea || docs.title || '');
+            const timings = docs.timings || null;
+            const present = ARCHIVE_DOCS.filter(([key]) => (docs[key] || '').trim());
+            const sections = present.map(([key, label]) => {
+                const ms = timings && timings.steps ? timings.steps[key] : null;
+                const time = ms != null ? `<p class="doc-time">${esc(t('분석 소요', 'Analysis time'))} ${esc(fmtDuration(ms))}</p>` : '<p class="doc-time"></p>';
+                if (key === 'prototype') {
+                    return `<section class="doc" id="prototype"><h2>${esc(label)}</h2>${time}
+                        <div class="proto-frame"><iframe src="prototype.html" sandbox="allow-scripts allow-forms allow-modals" title="${esc(label)}" loading="lazy"></iframe></div>
+                        <a class="open" href="prototype.html" target="_blank" rel="noopener">${esc(t('새 창에서 열기 ↗', 'Open in a new tab ↗'))}</a></section>`;
+                }
+                // 각 단계 분석 원문 전체를 그대로 싣는다 (요약·생략 없음, 차트 데이터 블록만 차트로 변환)
+                const { markdown, data } = splitVizBlock(docs[key]);
+                const md = markdown.trim();
+                const viz = VIZ_DOC_KEYS.has(key) && vizDataUsable(key, data) ? renderFrameworkViz(key, data) : '';
+                // 넓은 표는 가로 스크롤 래퍼로 감싸 본문 폭은 유지하고 표는 전체 폭을 채운다
+                const holder = document.createElement('div');
+                holder.innerHTML = renderMarkdownEnhanced(md);
+                holder.querySelectorAll('table').forEach(table => {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'table-wrap';
+                    table.replaceWith(wrap);
+                    wrap.appendChild(table);
+                });
+                return `<section class="doc" id="${key}"><h2>${esc(label)}</h2>${time}<div class="markdown-body">${viz}${holder.innerHTML}</div></section>`;
+            }).join('');
+            const total = timings && timings.totalMs ? `<span class="chip">${esc(t('총 분석 소요', 'Total analysis'))} ${esc(fmtDuration(timings.totalMs))}</span>` : '';
+            const labels = JSON.stringify({ show: t('표로 보기', 'Show table'), hide: t('표 숨기기', 'Hide table') });
+            const timingTable = timings && timings.steps && Object.keys(timings.steps).length ? `<section class="doc" id="timings"><h2>${esc(t('단계별 분석 소요시간', 'Analysis time by step'))}</h2><p class="doc-time"></p>
+                <div class="markdown-body"><div class="table-wrap"><table><thead><tr><th>${esc(t('단계', 'Step'))}</th><th>${esc(t('소요시간', 'Time'))}</th></tr></thead><tbody>
+                ${ARCHIVE_DOCS.filter(([key]) => timings.steps[key] != null).map(([key, label]) => `<tr><td>${esc(label)}</td><td>${esc(fmtDuration(timings.steps[key]))}</td></tr>`).join('')}
+                <tr><td><b>${esc(t('합계 (중간 검토 대기 제외)', 'Total (excluding review wait)'))}</b></td><td><b>${esc(fmtDuration(timings.totalMs))}</b></td></tr>
+                ${timings.reviewWaitMs >= 1000 ? `<tr><td>${esc(t('중간 검토 대기', 'Review wait'))}</td><td>${esc(fmtDuration(timings.reviewWaitMs))}</td></tr>` : ''}
+                </tbody></table></div></div></section>` : '';
+            return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>${esc(title)} · PITL 기획서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>${collectArchiveCss()}${ARCHIVE_PAGE_CSS}</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+    <div class="eyebrow">PITL · PLANNING-IN-THE-LOOP</div>
+    <h1>${esc(title)}</h1>
+    <p class="idea">${esc(docs.idea || '')}</p>
+    <div class="meta"><span class="chip">${esc(archiveDate(docs))}</span><span class="chip">${present.length}${esc(t('개 문서', ' documents'))}</span>${total}</div>
+</div></header>
+<nav class="toc" aria-label="${esc(t('문서 목차', 'Contents'))}"><div class="wrap">${present.map(([key, label]) => `<a href="#${key}">${esc(label)}</a>`).join('')}${timingTable ? `<a href="#timings">${esc(t('소요시간', 'Timing'))}</a>` : ''}</div></nav>
+<main class="wrap">${sections}${timingTable}</main>
+<footer class="wrap">${esc(t('Planning-in-the-Loop가 자동 생성한 기획서입니다. 시장 규모·점수 등 수치는 모델 추정치를 포함합니다.', 'Generated by Planning-in-the-Loop. Figures such as market sizes and scores include model estimates.'))}</footer>
+<script>
+const VIZ_LABELS = ${labels};
+function toggleVizTable(btn) {
+    const tableEl = btn.closest('.viz-card').querySelector('.viz-table');
+    const open = tableEl.hidden;
+    tableEl.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    btn.textContent = open ? VIZ_LABELS.hide : VIZ_LABELS.show;
+}
+(() => {
+    const tip = document.createElement('div');
+    tip.id = 'viz-tooltip'; tip.setAttribute('role', 'tooltip'); tip.hidden = true;
+    document.body.appendChild(tip);
+    const place = (x, y) => { const r = tip.getBoundingClientRect(); tip.style.left = Math.min(innerWidth - r.width - 8, x + 14) + 'px'; tip.style.top = Math.max(8, y - r.height - 12) + 'px'; };
+    const show = (el, x, y) => { tip.textContent = el.getAttribute('data-tip'); tip.hidden = false; place(x, y); };
+    const find = e => e.target.closest && e.target.closest('[data-tip]');
+    addEventListener('pointerover', e => { const el = find(e); if (el) show(el, e.clientX, e.clientY); });
+    addEventListener('pointermove', e => { if (!tip.hidden && find(e)) place(e.clientX, e.clientY); });
+    addEventListener('pointerout', e => { const el = find(e); if (el && !el.contains(e.relatedTarget)) tip.hidden = true; });
+    addEventListener('focusin', e => { const el = find(e); if (el) { const r = el.getBoundingClientRect(); show(el, r.left + r.width / 2, r.top); } });
+    addEventListener('focusout', () => { tip.hidden = true; });
+})();
+<\/script>
+</body>
+</html>`;
+        }
+
+        function archiveDate(docs) {
+            const key = (docs.archive && docs.archive.date) || window.pitlActiveSessionDate;
+            if (/^\d{6}$/.test(key || '')) return `20${key.slice(0, 2)}-${key.slice(2, 4)}-${key.slice(4, 6)}`;
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        // 아카이브 카드 썸네일 (960×540 JPEG, 아카이브 기존 썸네일과 같은 규격)
+        async function buildArchiveThumb(docs) {
+            try { await document.fonts.ready; } catch (e) { /* 기본 글꼴로 그림 */ }
+            const W = 960, H = 540;
+            const canvas = document.createElement('canvas');
+            canvas.width = W; canvas.height = H;
+            const ctx = canvas.getContext('2d');
+            const bg = ctx.createLinearGradient(0, 0, W, H);
+            bg.addColorStop(0, '#F0EEE9'); bg.addColorStop(1, '#E6E2EE');
+            ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+            const accent = ctx.createLinearGradient(0, 0, W, 0);
+            accent.addColorStop(0, '#6D4AFF'); accent.addColorStop(1, '#C9245A');
+            ctx.fillStyle = accent; ctx.fillRect(0, 0, W, 10);
+            // 오른쪽: 9개 문서 타일 모자이크
+            const tileKeys = ['1pager', 'threec', 'swot', 'stp', 'mece', 'prd', 'wireframe', 'prototype', 'audit'];
+            tileKeys.forEach((key, i) => {
+                const x = 640 + (i % 3) * 92, y = 150 + Math.floor(i / 3) * 92;
+                ctx.fillStyle = (docs[key] || '').trim() ? 'rgba(91, 59, 240, 0.16)' : 'rgba(27, 26, 31, 0.06)';
+                ctx.beginPath(); ctx.roundRect(x, y, 80, 80, 16); ctx.fill();
+                ctx.fillStyle = '#5B3BF0'; ctx.font = "700 20px 'Space Grotesk', 'Noto Sans KR', sans-serif";
+                ctx.fillText(String(i + 1).padStart(2, '0'), x + 14, y + 34);
+            });
+            const wrap = (text, x, y, maxW, lineH, maxLines, font, color) => {
+                ctx.font = font; ctx.fillStyle = color;
+                const words = String(text || '').split(/\s+/);
+                let line = '', lines = 0;
+                for (let i = 0; i < words.length; i++) {
+                    const test = line ? `${line} ${words[i]}` : words[i];
+                    if (ctx.measureText(test).width > maxW && line) {
+                        if (++lines === maxLines) { ctx.fillText(`${line}…`, x, y); return y + lineH; }
+                        ctx.fillText(line, x, y); y += lineH; line = words[i];
+                    } else line = test;
+                }
+                if (line) { ctx.fillText(line, x, y); y += lineH; }
+                return y;
+            };
+            ctx.fillStyle = '#5B3BF0'; ctx.font = "700 20px 'Space Grotesk', 'Noto Sans KR', sans-serif";
+            ctx.fillText('PITL 기획서', 64, 96);
+            let y = wrap(docs.summaryTitle || summarizeIdeaToTitle(docs.idea || ''), 64, 172, 540, 62, 3, "800 50px 'Noto Sans KR', sans-serif", '#1B1A1F');
+            wrap(docs.idea || '', 64, y + 18, 540, 30, 3, "400 21px 'Noto Sans KR', sans-serif", '#66616D');
+            const total = docs.timings && docs.timings.totalMs ? ` · 총 ${fmtDuration(docs.timings.totalMs)}` : '';
+            ctx.fillStyle = '#66616D'; ctx.font = "600 19px 'Noto Sans KR', sans-serif";
+            ctx.fillText(`${archiveDate(docs)}${total}`, 64, H - 56);
+            return canvas.toDataURL('image/jpeg', 0.86).split(',')[1];
+        }
+
+        function makeArchiveSlug() {
+            const d = new Date();
+            const ymd = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+            const rand = Array.from(crypto.getRandomValues(new Uint8Array(6)), b => 'abcdefghijklmnopqrstuvwxyz0123456789'[b % 36]).join('');
+            return `p-${ymd}-${rand}`;
+        }
+
+        // 기획서를 아카이브에 게시한다. auto=true(분석 완료 직후)면 서버 설정이 꺼져 있을 때 조용히 건너뜀
+        async function publishPlanToArchive(docs, { auto = false } = {}) {
+            const say = msg => { if (typeof logAgentClientSide === 'function') logAgentClientSide('system', msg); };
+            if (!docs || !(docs.audit || docs.prototype || docs['1pager'])) return null;
+            let status;
+            try { status = await fetch('/api/archive/status').then(r => r.json()); } catch (e) { status = null; }
+            if (!status) { if (!auto) pitlAlert(t('아카이브 서버 상태를 확인하지 못했습니다.', 'Could not reach the archive service.'), 'error'); return null; }
+            if (auto && !status.autoPublish) return null;
+            if (!status.authenticated) {
+                const msg = t('GitHub 인증 정보가 없어 아카이브 게시를 건너뜁니다. (.env의 GITHUB_TOKEN 또는 gh auth login)', 'Skipping archive publish: no GitHub credentials.');
+                say(`📦 ${msg}`);
+                if (!auto) pitlAlert(msg, 'warn', t('아카이브 게시', 'Archive'));
+                return null;
+            }
+
+            const slug = (docs.archive && docs.archive.slug) || makeArchiveSlug();
+            const dateKey = (docs.archive && docs.archive.date) || window.pitlActiveSessionDate || null;
+            say(t(`📦 아카이브 게시 준비 중… (${status.repo})`, `📦 Preparing archive publish… (${status.repo})`));
+            try {
+                const files = {
+                    report: buildArchiveReportHtml(docs),
+                    prototype: docs.prototype ? extractPureHtmlCode(docs.prototype, docs.title || 'pitl', docs.idea || '') : '',
+                    thumbJpegBase64: await buildArchiveThumb(docs)
+                };
+                const item = {
+                    title: docs.summaryTitle || summarizeIdeaToTitle(docs.idea || docs.title || ''),
+                    desc: String(docs.idea || '').replace(/\s+/g, ' ').trim().slice(0, 140),
+                    tags: ['PITL', t('상품기획', 'Product planning')],
+                    date: archiveDate(docs)
+                };
+                const res = await fetch('/api/archive/publish', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ slug, item, files })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+                docs.archive = { slug, url: data.url, commit: data.commit, publishedAt: new Date().toISOString(), date: dateKey };
+                saveClientHistoryLocally(docs, window.pitlActiveSessionDate);
+                say(t(`📦 아카이브 게시 완료: ${data.url} (GitHub Pages 반영까지 1~2분)`, `📦 Published to the archive: ${data.url} (live in 1-2 min)`));
+                showCompletionToast(t('기획서를 아카이브에 게시했습니다.', 'Plan published to the archive.'));
+                return data.url;
+            } catch (err) {
+                say(t(`📦 [아카이브 게시 실패] ${err.message}`, `📦 [Archive publish failed] ${err.message}`));
+                if (!auto) pitlAlert(t('아카이브 게시에 실패했습니다: ', 'Archive publish failed: ') + vizEsc(err.message), 'error', t('아카이브 게시', 'Archive'));
+                return null;
+            }
+        }
+
+        async function publishFromDashboard() {
+            const btn = document.getElementById('btn-archive-publish');
+            if (btn) { btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t('게시 중…', 'Publishing…')}`; }
+            await publishPlanToArchive(generatedDocs, { auto: false });
+            if (activeDoc === 'dashboard') switchDocument('dashboard');
+        }
+
+        function archiveBarHtml() {
+            if (!generatedDocs || !(generatedDocs.audit || generatedDocs.prototype)) return '';
+            const pub = generatedDocs.archive;
+            return `<div class="archive-bar">
+                <span><i class="fa-solid fa-box-archive"></i> ${pub && pub.url
+                    ? `${t('아카이브에 게시됨', 'Published to the archive')} · <a href="${vizEsc(pub.url)}" target="_blank" rel="noopener">${t('기획서 보기 ↗', 'Open ↗')}</a>`
+                    : t('아직 아카이브에 게시되지 않았습니다', 'Not published to the archive yet')}</span>
+                <button type="button" class="btn-minimal" id="btn-archive-publish" onclick="publishFromDashboard()">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> ${pub && pub.url ? t('다시 게시', 'Republish') : t('아카이브에 게시', 'Publish')}
+                </button>
+            </div>`;
+        }
+
         function renderMarkdownEnhanced(mdRaw) {
             if (!mdRaw) return '';
             
@@ -9281,7 +9789,8 @@ ${idea.slice(0, 2000)}`
             // 핵심 산출물은 2칸짜리 벤토 타일로 강조 (4열 × 3행 = 12칸)
             const WIDE_TILES = new Set(['1pager', 'prd', 'prototype']);
             const tileCardsHtml = tiles.map(tile => {
-                const mdRaw = generatedDocs ? (generatedDocs[tile.key] || '') : '';
+                // 요약 문구에는 시각화 데이터 블록(pitl-viz JSON)을 쓰지 않는다
+                const mdRaw = splitVizBlock(generatedDocs ? (generatedDocs[tile.key] || '') : '').markdown;
                 const isReady = Boolean(mdRaw && mdRaw.trim().length > 0);
                 
                 // Extract snippet text
@@ -9296,6 +9805,7 @@ ${idea.slice(0, 2000)}`
                 }
 
                 const size = WIDE_TILES.has(tile.key) ? 'wide' : '';
+                const stepMs = generatedDocs && generatedDocs.timings && generatedDocs.timings.steps ? generatedDocs.timings.steps[tile.key] : null;
                 return `
                     <div class="tile-card ${isReady ? 'ready' : 'empty'} ${size}" onclick="switchDocument('${tile.key}')">
                         <div class="tile-head">
@@ -9308,7 +9818,10 @@ ${idea.slice(0, 2000)}`
                             <h3 class="tile-title">${tile.title}</h3>
                             <p class="tile-snippet">${snippet}</p>
                         </div>
-                        <span class="tile-cta">${t('상세 서류 보기', 'View Document')} <i class="fa-solid fa-arrow-right"></i></span>
+                        <div class="tile-foot">
+                            ${stepMs != null ? `<span class="tile-time"><i class="fa-regular fa-clock"></i> ${fmtDuration(stepMs)}</span>` : '<span></span>'}
+                            <span class="tile-cta">${t('상세 서류 보기', 'View Document')} <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -9330,6 +9843,7 @@ ${idea.slice(0, 2000)}`
                         </p>
                     </div>
 
+                    ${archiveBarHtml()}
                     <div class="tile-bento">
                         ${tileCardsHtml}
                     </div>
