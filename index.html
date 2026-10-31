@@ -4337,6 +4337,8 @@
         /* ── Run option: mid-review switch (landing) ── */
         .run-options {
             display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
             justify-content: center;
             margin: 14px auto 0;
             max-width: 800px;
@@ -4602,6 +4604,13 @@
                     <span class="review-toggle-text">
                         <b id="mid-review-label">중간 검토 ON</b>
                         <small id="mid-review-desc">MECE 분석까지 마친 뒤 멈추고, 검토 후 2단계를 진행합니다</small>
+                    </span>
+                </button>
+                <button type="button" class="review-toggle" id="toggle-archive-upload" role="switch" aria-checked="true" onclick="toggleArchiveUpload()">
+                    <span class="review-toggle-track" aria-hidden="true"><span class="review-toggle-thumb"></span></span>
+                    <span class="review-toggle-text">
+                        <b id="archive-upload-label">통합기획서 업로드 ON</b>
+                        <small id="archive-upload-desc">분석이 끝나면 아카이브(GitHub Pages)에 자동 게시합니다</small>
                     </span>
                 </button>
             </div>
@@ -5029,6 +5038,7 @@
                 }
             }
             syncMidReviewToggle();
+            syncArchiveToggle();
         }
 
         function toggleLanguage() {
@@ -6609,6 +6619,30 @@ ${idea.slice(0, 2000)}`
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncMidReviewToggle);
         else syncMidReviewToggle();
 
+        // ── 통합기획서 업로드 설정 (기본 ON: 분석 완료 시 아카이브 자동 게시) ──
+        function isArchiveUploadEnabled() {
+            try { return localStorage.getItem('pitl_archive_upload') !== 'off'; } catch (e) { return true; }
+        }
+
+        function syncArchiveToggle() {
+            const btn = document.getElementById('toggle-archive-upload');
+            if (!btn) return;
+            const on = isArchiveUploadEnabled();
+            btn.setAttribute('aria-checked', String(on));
+            document.getElementById('archive-upload-label').textContent = on ? t('통합기획서 업로드 ON', 'Report upload ON') : t('통합기획서 업로드 OFF', 'Report upload OFF');
+            document.getElementById('archive-upload-desc').textContent = on
+                ? t('분석이 끝나면 아카이브(GitHub Pages)에 자동 게시합니다', 'Publish to the archive (GitHub Pages) when analysis finishes')
+                : t('자동 게시하지 않습니다 (타일 대시보드에서 수동 게시 가능)', 'No automatic publishing (manual publish stays available)');
+        }
+
+        function toggleArchiveUpload() {
+            try { localStorage.setItem('pitl_archive_upload', isArchiveUploadEnabled() ? 'off' : 'on'); } catch (e) { /* 저장 불가 시 기본값 유지 */ }
+            syncArchiveToggle();
+        }
+
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncArchiveToggle);
+        else syncArchiveToggle();
+
         async function startProductPlanningClientSide(idea) {
             window.pitlResumeInFlight = false;
             window.pitlActiveSessionDate = null; // 새 기획은 오늘 날짜로 저장
@@ -7451,8 +7485,12 @@ ${idea.slice(0, 2000)}`
                 
                 generatedDocs = resultDocs;
                 saveClientHistoryLocally(resultDocs);
-                // 분석이 끝난 기획서를 아카이브에 자동 게시 (실패해도 기획 결과에는 영향 없음)
-                publishPlanToArchive(resultDocs, { auto: true });
+                // 분석이 끝난 기획서를 아카이브에 자동 게시 (첫 화면의 업로드 스위치가 ON일 때, 실패해도 기획 결과에는 영향 없음)
+                if (isArchiveUploadEnabled()) {
+                    publishPlanToArchive(resultDocs, { auto: true });
+                } else {
+                    logAgentClientSide('system', t('📦 통합기획서 업로드 OFF — 아카이브 자동 게시를 건너뜁니다. (타일 대시보드에서 수동 게시 가능)', '📦 Report upload OFF — skipping automatic archive publishing.'));
+                }
                 
                 completeAllPipelineSteps();
                 
