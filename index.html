@@ -4481,17 +4481,18 @@
         .archive-bar a { color: var(--accent-text); font-weight: 600; }
     
         /* ── 구조화 입력 칩 ── */
-        .prompt-slots { display: flex; justify-content: space-between; align-items: center; gap: 10px 16px; flex-wrap: wrap; padding: 10px 4px 2px; border-top: 1px solid rgba(var(--hairline-rgb), .08); margin-top: 8px; }
+        .prompt-slots { display: flex; justify-content: space-between; align-items: center; gap: 10px 16px; flex-wrap: wrap; padding: 12px 28px 14px; border-top: 1px solid rgba(var(--hairline-rgb), .08); margin: 0; }
         .slot-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-        .slot-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px dashed rgba(var(--hairline-rgb), .25); border-radius: 999px; padding: 4px 12px 4px 7px; font-size: 12.5px; background: transparent; color: var(--text-secondary); cursor: pointer; transition: all .2s; font-family: inherit; }
-        .slot-chip .slot-dot { width: 15px; height: 15px; border-radius: 50%; border: 1.5px solid currentColor; display: grid; place-items: center; font-size: 9px; color: transparent; }
+        .slot-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px dashed rgba(var(--hairline-rgb), .25); border-radius: 999px; padding: 5px 12px 5px 8px; font-size: 12.5px; line-height: 1.4; background: transparent; color: var(--text-secondary); cursor: pointer; transition: all .2s; font-family: inherit; }
+        .slot-chip .slot-dot { width: 14px; height: 14px; flex-shrink: 0; border-radius: 50%; border: 1.5px solid rgba(var(--hairline-rgb), .35); display: grid; place-items: center; font-size: 9px; line-height: 1; color: transparent; }
         .slot-chip.filled { border-style: solid; border-color: rgba(var(--accent-rgb), .45); background: rgba(var(--accent-rgb), .08); color: var(--text-primary); }
         .slot-chip.filled .slot-dot { background: rgb(var(--accent-rgb)); border-color: rgb(var(--accent-rgb)); color: #fff; }
         .slot-status { display: flex; align-items: center; gap: 8px; min-width: 0; }
         .slot-meter { display: inline-flex; gap: 3px; flex-shrink: 0; }
         .slot-meter i { width: 14px; height: 4px; border-radius: 2px; background: rgba(var(--hairline-rgb), .12); transition: background .2s; }
         .slot-meter i.on { background: rgb(var(--accent-rgb)); }
-        .slot-nudge { font-size: 12px; color: var(--text-secondary); }
+        .slot-nudge { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+        @media (max-width: 640px) { .prompt-slots { padding: 10px 16px 12px; } .slot-status { width: 100%; } }
         .slot-nudge.warn { color: var(--accent-amber); }
 
         /* ── 빈 상태 시작 카드 ── */
@@ -4718,6 +4719,54 @@
         @media (max-width: 900px) { .plan-actions { position: static; justify-content: flex-end; margin-bottom: 8px; } .plan-head { padding-right: 0; } }
         .sidebar-panel .sidebar-settings-wrap { display: none; }
         .sidebar-empty-state[hidden] { display: none !important; }
+
+        /* ══ 아이콘 버튼 · 뒤로 가기 · 맨 위로 ══ */
+        .theme-seg button { width: 32px; height: 28px; padding: 0 !important; display: inline-grid; place-items: center; font-size: 13px !important; }
+        .plan-btn-icon { width: 36px; height: 36px; padding: 0 !important; display: inline-grid; place-items: center; font-size: 14px; }
+        .plan-btn-icon.on { background: rgba(var(--accent-rgb), .14); border-color: rgba(var(--accent-rgb), .35); }
+        .plan-back { border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); width: 26px; height: 26px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 11px; cursor: pointer; margin-right: 6px; padding: 0; }
+        .plan-back:hover { border-color: rgba(var(--accent-rgb), .45); }
+        .plan-back[hidden] { display: none; }
+        .plan-crumb { align-items: center; }
+        .plan-head { padding-right: 300px; }
+        .scroll-top-btn { position: fixed; right: 24px; bottom: 24px; z-index: 950; display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 999px; border: 1px solid var(--border-color); background: color-mix(in srgb, var(--bg-card) 80%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); color: var(--text-primary); font: 700 12px 'Space Grotesk', sans-serif; letter-spacing: .08em; box-shadow: var(--shadow-card), 0 8px 24px rgba(0, 0, 0, .14); cursor: pointer; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .2s, transform .2s; }
+        .scroll-top-btn.show { opacity: 1; transform: none; pointer-events: auto; }
+        .scroll-top-btn:hover { border-color: rgba(var(--accent-rgb), .45); }
+        @media (prefers-reduced-motion: reduce) { .scroll-top-btn { transition: none; } }
+
+        /* ══ 첫 화면 우측: 점 잇기 애니메이션 ══ */
+        .landing-dots { display: none; }
+        @media (min-width: 1280px) {
+            body.state-landing .landing-view-container { flex-direction: row; justify-content: center; column-gap: clamp(40px, 5vw, 88px); }
+            .landing-view-container .landing-content { max-width: 760px; flex: 0 1 760px; }
+            .landing-dots { display: flex; flex-direction: column; align-items: center; gap: 18px; flex: 0 0 clamp(340px, 28vw, 460px); position: relative; z-index: 2; margin-top: var(--sp-6, 48px); }
+            .landing-dots::before { content: ''; position: absolute; inset: -12% -16%; z-index: -1; background: radial-gradient(closest-side, var(--bg-base) 62%, transparent); pointer-events: none; }
+        }
+        #landing-dots-canvas { width: 100%; aspect-ratio: 1 / 1.08; display: block; }
+        .landing-dots-caption { margin: 0; min-height: 30px; font: 400 19px/1.4 'Noto Sans KR', sans-serif; letter-spacing: -0.01em; color: var(--text-primary); text-align: center; opacity: 0; transform: translateY(6px); transition: opacity .6s ease, transform .6s ease; }
+        .landing-dots-caption.show { opacity: 1; transform: none; }
+        .landing-dots-caption:lang(en) { font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif; letter-spacing: 0; }
+
+        /* ══ 최근 기획서: 화면 가로 끝까지 ══ */
+        .landing-view-container > .landing-history-section { flex: none; width: calc(100% + 48px); max-width: none; margin: 8px -24px 0; z-index: 2; position: relative; }
+        @media (min-width: 1280px) {
+            body.state-landing .landing-view-container { flex-wrap: wrap; align-content: safe center; align-items: flex-start; }
+            .landing-view-container > .landing-history-section { flex: 0 0 calc(100% + 48px); }
+        }
+        .landing-view-container > .landing-history-section .landing-history-marquee-wrapper { mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%); }
+        .landing-view-container > .landing-history-section .starter-empty { max-width: 960px; margin: 0 auto; }
+        @media (prefers-reduced-motion: reduce) { .landing-dots-caption { transition: none; } }
+
+        /* ══ 최근 기획서 타일: 한 단계 작게 (220×97 → 184×~78) ══ */
+        .landing-history-grid { gap: 12px !important; }
+        .landing-history-card { flex: 0 0 184px !important; width: 184px !important; border-radius: 14px !important; }
+        .landing-history-card .landing-card-content { padding: 9px 11px !important; gap: 4px !important; }
+        .landing-history-card .landing-card-title { font-size: 12.5px !important; line-height: 1.4; }
+        .landing-history-card .landing-card-title i { margin-right: 4px !important; font-size: 11px; }
+        .landing-history-card .landing-card-idea { font-size: 10.5px !important; margin: 2px 0 !important; max-width: 100% !important; line-height: 1.4 !important; }
+        .landing-history-card .landing-card-footer { font-size: 10.5px !important; line-height: 1.4 !important; }
+        .landing-history-card .landing-card-badge { font-size: 10px !important; padding: 1px 6px !important; letter-spacing: 0 !important; }
+        .landing-history-card .btn-delete-history { font-size: 11px; }
 </style>
 </head>
 <body class="state-landing dark-theme">
@@ -4840,9 +4889,9 @@
     <div class="landing-view-container">
         <div class="landing-theme-corner">
                     <div class="theme-seg" role="group" aria-label="테마">
-                        <button type="button" data-theme-mode="system" aria-pressed="false" onclick="setThemeMode('system')">시스템</button>
-                        <button type="button" data-theme-mode="light" aria-pressed="false" onclick="setThemeMode('light')">라이트</button>
-                        <button type="button" data-theme-mode="dark" aria-pressed="false" onclick="setThemeMode('dark')">다크</button>
+                        <button type="button" data-theme-mode="system" aria-pressed="false" onclick="setThemeMode('system')" title="시스템 설정 따르기" aria-label="시스템 테마"><i class="fa-solid fa-desktop"></i></button>
+                        <button type="button" data-theme-mode="light" aria-pressed="false" onclick="setThemeMode('light')" title="라이트" aria-label="라이트 테마"><i class="fa-solid fa-sun"></i></button>
+                        <button type="button" data-theme-mode="dark" aria-pressed="false" onclick="setThemeMode('dark')" title="다크" aria-label="다크 테마"><i class="fa-solid fa-moon"></i></button>
                     </div>
         </div>
         <!-- Interactive Space Particle Network Canvas -->
@@ -4888,13 +4937,20 @@
                 </button>
             </div>
 
-            <!-- Recent Planning Runs Divider & Marquee -->
-            <div class="landing-history-section">
-                <div class="section-divider-title" data-i18n="history_section_title">최근 생성된 완공 기획안 히스토리</div>
-                <div class="landing-history-marquee-wrapper">
-                    <div class="landing-history-grid" id="landing-history-list">
-                        <!-- History cards injected here (doubled for seamless loop) -->
-                    </div>
+        </div>
+
+        <!-- 우측: 점이 이어져 기획이 되는 애니메이션 -->
+        <aside class="landing-dots" aria-hidden="true">
+            <canvas id="landing-dots-canvas"></canvas>
+            <p class="landing-dots-caption" id="landing-dots-caption"></p>
+        </aside>
+
+        <!-- Recent Planning Runs Divider & Marquee -->
+        <div class="landing-history-section">
+            <div class="section-divider-title" data-i18n="history_section_title">최근 생성된 완공 기획안 히스토리</div>
+            <div class="landing-history-marquee-wrapper">
+                <div class="landing-history-grid" id="landing-history-list">
+                    <!-- History cards injected here (doubled for seamless loop) -->
                 </div>
             </div>
         </div>
@@ -4962,17 +5018,17 @@
                 <div class="chrome-title-bar pitl-rail-bar">
                     <!-- 우측 상단: 테마 · 공유 · 더 보기 -->
                     <div class="plan-actions">
+                        <button type="button" class="plan-btn plan-btn-icon" id="btn-plan-dashboard" onclick="switchDocument('dashboard')" title="타일 대시보드" aria-label="타일 대시보드" hidden><i class="fa-solid fa-table-cells-large"></i></button>
                     <div class="theme-seg" role="group" aria-label="테마">
-                        <button type="button" data-theme-mode="system" aria-pressed="false" onclick="setThemeMode('system')">시스템</button>
-                        <button type="button" data-theme-mode="light" aria-pressed="false" onclick="setThemeMode('light')">라이트</button>
-                        <button type="button" data-theme-mode="dark" aria-pressed="false" onclick="setThemeMode('dark')">다크</button>
+                        <button type="button" data-theme-mode="system" aria-pressed="false" onclick="setThemeMode('system')" title="시스템 설정 따르기" aria-label="시스템 테마"><i class="fa-solid fa-desktop"></i></button>
+                        <button type="button" data-theme-mode="light" aria-pressed="false" onclick="setThemeMode('light')" title="라이트" aria-label="라이트 테마"><i class="fa-solid fa-sun"></i></button>
+                        <button type="button" data-theme-mode="dark" aria-pressed="false" onclick="setThemeMode('dark')" title="다크" aria-label="다크 테마"><i class="fa-solid fa-moon"></i></button>
                     </div>
-                        <button type="button" class="plan-btn" id="btn-plan-share" onclick="sharePlan()" hidden>공유</button>
+                        <button type="button" class="plan-btn plan-btn-icon" id="btn-plan-share" onclick="sharePlan()" title="공유 (아카이브 링크 복사)" aria-label="공유" hidden><i class="fa-solid fa-share-nodes"></i></button>
                         <div class="plan-more-wrap">
                             <button type="button" class="plan-btn plan-btn-icon" id="btn-plan-more" onclick="togglePlanMore(event)" aria-haspopup="menu" aria-expanded="false" aria-label="더 보기" hidden>⋯</button>
                             <div class="plan-more-menu" id="plan-more-menu" role="menu" hidden>
                                 <button type="button" role="menuitem" onclick="hidePlanMore(); copyActiveDocument()">현재 문서 마크다운 복사</button>
-                                <button type="button" role="menuitem" onclick="hidePlanMore(); switchDocument('dashboard')">타일 대시보드 보기</button>
                                 <button type="button" role="menuitem" onclick="hidePlanMore(); regenerateFromStart()">같은 아이디어로 다시 실행</button>
                             </div>
                         </div>
@@ -4980,7 +5036,7 @@
 
                     <!-- 기획서 제목 + 정보 칩 -->
                     <div class="plan-head" id="plan-head" hidden>
-                        <div class="plan-crumb">기획서 <span>›</span> <span id="plan-state"></span></div>
+                        <div class="plan-crumb"><button type="button" class="plan-back" id="btn-plan-back" onclick="goBackView()" title="이전 화면" aria-label="이전 화면으로" hidden><i class="fa-solid fa-arrow-left"></i></button>기획서 <span>›</span> <span id="plan-state"></span></div>
                         <h1 class="plan-title" id="plan-title"></h1>
                         <div class="plan-chips" id="plan-chips"></div>
                     </div>
@@ -6358,6 +6414,46 @@ ${idea.slice(0, 2000)}`
             }
         })();
 
+        // ── 화면 기록: 문서·대시보드·진행 화면 사이 뒤로 가기 ──
+        window.pitlViewStack = [];
+        window.pitlCurrentView = null;
+
+        function pushViewHistory(next, fromBack) {
+            const cur = window.pitlCurrentView;
+            if (!fromBack && cur && cur !== next) {
+                window.pitlViewStack.push(cur);
+                if (window.pitlViewStack.length > 30) window.pitlViewStack.shift();
+            }
+            window.pitlCurrentView = next;
+        }
+
+        function resetViewHistory() {
+            window.pitlViewStack = [];
+            window.pitlCurrentView = null;
+            const back = document.getElementById('btn-plan-back');
+            if (back) back.hidden = true;
+        }
+
+        function goBackView() {
+            const stack = window.pitlViewStack;
+            while (stack.length) {
+                const prev = stack.pop();
+                // 지나간 진행 화면·검토 카드는 지금도 유효할 때만 되돌린다
+                if (prev === 'progress') {
+                    const tm = window.pitlTiming;
+                    if (tm && tm.active && !tm.finishedAt) { window.pitlCurrentView = 'progress'; renderPipelineRunningProgressCard(); break; }
+                    continue;
+                }
+                if (prev === 'gate50') {
+                    if (window.pitlWaitingGate50) { window.pitlCurrentView = 'gate50'; renderGateCheckpoint(); break; }
+                    continue;
+                }
+                switchDocument(prev, true);
+                break;
+            }
+            updateRailMeta();
+        }
+
         // ── 테마: 시스템 / 라이트 / 다크 ──
         function currentThemeMode() {
             const v = localStorage.getItem('pitl_theme');
@@ -6386,9 +6482,9 @@ ${idea.slice(0, 2000)}`
             const btn = document.getElementById('btn-plan-share');
             let url = generatedDocs.archive && generatedDocs.archive.url;
             if (!url) {
-                if (btn) { btn.disabled = true; btn.textContent = t('게시 중…', 'Publishing…'); }
+                if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; }
                 url = await publishPlanToArchive(generatedDocs, { auto: false });
-                if (btn) btn.disabled = false;
+                if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-share-nodes"></i>'; }
                 updateRailMeta();
                 if (activeDoc === 'dashboard') switchDocument('dashboard');
             }
@@ -6418,6 +6514,32 @@ ${idea.slice(0, 2000)}`
         }
 
         document.addEventListener('click', e => { if (!e.target.closest('.plan-more-wrap')) hidePlanMore(); });
+
+        // ── 맨 위로: 스크롤 영역의 끝에 닿으면 버튼을 보여 준다 ──
+        (function initScrollTop() {
+            let scroller = null;
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'scroll-top-btn';
+            btn.title = t('맨 위로', 'Back to top');
+            btn.setAttribute('aria-label', t('맨 위로', 'Back to top'));
+            btn.innerHTML = '<i class="fa-solid fa-arrow-up"></i><span>TOP</span>';
+            btn.addEventListener('click', () => {
+                const el = scroller || document.scrollingElement;
+                if (el) el.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+            });
+            const attach = () => document.body.appendChild(btn);
+            if (document.body) attach(); else document.addEventListener('DOMContentLoaded', attach);
+            document.addEventListener('scroll', e => {
+                const el = e.target === document ? document.scrollingElement : e.target;
+                if (!el || el.nodeType !== 1 || el.scrollHeight - el.clientHeight < 400) return;
+                // 사이드바 기록 목록 같은 작은 영역은 제외한다
+                if (el.closest && el.closest('.sidebar-panel, .chat-panel, .plan-more-menu')) return;
+                scroller = el;
+                const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 120;
+                btn.classList.toggle('show', atBottom && el.scrollTop > 200);
+            }, { capture: true, passive: true });
+        })();
         document.addEventListener('keydown', e => { if (e.key === 'Escape') hidePlanMore(); });
 
         // ── 에이전트 4팀: 단계별 담당 ──
@@ -6440,6 +6562,7 @@ ${idea.slice(0, 2000)}`
             if (!target) return;
 
             const currentPct = Math.round(window.pitlCurrentProgress || 0);
+            if (!targetArea) pushViewHistory('progress');
             target.innerHTML = `
                 <div class="document-wrapper run-stream-wrapper">
                     <div class="run-bento" id="run-stream">
@@ -6568,8 +6691,12 @@ ${idea.slice(0, 2000)}`
             const done = !!(generatedDocs && (generatedDocs.audit || generatedDocs.prototype));
             const share = document.getElementById('btn-plan-share');
             const more = document.getElementById('btn-plan-more');
-            if (share) { share.hidden = !done; share.textContent = generatedDocs && generatedDocs.archive && generatedDocs.archive.url ? t('링크 복사', 'Copy link') : t('공유', 'Share'); }
+            if (share) { share.hidden = !done; share.title = generatedDocs && generatedDocs.archive && generatedDocs.archive.url ? t('아카이브 링크 복사', 'Copy archive link') : t('공유 (아카이브에 게시 후 링크 복사)', 'Share (publish, then copy link)'); }
             if (more) more.hidden = !generatedDocs;
+            const dash = document.getElementById('btn-plan-dashboard');
+            if (dash) { dash.hidden = !generatedDocs; dash.classList.toggle('on', activeDoc === 'dashboard'); }
+            const back = document.getElementById('btn-plan-back');
+            if (back) back.hidden = !(window.pitlViewStack && window.pitlViewStack.length);
             const chipBox = document.getElementById('plan-chips');
             if (chipBox.innerHTML !== chips) chipBox.innerHTML = chips;
         }
@@ -6586,6 +6713,8 @@ ${idea.slice(0, 2000)}`
             const st = window.pitlPendingState;
             if (!target || !st) return;
             activeDoc = 'gate50';
+            pushViewHistory('gate50');
+            setTimeout(updateRailMeta, 0);
             const items = [['1pager', st.onePagerContent], ['threec', st.threeCContent], ['swot', st.swotContent], ['stp', st.stpContent], ['mece', st.meceContent]];
             const esc = v => String(v).replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
             target.innerHTML = `
@@ -7097,6 +7226,8 @@ ${idea.slice(0, 2000)}`
             window.pitlRunTitle = '';
             window.pitlCurrentHistoryKey = null;
             document.querySelectorAll('#history-list .history-row.cur:not(.history-live)').forEach(row => row.classList.remove('cur'));
+            resetViewHistory();
+            window.pitlCurrentView = 'progress';
             if (!idea || typeof idea !== 'string') {
                 console.error('[Pipeline Error] Invalid idea parameter:', idea);
                 return;
@@ -9098,8 +9229,9 @@ ${idea.slice(0, 2000)}`
         }
 
         // Switch Computer Browser active document tab
-        function switchDocument(docKey) {
+        function switchDocument(docKey, fromBack) {
             if (!generatedDocs && docKey !== '1pager' && docKey !== 'dashboard') return;
+            pushViewHistory(docKey, fromBack);
             setTimeout(updateRailMeta, 0);
             
             // Clean active states of circle tabs
@@ -11045,6 +11177,34 @@ function toggleVizTable(btn) {
             if (row.dataset.sig !== html) { row.innerHTML = html; row.dataset.sig = html; }
         }
 
+        function fillHistoryMarquee(grid) {
+            const set = grid.dataset.cards;
+            if (!set) return;
+            grid.innerHTML = set;
+            const setWidth = grid.scrollWidth;
+            const view = (grid.parentElement && grid.parentElement.clientWidth) || window.innerWidth;
+            const reps = setWidth > 0 ? Math.max(1, Math.ceil(view / setWidth)) : 1;
+            const half = set.repeat(reps);
+            grid.innerHTML = half + half;
+            // 속도는 카드 수와 상관없이 일정하게 (초당 약 40px)
+            grid.style.animationDuration = Math.max(18, Math.round(setWidth * reps / 40)) + 's';
+        }
+
+        // 작업 화면에서 첫 화면으로 돌아오면 (숨겨져 있던 동안 폭을 잴 수 없었으므로) 다시 채운다
+        new MutationObserver(() => {
+            const grid = document.getElementById('landing-history-list');
+            if (grid && grid.dataset.cards && document.body.classList.contains('state-landing')) fillHistoryMarquee(grid);
+        }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+        let historyMarqueeTimer = 0;
+        window.addEventListener('resize', () => {
+            clearTimeout(historyMarqueeTimer);
+            historyMarqueeTimer = setTimeout(() => {
+                const grid = document.getElementById('landing-history-list');
+                if (grid && grid.dataset.cards && document.body.classList.contains('state-landing')) fillHistoryMarquee(grid);
+            }, 200);
+        });
+
         function renderHistoryLists(data) {
             // 1. Sidebar List
             const listContainer = document.getElementById('history-list');
@@ -11093,6 +11253,7 @@ function toggleVizTable(btn) {
             if (landingGrid) {
                 if (!data || data.length === 0) {
                     landingGrid.style.animation = 'none';
+                    delete landingGrid.dataset.cards;
                     landingGrid.innerHTML = `
                         <div class="landing-history-empty starter-empty">
                             <div class="starter-glyph" aria-hidden="true">✦</div>
@@ -11125,12 +11286,10 @@ function toggleVizTable(btn) {
                             </div>
                         </div>`;
                     };
-                    // Duplicate cards for seamless infinite scroll
-                    const cardHTML = data.map(buildCard).join('');
-                    landingGrid.innerHTML = cardHTML + cardHTML; // doubled for seamless loop
-                    // Adjust animation speed based on item count
-                    const duration = Math.max(18, data.length * 5);
-                    landingGrid.style.animationDuration = duration + 's';
+                    // 끊김 없는 흐름: 화면 폭을 채울 만큼 반복한 묶음을 두 번 이어 붙인다 (-50% 이동)
+                    landingGrid.style.animation = '';
+                    landingGrid.dataset.cards = data.map(buildCard).join('');
+                    fillHistoryMarquee(landingGrid);
                 }
             }
             
@@ -11175,6 +11334,7 @@ function toggleVizTable(btn) {
 
         // Fetch selected historical item
         async function loadHistoryItem(title, date) {
+            resetViewHistory();
             window.pitlCurrentHistoryKey = `${title}|${date}`;
             document.querySelectorAll('#history-list .history-row:not(.history-live)').forEach(row => row.classList.toggle('cur', row.dataset.key === window.pitlCurrentHistoryKey));
             const btnSubmit = document.getElementById('btn-submit-planning');
@@ -11551,6 +11711,214 @@ function toggleVizTable(btn) {
         fitLandingTitle();
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitLandingTitle);
         window.addEventListener('resize', fitLandingTitle);
+    </script>
+
+    <script>
+        (function landingDots() {
+            // 첫 화면 우측 애니메이션: 세 가지 이야기가 번갈아 재생된다
+            //  A. 아이디어 → 9단계 → 한 장의 기획   B. 에이전트 4팀 → 하나의 루프   C. 구조 → 우선순위 → 검증 → 화면
+            const canvas = document.getElementById('landing-dots-canvas');
+            const caption = document.getElementById('landing-dots-caption');
+            if (!canvas || !caption) return;
+            const ctx = canvas.getContext('2d');
+            const LABELS = ['1-Pager', '3C', 'SWOT', 'STP', 'MECE', 'PRD', 'Wireframe', 'Prototype', 'QA'];
+            const COLOR_VARS = ['--agent-s', '--agent-s', '--agent-s', '--agent-s', '--agent-s', '--agent-a', '--agent-d', '--agent-d', '--agent-r'];
+            const N = 9;
+            const rand = i => { const x = Math.sin(i * 12.9898 + 4.1) * 43758.5453; return x - Math.floor(x); };
+            const C = { x: .5, y: .46 };
+            const ring = (i, r, rot = 0) => ({ x: C.x + Math.cos(i / N * Math.PI * 2 - Math.PI / 2 + rot) * r, y: C.y + Math.sin(i / N * Math.PI * 2 - Math.PI / 2 + rot) * r });
+            const loopEdges = Array.from({ length: N }, (_, i) => [i, (i + 1) % N]);
+            const chain = Array.from({ length: N - 1 }, (_, i) => [i, i + 1]);
+
+            // A: 3줄 지그재그 경로 · 문서
+            const zig = i => { const row = Math.floor(i / 3), col = row % 2 ? 2 - i % 3 : i % 3; return { x: .2 + col * .3, y: .22 + row * .26 }; };
+            const docRows = [.36, .46, .56, .66, .76];
+            // B: 에이전트 4팀 묶음 (전략가 5 · 분석가 1 · 설계자 2 · 검수자 1)
+            const TEAM = [0, 0, 0, 0, 0, 1, 2, 2, 3];
+            const TEAM_C = [{ x: .28, y: .27 }, { x: .72, y: .27 }, { x: .72, y: .67 }, { x: .28, y: .67 }];
+            const teamPos = (i, el, spin) => {
+                const g = TEAM[i], members = TEAM.map((t, j) => t === g ? j : -1).filter(j => j >= 0), m = members.indexOf(i);
+                if (members.length === 1) return { ...TEAM_C[g] };
+                const ang = m / members.length * Math.PI * 2 + (spin ? el / 900 : 0);
+                const r = members.length > 2 ? .085 : .055;
+                return { x: TEAM_C[g].x + Math.cos(ang) * r, y: TEAM_C[g].y + Math.sin(ang) * r };
+            };
+            // C: 3×3 격자 · 막대 · 체크 · 휴대폰 화면
+            const grid = i => ({ x: .26 + (i % 3) * .24, y: .22 + Math.floor(i / 3) * .24 });
+            const BAR_H = [.42, .3, .5, .22, .36, .46, .28, .4, .34];
+            const bar = i => ({ x: .14 + i * .09, y: .74 - BAR_H[i] });
+            const CHECK = [[.26, .48], [.32, .55], [.38, .62], [.44, .69], [.52, .6], [.6, .5], [.68, .4], [.76, .3], [.82, .22]];
+            const phoneRows = [.3, .4, .5, .6, .7];
+
+            const STORIES = [
+                [ // A
+                    { dur: 3000, ko: '아이디어 한 점에서', en: 'It starts with one dot',
+                      dots: i => i === 0 ? { x: C.x, y: C.y, r: 11, a: 1 } : { x: C.x, y: C.y, r: 3, a: 0 }, edges: [], pulse: true },
+                    { dur: 3200, ko: '질문이 생기고', en: 'Questions appear',
+                      dots: i => i === 0 ? { x: C.x, y: C.y, r: 9, a: 1 } : i <= 3 ? { x: C.x + Math.cos((i - 1) * 2.094 - 1.571) * .26, y: C.y + Math.sin((i - 1) * 2.094 - 1.571) * .26, r: 7, a: 1 } : { x: C.x, y: C.y, r: 3, a: 0 },
+                      edges: [[0, 1], [0, 2], [0, 3], [1, 2], [2, 3], [3, 1]] },
+                    { dur: 2800, ko: '흩어진 생각을 모아', en: 'Gather scattered thoughts',
+                      dots: i => ({ x: .12 + rand(i) * .76, y: .14 + rand(i + 20) * .64, r: 6, a: .9 }), edges: [] },
+                    { dur: 5400, ko: '하나씩 이어 가면', en: 'Connect them one by one', labels: true, seq: true,
+                      dots: i => ({ ...zig(i), r: 7, a: 1 }), edges: chain },
+                    { dur: 4400, ko: '한 장의 기획이 됩니다', en: 'And it becomes a plan',
+                      dots: i => i < 4 ? { x: [.24, .76, .76, .24][i], y: [.16, .16, .86, .86][i], r: 6, a: 1 } : { x: .32, y: docRows[i - 4], r: 5, a: 1 },
+                      edges: [[0, 1], [1, 2], [2, 3], [3, 0], [4, [.68, docRows[0]]], [5, [.62, docRows[1]]], [6, [.66, docRows[2]]], [7, [.56, docRows[3]]], [8, [.6, docRows[4]]]] }
+                ],
+                [ // B
+                    { dur: 3200, ko: '네 에이전트 팀이', en: 'Four agent teams',
+                      dots: i => ({ ...teamPos(i, 0, false), r: 7, a: 1 }),
+                      edges: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [6, 7]] },
+                    { dur: 3600, ko: '각자 맡은 일을 하고', en: 'Each does its part',
+                      dots: (i, el) => ({ ...teamPos(i, el, true), r: 7, a: 1 }), edges: [] },
+                    { dur: 3800, ko: '결과를 건네며', en: 'Then hands it on', seq: true,
+                      dots: (i, el) => ({ ...teamPos(i, el + 3600, true), r: 7, a: 1 }), edges: [[4, 5], [5, 6], [7, 8], [8, 0]] },
+                    { dur: 5200, ko: '하나의 루프로 돕니다', en: 'Around one loop', seq: true,
+                      dots: (i, el) => ({ ...ring(i, .3, el / 6000), r: 7, a: 1 }), edges: loopEdges }
+                ],
+                [ // C
+                    { dur: 3600, ko: '문제를 구조로 나누고', en: 'Break the problem down',
+                      dots: i => ({ ...grid(i), r: 7, a: 1 }),
+                      edges: [[0, 1], [1, 2], [3, 4], [4, 5], [6, 7], [7, 8], [0, 3], [3, 6], [1, 4], [4, 7], [2, 5], [5, 8]] },
+                    { dur: 3600, ko: '우선순위를 정하고', en: 'Decide what matters',
+                      dots: i => ({ ...bar(i), r: 6, a: 1 }), edges: Array.from({ length: N }, (_, i) => [i, [bar(i).x, .74]]), bars: true },
+                    { dur: 3800, ko: '빠짐없이 검증하면', en: 'Check every piece', seq: true,
+                      dots: i => ({ x: CHECK[i][0], y: CHECK[i][1], r: 6, a: 1 }), edges: chain },
+                    { dur: 4600, ko: '만들 준비가 됩니다', en: 'Ready to build',
+                      dots: i => i < 4 ? { x: [.34, .66, .66, .34][i], y: [.14, .14, .84, .84][i], r: 6, a: 1 } : { x: .42, y: phoneRows[i - 4], r: 5, a: 1 },
+                      edges: [[0, 1], [1, 2], [2, 3], [3, 0], [4, [.58, phoneRows[0]]], [5, [.56, phoneRows[1]]], [6, [.58, phoneRows[2]]], [7, [.52, phoneRows[3]]], [8, [.57, phoneRows[4]]]] }
+                ]
+            ];
+            const SCENES = STORIES.flat();
+            const TRANS = 1300;
+            const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+            const lerp = (a, b, k) => a + (b - a) * k;
+            const clamp01 = x => Math.min(1, Math.max(0, x));
+
+            let W = 0, H = 0, colors = [], muted = '#888', textColor = '#222';
+            function readTheme() {
+                const cs = getComputedStyle(document.documentElement);
+                colors = COLOR_VARS.map(v => cs.getPropertyValue(v).trim() || '#8B6CFF');
+                const bcs = getComputedStyle(document.body);
+                textColor = bcs.getPropertyValue('--text-primary').trim() || '#222';
+                muted = bcs.getPropertyValue('--text-secondary').trim() || '#888';
+            }
+            function resize() {
+                const r = canvas.getBoundingClientRect();
+                if (!r.width) return;
+                const dpr = Math.min(2, window.devicePixelRatio || 1);
+                W = r.width; H = r.height;
+                canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
+
+            // k번째 장면의 el(ms) 시점을 그린다. 시작 위치는 직전 장면의 마지막 위치
+            function drawAt(k, el) {
+                const sc = SCENES[k], prev = SCENES[(k + SCENES.length - 1) % SCENES.length];
+                const cur = [];
+                for (let i = 0; i < N; i++) {
+                    const q = ease(clamp01((el - i * 45) / TRANS));
+                    const f = prev.dots(i, prev.dur), to = sc.dots(i, el);
+                    cur.push({ x: lerp(f.x, to.x, q), y: lerp(f.y, to.y, q), r: lerp(f.r, to.r, q), a: lerp(f.a, to.a, q) });
+                }
+                ctx.clearRect(0, 0, W, H);
+                const P = d => [d.x * W, d.y * H];
+
+                // 잇는 선: 점이 자리 잡은 뒤 차례로 그려진다
+                sc.edges.forEach((e, j) => {
+                    const start = TRANS * .7 + j * (sc.seq ? 380 : 120);
+                    const q = ease(clamp01((el - start) / (sc.seq ? 420 : 700)));
+                    if (q <= 0) return;
+                    const d0 = cur[e[0]];
+                    const [x1, y1] = P(d0);
+                    const toPoint = Array.isArray(e[1]);
+                    const [x2, y2] = toPoint ? [e[1][0] * W, e[1][1] * H] : P(cur[e[1]]);
+                    const grad = ctx.createLinearGradient(x1, y1, x2 + .01, y2 + .01);
+                    grad.addColorStop(0, colors[e[0]]);
+                    grad.addColorStop(1, toPoint ? colors[e[0]] : colors[e[1]]);
+                    ctx.strokeStyle = grad;
+                    ctx.globalAlpha = (toPoint ? (sc.bars ? .45 : .3) : .55) * Math.min(d0.a, 1);
+                    ctx.lineWidth = toPoint ? (sc.bars ? 8 : 5) : 2;
+                    ctx.lineCap = 'round';
+                    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(lerp(x1, x2, q), lerp(y1, y2, q)); ctx.stroke();
+                });
+
+                // 점
+                cur.forEach((d, i) => {
+                    if (d.a < .01) return;
+                    const [x, y] = P(d);
+                    const lit = sc.labels ? clamp01((el - TRANS * .7 - (i - 1) * 380) / 300) : 1;
+                    ctx.globalAlpha = d.a * (sc.labels ? .35 + .65 * lit : 1);
+                    ctx.fillStyle = colors[i];
+                    ctx.beginPath(); ctx.arc(x, y, d.r, 0, Math.PI * 2); ctx.fill();
+                    if (sc.pulse && i === 0) { // 첫 점은 숨 쉬듯 퍼지는 고리
+                        const rr = (Math.max(0, el) % 1600) / 1600;
+                        ctx.globalAlpha = (1 - rr) * .35;
+                        ctx.strokeStyle = colors[0]; ctx.lineWidth = 2;
+                        ctx.beginPath(); ctx.arc(x, y, d.r + rr * 26, 0, Math.PI * 2); ctx.stroke();
+                    }
+                    if (sc.labels && lit > 0) {
+                        ctx.globalAlpha = d.a * lit * .9;
+                        ctx.fillStyle = i % 2 ? muted : textColor;
+                        ctx.font = `500 ${Math.max(11, W * .027)}px 'Space Grotesk', 'Noto Sans KR', sans-serif`;
+                        ctx.textAlign = 'center';
+                        ctx.fillText(LABELS[i], x, y + (i % 2 ? 26 : -16));
+                    }
+                });
+                ctx.globalAlpha = 1;
+            }
+
+            // 자막: 한 바퀴(세 이야기 전체)는 한글, 다음 바퀴는 영어로 번갈아 보여 준다
+            let capKey = '', cycle = 0;
+            function setCaption(text, lang) {
+                if (capKey === text) return;
+                capKey = text;
+                caption.classList.remove('show');
+                clearTimeout(setCaption.t);
+                setCaption.t = setTimeout(() => { caption.textContent = text; caption.lang = lang; caption.classList.add('show'); }, 280);
+            }
+            function captionFor(k, lang) {
+                const sc = SCENES[k];
+                return lang === 'en' ? [sc.en, 'en'] : [sc.ko, 'ko'];
+            }
+            const cycleLang = () => (cycle % 2 ? 'en' : 'ko');
+
+            let scene = 0, sceneStart = performance.now(), raf = 0;
+            // 점검용: 원하는 장면·시점을 바로 그린다
+            canvas.pitlSeek = (k, el, lang = 'ko') => { readTheme(); resize(); drawAt(k, el); const [c, l] = captionFor(k, lang); caption.textContent = c; caption.lang = l; caption.classList.add('show'); capKey = c; };
+
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+            const active = () => document.body.classList.contains('state-landing') && !document.hidden && canvas.offsetParent !== null;
+            function loop() {
+                raf = 0;
+                if (!active()) return;
+                const now = performance.now();
+                if (now - sceneStart > SCENES[scene].dur) {
+                    scene = (scene + 1) % SCENES.length;
+                    sceneStart = now;
+                    if (scene === 0) cycle++;
+                }
+                drawAt(scene, now - sceneStart);
+                setCaption(...captionFor(scene, cycleLang()));
+                raf = requestAnimationFrame(loop);
+            }
+            function start() {
+                readTheme(); resize();
+                if (reduce.matches) { // 움직임 줄이기: 첫 이야기의 마지막 장면만 보여 준다
+                    const last = STORIES[0].length - 1;
+                    drawAt(last, 1e6);
+                    caption.textContent = SCENES[last].ko; caption.classList.add('show');
+                    return;
+                }
+                if (!raf && active()) raf = requestAnimationFrame(loop);
+            }
+            if (window.ResizeObserver) new ResizeObserver(start).observe(canvas);
+            document.addEventListener('visibilitychange', start);
+            new MutationObserver(start).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            new MutationObserver(readTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+            reduce.addEventListener('change', start);
+            start();
+        })();
     </script>
 </body>
 </html>
