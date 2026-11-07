@@ -4581,6 +4581,143 @@
         .status-pill-more li.cur { color: var(--text-primary); font-weight: 600; }
         .status-pill-open { margin: 6px 0 2px; width: 100%; border: 1px solid var(--border-color); background: transparent; color: var(--text-primary); border-radius: 999px; padding: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit; }
         @media (prefers-reduced-motion: reduce) { .run-stream *, .gate-checkpoint, .status-pill, .run-sk, .run-pulse { animation: none !important; transition: none !important; } }
+
+        /* ══ 리디자인: 제목 영역 · 파이프라인 레일 ══ */
+        :root { --agent-s: #8B6CFF; --agent-a: #38BDF8; --agent-d: #F472B6; --agent-r: #3DD39B; }
+        [data-theme="light"] { --agent-s: #5B3BF0; --agent-a: #0E7490; --agent-d: #B4237A; --agent-r: #0B7A5A; }
+        .computer-chrome .chrome-title-bar.pitl-rail-bar { height: auto !important; display: block !important; padding: 18px 28px 14px !important; }
+        .plan-head { margin-bottom: 14px; }
+        .plan-head[hidden] { display: none; }
+        .plan-crumb { font-size: 12px; color: var(--text-secondary); display: flex; gap: 6px; }
+        .plan-title { font-family: 'Noto Sans KR', sans-serif !important; font-weight: 800; font-size: clamp(22px, 2.4vw, 32px); letter-spacing: -0.03em; line-height: 1.2; margin: 2px 0 8px; color: var(--text-primary); border: none; padding: 0; background: none; -webkit-text-fill-color: currentColor; }
+        .plan-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+        .plan-chip { font-size: 12px; border: 1px solid var(--border-color); border-radius: 999px; padding: 2px 10px; color: var(--text-secondary); background: var(--bg-card); }
+
+        #circle-tabs-bar.pipeline-rail { display: grid !important; grid-template-columns: minmax(0, 5fr) 72px minmax(0, 4fr); gap: 12px; align-items: end; height: auto !important; padding: 12px 16px 10px !important; border: 1px solid var(--border-color); border-radius: 16px; background: var(--bg-card); overflow-x: auto; }
+        @media (max-width: 900px) { #circle-tabs-bar.pipeline-rail { grid-template-columns: 560px 64px 460px; } }
+        .rail-phase-h { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--text-secondary); margin-bottom: 8px; }
+        .rail-steps { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+        #circle-tabs-bar.pipeline-rail .circle-tab-item { all: unset; box-sizing: border-box; display: grid; gap: 4px; min-width: 0; cursor: pointer; color: var(--text-secondary); font-family: inherit; }
+        #circle-tabs-bar.pipeline-rail .circle-tab-item.disabled { cursor: default; opacity: .55; }
+        #circle-tabs-bar.pipeline-rail .circle-tab-item:focus-visible { outline: 2px solid rgb(var(--accent-rgb)); outline-offset: 3px; border-radius: 4px; }
+        .rail-bar { display: block; height: 4px; border-radius: 2px; background: rgba(var(--hairline-rgb), .10); overflow: hidden; }
+        #circle-tabs-bar .rail-bar .node-liquid { all: unset; display: block; height: 100%; width: 0; border-radius: 2px; background: rgb(var(--accent-rgb)); transition: width .4s ease; }
+        #circle-tabs-bar .circle-tab-item.completed .rail-bar .node-liquid { width: 100% !important; background: #10b981; }
+        #circle-tabs-bar .circle-tab-item.pending .rail-bar .node-liquid { width: 0 !important; }
+        #circle-tabs-bar.pipeline-rail .circle-tab-label { all: unset; display: block; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: inherit; }
+        #circle-tabs-bar.pipeline-rail .rail-sub { display: flex; gap: 6px; min-height: 16px; font-size: 11px; font-variant-numeric: tabular-nums; color: var(--text-secondary); white-space: nowrap; overflow: hidden; }
+        #circle-tabs-bar.pipeline-rail .node-percent { all: unset; font-weight: 700; color: var(--text-primary); }
+        #circle-tabs-bar.pipeline-rail .circle-tab-time { all: unset; }
+        #circle-tabs-bar.pipeline-rail .circle-tab-item.completed .node-percent,
+        #circle-tabs-bar.pipeline-rail .circle-tab-item.pending .node-percent,
+        #circle-tabs-bar #nav-gate50 .node-percent { display: none; }
+        #circle-tabs-bar #nav-gate50.waiting .circle-tab-label { color: var(--accent-amber); }
+        #circle-tabs-bar.pipeline-rail .circle-tab-item.completed { color: var(--text-primary); }
+        #circle-tabs-bar.pipeline-rail .circle-tab-item.completed:hover .circle-tab-label { text-decoration: underline; text-underline-offset: 3px; }
+        #circle-tabs-bar.pipeline-rail .circle-tab-item.organizing,
+        #circle-tabs-bar.pipeline-rail .circle-tab-item.active { color: var(--text-primary); }
+        #circle-tabs-bar.pipeline-rail .circle-tab-item.active .circle-tab-label { color: rgb(var(--accent-rgb)); }
+        #circle-tabs-bar.pipeline-rail .circle-tab-item.active .rail-bar { box-shadow: 0 0 0 2px rgba(var(--accent-rgb), .25); }
+        #circle-tabs-bar.pipeline-rail #nav-gate50 { justify-items: center; text-align: center; padding-bottom: 2px; }
+        .rail-dia { width: 13px; height: 13px; transform: rotate(45deg); border: 1.5px dashed rgba(var(--hairline-rgb), .4); border-radius: 3px; margin-bottom: 3px; }
+        #nav-gate50.completed .rail-dia { border: 1.5px solid #10b981; background: #10b981; }
+        #nav-gate50.waiting { color: var(--accent-amber) !important; opacity: 1 !important; cursor: pointer !important; }
+        #nav-gate50.waiting .rail-dia { border: 1.5px solid var(--accent-amber); background: rgba(245, 158, 11, .2); animation: railBreathe 1.6s ease-in-out infinite; }
+        @keyframes railBreathe { 50% { transform: rotate(45deg) scale(1.18); } }
+
+        /* ══ 진행 화면 벤토 ══ */
+        .document-wrapper.run-stream-wrapper:has(.run-bento) { padding: 20px 28px !important; }
+        .run-bento { width: 100%; max-width: 1180px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 14px; }
+        .run-tile { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 18px; padding: 18px 20px; min-width: 0; box-shadow: var(--shadow-card); animation: runFadeUp .35s ease both; }
+        .run-tile-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .05em; color: var(--text-secondary); margin-bottom: 12px; }
+        .run-writer { grid-column: span 7; grid-row: span 2; display: flex; flex-direction: column; }
+        .run-stat, .run-agents { grid-column: span 5; }
+        .run-activity { grid-column: span 12; }
+        @media (max-width: 1100px) { .run-bento > * { grid-column: span 12 !important; grid-row: auto !important; } }
+        .run-paper { flex: 1; border: 1px solid var(--border-color); border-radius: 12px; padding: 16px 18px; background: rgba(var(--hairline-rgb), .02); min-height: 260px; }
+        .run-sk-h { height: 12px !important; margin-top: 18px !important; background: linear-gradient(90deg, rgba(var(--hairline-rgb), .12) 0%, rgba(var(--hairline-rgb), .22) 50%, rgba(var(--hairline-rgb), .12) 100%) !important; background-size: 200% 100% !important; }
+        .run-who { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; letter-spacing: 0; color: var(--text-secondary); }
+        .run-av { width: 20px; height: 20px; border-radius: 50%; display: inline-grid; place-items: center; color: #fff; font: 800 10px 'Space Grotesk', sans-serif; flex-shrink: 0; }
+        .run-av-sys { background: rgba(var(--hairline-rgb), .18); color: var(--text-secondary); }
+        .run-big { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(64px, 7vw, 100px); line-height: .9; letter-spacing: -0.05em; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+        .run-stat-sub { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 12.5px; color: var(--text-secondary); }
+        .run-stat-sub b { display: block; font: 700 16px 'Space Grotesk', 'Noto Sans KR', sans-serif; color: var(--text-primary); }
+        .run-mini { display: grid; grid-template-columns: repeat(9, 1fr); gap: 3px; margin-top: 16px; }
+        .run-mini i { height: 20px; border-radius: 4px; background: rgba(var(--hairline-rgb), .08); position: relative; overflow: hidden; }
+        .run-mini i b { position: absolute; inset: 0 auto 0 0; width: 0; background: rgb(var(--accent-rgb)); transition: width .4s ease; }
+        .run-mini i.done b { width: 100% !important; background: #10b981; }
+        .run-flow { display: flex; align-items: flex-start; }
+        .run-agent { flex: 1; min-width: 0; display: grid; justify-items: center; text-align: center; gap: 5px; font-size: 12px; color: var(--text-secondary); }
+        .run-agent b { color: var(--text-secondary); font-size: 12.5px; }
+        .run-agent small { font-size: 11px; line-height: 1.4; }
+        .run-node { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; font: 800 15px 'Space Grotesk', sans-serif; color: var(--text-secondary); background: rgba(var(--hairline-rgb), .04); border: 1px solid var(--border-color); transition: all .3s; }
+        .run-agent.on .run-node { color: #fff; background: var(--c); border-color: var(--c); box-shadow: 0 0 0 6px color-mix(in srgb, var(--c) 18%, transparent), 0 8px 22px color-mix(in srgb, var(--c) 35%, transparent); }
+        .run-agent.on b { color: var(--text-primary); }
+        .run-agent.done .run-node { color: var(--c); border-color: color-mix(in srgb, var(--c) 50%, transparent); }
+        .run-link { flex: 0 0 16px; height: 0; margin-top: 21px; border-top: 1.5px dashed rgba(var(--hairline-rgb), .2); }
+        .run-link.on { border-top-color: rgb(var(--accent-rgb)); }
+        .run-feed { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+        .run-feed li { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 10px; align-items: start; font-size: 13px; color: var(--text-secondary); animation: runFadeUp .35s ease both; }
+        .run-feed-msg { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .run-feed-t { font-size: 11px; font-variant-numeric: tabular-nums; }
+
+        /* ══ 사이드바 기록: 두 줄 행 ══ */
+        .history-group { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--text-secondary); padding: 12px 10px 4px; }
+        .history-item-card.history-row { display: flex !important; flex-direction: row !important; align-items: center; gap: 8px; padding: 8px 10px !important; margin: 0 0 2px !important; border-radius: 10px !important; border: 1px solid transparent !important; background: transparent !important; box-shadow: none !important; transform: none !important; min-height: 0 !important; }
+        .history-item-card.history-row:hover { background: rgba(var(--hairline-rgb), .05) !important; }
+        .history-row-main { flex: 1; min-width: 0; display: grid; gap: 1px; }
+        .history-row-title { font-size: 13.5px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .history-row-meta { font-size: 11.5px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .history-row .btn-delete-history { opacity: 0; transition: opacity .15s; }
+        .history-row:hover .btn-delete-history, .history-row .btn-delete-history:focus-visible { opacity: 1; }
+
+        /* ══ 완료 대시보드 숫자 줄 ══ */
+        .dash-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+        @media (max-width: 760px) { .dash-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        .dash-stat { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 18px; padding: 16px 18px; box-shadow: var(--shadow-card); }
+        .dash-stat-v { font: 700 clamp(26px, 3vw, 40px)/1.05 'Space Grotesk', 'Noto Sans KR', sans-serif; letter-spacing: -0.03em; color: var(--text-primary); }
+        .dash-stat-v sup { font-size: .45em; color: var(--text-secondary); margin-left: 2px; vertical-align: top; }
+        .dash-stat-v.good { color: #10b981; }
+        .dash-stat-k { font-size: 12.5px; color: var(--text-secondary); margin-top: 6px; }
+        @media (prefers-reduced-motion: reduce) { .run-tile, .run-feed li, #nav-gate50 .rail-dia { animation: none !important; } }
+
+        /* ══ 사이드바: 새 기획 · 검색 · 현재/실행 중 행 ══ */
+        .sidebar-panel .new-plan-btn { background: var(--text-primary) !important; color: var(--bg-base) !important; border: 0 !important; box-shadow: none !important; justify-content: space-between !important; padding: 10px 14px !important; border-radius: 12px !important; font-size: 14px !important; font-weight: 700; }
+        .sidebar-panel .new-plan-btn:hover { opacity: .9; transform: none; }
+        .sidebar-panel .new-plan-btn span { display: inline-flex; align-items: center; gap: 8px; }
+        .kbd-hint { font: 11px 'Fira Code', ui-monospace, monospace; opacity: .6; letter-spacing: 0; }
+        .history-search { display: block; width: 100%; box-sizing: border-box; margin: 10px 0 4px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); font: 13px 'Noto Sans KR', sans-serif; outline: none; }
+        .history-search:focus { border-color: rgba(var(--hairline-rgb), .3); }
+        .history-search::placeholder { color: var(--text-secondary); }
+        .sidebar-panel .sidebar-menu-title { display: none; }
+        .history-item-card.history-row.cur { background: var(--bg-card) !important; box-shadow: var(--shadow-card) !important; border-color: var(--border-color) !important; }
+        .history-live-meta { color: rgb(var(--accent-rgb)) !important; font-weight: 700; }
+        .history-group[hidden], .history-row[hidden] { display: none !important; }
+
+        /* ══ 테마 전환: 우측 상단 세그먼트 ══ */
+        .theme-seg { display: inline-flex; border: 1px solid var(--border-color); border-radius: 999px; padding: 3px; background: var(--bg-card); }
+        .theme-seg button { border: 0; background: none; padding: 5px 12px; border-radius: 999px; font: 500 13px 'Noto Sans KR', sans-serif; color: var(--text-secondary); cursor: pointer; }
+        .theme-seg button:hover { color: var(--text-primary); }
+        .theme-seg button[aria-pressed="true"] { background: rgba(var(--accent-rgb), .14); color: var(--text-primary); font-weight: 700; }
+        .theme-seg button:focus-visible { outline: 2px solid rgb(var(--accent-rgb)); outline-offset: 1px; }
+        .landing-theme-corner { position: fixed; top: 16px; right: 20px; z-index: 60; }
+        body:not(.state-landing) .landing-theme-corner { display: none; }
+        .chrome-title-bar.pitl-rail-bar { position: relative; }
+        .plan-actions { position: absolute; top: 16px; right: 28px; display: flex; gap: 8px; align-items: center; z-index: 5; }
+        .plan-btn { border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); border-radius: 999px; padding: 7px 16px; font: 600 13px 'Noto Sans KR', sans-serif; cursor: pointer; }
+        .plan-btn:hover { border-color: rgba(var(--accent-rgb), .45); }
+        .plan-btn[hidden] { display: none; }
+        .plan-btn-icon { width: 36px; padding: 7px 0; text-align: center; }
+        .plan-more-wrap { position: relative; }
+        .plan-more-menu { position: absolute; right: 0; top: calc(100% + 6px); min-width: 210px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: var(--shadow-card), 0 12px 32px rgba(0, 0, 0, .14); padding: 6px; display: grid; z-index: 70; }
+        .plan-more-menu[hidden] { display: none; }
+        .plan-more-menu button { border: 0; background: none; text-align: left; padding: 8px 10px; border-radius: 8px; font: 13px 'Noto Sans KR', sans-serif; color: var(--text-primary); cursor: pointer; }
+        .plan-more-menu button:hover { background: rgba(var(--hairline-rgb), .06); }
+        .plan-head { padding-right: 360px; }
+        .chrome-title-bar.pitl-rail-bar:has(.plan-head[hidden]) { padding-top: 64px !important; }
+        @media (max-width: 900px) { .plan-actions { position: static; justify-content: flex-end; margin-bottom: 8px; } .plan-head { padding-right: 0; } }
+        .sidebar-panel .sidebar-settings-wrap { display: none; }
+        .sidebar-empty-state[hidden] { display: none !important; }
 </style>
 </head>
 <body class="state-landing dark-theme">
@@ -4701,6 +4838,13 @@
        1. LANDING PAGE STATE VIEW
        ========================================================================== -->
     <div class="landing-view-container">
+        <div class="landing-theme-corner">
+                    <div class="theme-seg" role="group" aria-label="테마">
+                        <button type="button" data-theme-mode="system" aria-pressed="false" onclick="setThemeMode('system')">시스템</button>
+                        <button type="button" data-theme-mode="light" aria-pressed="false" onclick="setThemeMode('light')">라이트</button>
+                        <button type="button" data-theme-mode="dark" aria-pressed="false" onclick="setThemeMode('dark')">다크</button>
+                    </div>
+        </div>
         <!-- Interactive Space Particle Network Canvas -->
         <canvas id="space-particle-canvas"></canvas>
         
@@ -4769,9 +4913,10 @@
                 <h3>PITL Workspace</h3>
             </div>
             
-            <button class="new-plan-btn" onclick="resetToLanding()" data-i18n="new_plan_btn">
-                <i class="fa-solid fa-plus"></i> 새로운 아이디어 기획
+            <button class="new-plan-btn" onclick="startNewPlan()" data-i18n="new_plan_btn">
+                <span><i class="fa-solid fa-plus"></i> 새 기획</span><kbd class="kbd-hint">⌘K</kbd>
             </button>
+            <input type="search" class="history-search" id="history-search" placeholder="기획서 검색" data-i18n-placeholder="history_search_placeholder" oninput="filterHistoryRows(this.value)" aria-label="기획서 검색">
             
             <div class="sidebar-menu-section">
                 <div class="sidebar-menu-title" data-i18n="history_sidebar_title">기획 히스토리 내역</div>
@@ -4814,189 +4959,92 @@
             <div class="computer-chrome">
                 
                 <!-- Chrome top title bar with navigation controls & tabs -->
-                <div class="chrome-title-bar">
-                    <!-- Circle Progress Node Tabs Bar (Categorized Stage Pill Groups) -->
-                    <div class="circle-tab-bar-container" id="circle-tabs-bar">
-                        <!-- Stage 1 Pill Group: 1단계 구조화 -->
-                        <div class="step-pill-group">
-                            <span class="step-pill-badge stage1">1단계 구조화</span>
-                            
-                            <div class="circle-tab-item active nav-item" id="nav-1pager" onclick="switchDocument('1pager')" title="1-Pager 비즈니스 요약">
-                                <div class="circle-tab-node">
-                                    <svg class="ring-svg" viewBox="0 0 40 40">
-                                        <circle class="ring-track" cx="20" cy="20" r="17"/>
-                                        <circle class="ring-fill" id="ring-fill-1pager" cx="20" cy="20" r="17"/>
-                                    </svg>
-                                    <div class="node-inner">
-                                        <div class="node-liquid" id="node-liquid-1pager"></div>
-                                        <i class="fa-solid fa-file-invoice node-icon"></i>
-                                        <span class="node-percent" id="node-pct-1pager">0%</span>
-                                    </div>
-                                </div>
+                <div class="chrome-title-bar pitl-rail-bar">
+                    <!-- 우측 상단: 테마 · 공유 · 더 보기 -->
+                    <div class="plan-actions">
+                    <div class="theme-seg" role="group" aria-label="테마">
+                        <button type="button" data-theme-mode="system" aria-pressed="false" onclick="setThemeMode('system')">시스템</button>
+                        <button type="button" data-theme-mode="light" aria-pressed="false" onclick="setThemeMode('light')">라이트</button>
+                        <button type="button" data-theme-mode="dark" aria-pressed="false" onclick="setThemeMode('dark')">다크</button>
+                    </div>
+                        <button type="button" class="plan-btn" id="btn-plan-share" onclick="sharePlan()" hidden>공유</button>
+                        <div class="plan-more-wrap">
+                            <button type="button" class="plan-btn plan-btn-icon" id="btn-plan-more" onclick="togglePlanMore(event)" aria-haspopup="menu" aria-expanded="false" aria-label="더 보기" hidden>⋯</button>
+                            <div class="plan-more-menu" id="plan-more-menu" role="menu" hidden>
+                                <button type="button" role="menuitem" onclick="hidePlanMore(); copyActiveDocument()">현재 문서 마크다운 복사</button>
+                                <button type="button" role="menuitem" onclick="hidePlanMore(); switchDocument('dashboard')">타일 대시보드 보기</button>
+                                <button type="button" role="menuitem" onclick="hidePlanMore(); regenerateFromStart()">같은 아이디어로 다시 실행</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 기획서 제목 + 정보 칩 -->
+                    <div class="plan-head" id="plan-head" hidden>
+                        <div class="plan-crumb">기획서 <span>›</span> <span id="plan-state"></span></div>
+                        <h1 class="plan-title" id="plan-title"></h1>
+                        <div class="plan-chips" id="plan-chips"></div>
+                    </div>
+
+                    <!-- 한 줄 파이프라인 레일 (1단계 5개 · 중간 검토 · 2단계 4개) -->
+                    <div class="circle-tab-bar-container pipeline-rail" id="circle-tabs-bar">
+                        <div class="rail-phase">
+                            <div class="rail-phase-h"><span>1단계 · 구조화</span><span class="rail-count" id="rail-count-1">0/5</span></div>
+                            <div class="rail-steps">
+                            <button type="button" class="circle-tab-item active nav-item" id="nav-1pager" onclick="switchDocument('1pager')" title="1-Pager">
+                                <span class="rail-bar"><span class="node-liquid" id="node-liquid-1pager"></span></span>
                                 <span class="circle-tab-label">1-Pager</span>
-                                <span class="circle-tab-time" data-node-time="1pager" aria-live="off"></span>
-                                <div class="active-indicator-triangle"></div>
-                            </div>
-
-                            <div class="circle-tab-item pending disabled nav-item" id="nav-threec" onclick="switchDocument('threec')" title="3C 분석">
-                                <div class="circle-tab-node">
-                                    <svg class="ring-svg" viewBox="0 0 40 40">
-                                        <circle class="ring-track" cx="20" cy="20" r="17"/>
-                                        <circle class="ring-fill" id="ring-fill-threec" cx="20" cy="20" r="17"/>
-                                    </svg>
-                                    <div class="node-inner">
-                                        <div class="node-liquid" id="node-liquid-threec"></div>
-                                        <i class="fa-solid fa-chart-pie node-icon"></i>
-                                        <span class="node-percent" id="node-pct-threec">0%</span>
-                                    </div>
-                                </div>
+                                <span class="rail-sub"><span class="node-percent" id="node-pct-1pager"></span><span class="circle-tab-time" data-node-time="1pager" aria-live="off"></span></span>
+                            </button>
+                            <button type="button" class="circle-tab-item pending disabled nav-item" id="nav-threec" onclick="switchDocument('threec')" title="3C">
+                                <span class="rail-bar"><span class="node-liquid" id="node-liquid-threec"></span></span>
                                 <span class="circle-tab-label">3C</span>
-                                <span class="circle-tab-time" data-node-time="threec" aria-live="off"></span>
-                                <div class="active-indicator-triangle"></div>
-                            </div>
-
-                            <div class="circle-tab-item pending disabled nav-item" id="nav-swot" onclick="switchDocument('swot')" title="SWOT">
-                                <div class="circle-tab-node">
-                                    <svg class="ring-svg" viewBox="0 0 40 40">
-                                        <circle class="ring-track" cx="20" cy="20" r="17"/>
-                                        <circle class="ring-fill" id="ring-fill-swot" cx="20" cy="20" r="17"/>
-                                    </svg>
-                                    <div class="node-inner">
-                                        <div class="node-liquid" id="node-liquid-swot"></div>
-                                        <i class="fa-solid fa-scale-balanced node-icon"></i>
-                                        <span class="node-percent" id="node-pct-swot">0%</span>
-                                    </div>
-                                </div>
+                                <span class="rail-sub"><span class="node-percent" id="node-pct-threec"></span><span class="circle-tab-time" data-node-time="threec" aria-live="off"></span></span>
+                            </button>
+                            <button type="button" class="circle-tab-item pending disabled nav-item" id="nav-swot" onclick="switchDocument('swot')" title="SWOT">
+                                <span class="rail-bar"><span class="node-liquid" id="node-liquid-swot"></span></span>
                                 <span class="circle-tab-label">SWOT</span>
-                                <span class="circle-tab-time" data-node-time="swot" aria-live="off"></span>
-                                <div class="active-indicator-triangle"></div>
-                            </div>
-
-                            <div class="circle-tab-item pending disabled nav-item" id="nav-stp" onclick="switchDocument('stp')" title="STP">
-                                <div class="circle-tab-node">
-                                    <svg class="ring-svg" viewBox="0 0 40 40">
-                                        <circle class="ring-track" cx="20" cy="20" r="17"/>
-                                        <circle class="ring-fill" id="ring-fill-stp" cx="20" cy="20" r="17"/>
-                                    </svg>
-                                    <div class="node-inner">
-                                        <div class="node-liquid" id="node-liquid-stp"></div>
-                                        <i class="fa-solid fa-bullseye node-icon"></i>
-                                        <span class="node-percent" id="node-pct-stp">0%</span>
-                                    </div>
-                                </div>
+                                <span class="rail-sub"><span class="node-percent" id="node-pct-swot"></span><span class="circle-tab-time" data-node-time="swot" aria-live="off"></span></span>
+                            </button>
+                            <button type="button" class="circle-tab-item pending disabled nav-item" id="nav-stp" onclick="switchDocument('stp')" title="STP">
+                                <span class="rail-bar"><span class="node-liquid" id="node-liquid-stp"></span></span>
                                 <span class="circle-tab-label">STP</span>
-                                <span class="circle-tab-time" data-node-time="stp" aria-live="off"></span>
-                                <div class="active-indicator-triangle"></div>
-                            </div>
-
-                            <div class="circle-tab-item pending disabled nav-item" id="nav-mece" onclick="switchDocument('mece')" title="MECE 분석">
-                                <div class="circle-tab-node">
-                                    <svg class="ring-svg" viewBox="0 0 40 40">
-                                        <circle class="ring-track" cx="20" cy="20" r="17"/>
-                                        <circle class="ring-fill" id="ring-fill-mece" cx="20" cy="20" r="17"/>
-                                    </svg>
-                                    <div class="node-inner">
-                                        <div class="node-liquid" id="node-liquid-mece"></div>
-                                        <i class="fa-solid fa-network-wired node-icon"></i>
-                                        <span class="node-percent" id="node-pct-mece">0%</span>
-                                    </div>
-                                </div>
+                                <span class="rail-sub"><span class="node-percent" id="node-pct-stp"></span><span class="circle-tab-time" data-node-time="stp" aria-live="off"></span></span>
+                            </button>
+                            <button type="button" class="circle-tab-item pending disabled nav-item" id="nav-mece" onclick="switchDocument('mece')" title="MECE">
+                                <span class="rail-bar"><span class="node-liquid" id="node-liquid-mece"></span></span>
                                 <span class="circle-tab-label">MECE</span>
-                                <span class="circle-tab-time" data-node-time="mece" aria-live="off"></span>
-                                <div class="active-indicator-triangle"></div>
+                                <span class="rail-sub"><span class="node-percent" id="node-pct-mece"></span><span class="circle-tab-time" data-node-time="mece" aria-live="off"></span></span>
+                            </button>
                             </div>
                         </div>
-
-                        <!-- Gate Approval Thumbs-Up Connector Circle Node (Between 1단계 & 2단계) -->
-                        <div class="gate-thumb-connector">
-                            <div class="circle-tab-item pending disabled nav-item" id="nav-gate50" onclick="handleGate50Click()" title="중간 검토: [1단계 구조화] 승인 ➔ [2단계 구체화] 계속 진행">
-                                <div class="circle-tab-node">
-                                    <svg class="ring-svg" viewBox="0 0 40 40">
-                                        <circle class="ring-track" cx="20" cy="20" r="17"/>
-                                        <circle class="ring-fill" id="ring-fill-gate50" cx="20" cy="20" r="17"/>
-                                    </svg>
-                                    <div class="node-inner" style="background: rgba(245, 158, 11, 0.14);">
-                                        <div class="node-liquid" id="node-liquid-gate50"></div>
-                                        <i class="fa-solid fa-thumbs-up node-icon" style="color: var(--accent-amber, #f59e0b);"></i>
-                                        <span class="node-percent" id="node-pct-gate50">⏸</span>
-                                    </div>
-                                </div>
-                                <span class="circle-tab-label" style="color: var(--accent-amber, #f59e0b); font-weight: 700;">승인 & 계속</span>
-                                <span class="circle-tab-time" data-node-time="gate50" aria-live="off"></span>
-                                <div class="active-indicator-triangle"></div>
-                            </div>
-                        </div>
-
-                        <!-- Stage 2 Pill Group: 2단계 구체화 -->
-                        <div class="step-pill-group">
-                            <span class="step-pill-badge stage2">2단계 구체화</span>
-
-                            <div class="circle-tab-item pending disabled nav-item" id="nav-prd" onclick="switchDocument('prd')" title="PRD Spec">
-                                <div class="circle-tab-node">
-                                    <svg class="ring-svg" viewBox="0 0 40 40">
-                                        <circle class="ring-track" cx="20" cy="20" r="17"/>
-                                        <circle class="ring-fill" id="ring-fill-prd" cx="20" cy="20" r="17"/>
-                                    </svg>
-                                    <div class="node-inner">
-                                        <div class="node-liquid" id="node-liquid-prd"></div>
-                                        <i class="fa-solid fa-file-shield node-icon"></i>
-                                        <span class="node-percent" id="node-pct-prd">0%</span>
-                                    </div>
-                                </div>
-                                <span class="circle-tab-label">PRD Spec</span>
-                                <span class="circle-tab-time" data-node-time="prd" aria-live="off"></span>
-                                <div class="active-indicator-triangle"></div>
-                            </div>
-
-                            <div class="circle-tab-item pending disabled nav-item" id="nav-wireframe" onclick="switchDocument('wireframe')" title="Wireframe">
-                                <div class="circle-tab-node">
-                                    <svg class="ring-svg" viewBox="0 0 40 40">
-                                        <circle class="ring-track" cx="20" cy="20" r="17"/>
-                                        <circle class="ring-fill" id="ring-fill-wireframe" cx="20" cy="20" r="17"/>
-                                    </svg>
-                                    <div class="node-inner">
-                                        <div class="node-liquid" id="node-liquid-wireframe"></div>
-                                        <i class="fa-solid fa-crop-simple node-icon"></i>
-                                        <span class="node-percent" id="node-pct-wireframe">0%</span>
-                                    </div>
-                                </div>
-                                <span class="circle-tab-label">Wireframe</span>
-                                <span class="circle-tab-time" data-node-time="wireframe" aria-live="off"></span>
-                                <div class="active-indicator-triangle"></div>
-                            </div>
-
-                            <div class="circle-tab-item pending disabled nav-item" id="nav-prototype" onclick="switchDocument('prototype')" title="Prototype">
-                                <div class="circle-tab-node">
-                                    <svg class="ring-svg" viewBox="0 0 40 40">
-                                        <circle class="ring-track" cx="20" cy="20" r="17"/>
-                                        <circle class="ring-fill" id="ring-fill-prototype" cx="20" cy="20" r="17"/>
-                                    </svg>
-                                    <div class="node-inner">
-                                        <div class="node-liquid" id="node-liquid-prototype"></div>
-                                        <i class="fa-solid fa-display node-icon"></i>
-                                        <span class="node-percent" id="node-pct-prototype">0%</span>
-                                    </div>
-                                </div>
-                                <span class="circle-tab-label">Prototype</span>
-                                <span class="circle-tab-time" data-node-time="prototype" aria-live="off"></span>
-                                <div class="active-indicator-triangle"></div>
-                            </div>
-
-                            <div class="circle-tab-item pending disabled nav-item" id="nav-audit" onclick="switchDocument('audit')" title="QA Audit">
-                                <div class="circle-tab-node">
-                                    <svg class="ring-svg" viewBox="0 0 40 40">
-                                        <circle class="ring-track" cx="20" cy="20" r="17"/>
-                                        <circle class="ring-fill" id="ring-fill-audit" cx="20" cy="20" r="17"/>
-                                    </svg>
-                                    <div class="node-inner">
-                                        <div class="node-liquid" id="node-liquid-audit"></div>
-                                        <i class="fa-solid fa-clipboard-check node-icon"></i>
-                                        <span class="node-percent" id="node-pct-audit">0%</span>
-                                    </div>
-                                </div>
-                                <span class="circle-tab-label">QA Audit</span>
-                                <span class="circle-tab-time" data-node-time="audit" aria-live="off"></span>
-                                <div class="active-indicator-triangle"></div>
+                        <button type="button" class="circle-tab-item pending disabled nav-item" id="nav-gate50" onclick="handleGate50Click()" title="중간 검토: 1단계 승인 후 2단계 진행">
+                            <span class="rail-dia" aria-hidden="true"></span>
+                            <span class="circle-tab-label">중간 검토</span>
+                            <span class="rail-sub"><span class="node-percent" id="node-pct-gate50"></span><span class="circle-tab-time" data-node-time="gate50" aria-live="off"></span></span>
+                        </button>
+                        <div class="rail-phase">
+                            <div class="rail-phase-h"><span>2단계 · 구체화</span><span class="rail-count" id="rail-count-2">0/4</span></div>
+                            <div class="rail-steps">
+                            <button type="button" class="circle-tab-item pending disabled nav-item" id="nav-prd" onclick="switchDocument('prd')" title="PRD">
+                                <span class="rail-bar"><span class="node-liquid" id="node-liquid-prd"></span></span>
+                                <span class="circle-tab-label">PRD</span>
+                                <span class="rail-sub"><span class="node-percent" id="node-pct-prd"></span><span class="circle-tab-time" data-node-time="prd" aria-live="off"></span></span>
+                            </button>
+                            <button type="button" class="circle-tab-item pending disabled nav-item" id="nav-wireframe" onclick="switchDocument('wireframe')" title="와이어프레임">
+                                <span class="rail-bar"><span class="node-liquid" id="node-liquid-wireframe"></span></span>
+                                <span class="circle-tab-label">와이어프레임</span>
+                                <span class="rail-sub"><span class="node-percent" id="node-pct-wireframe"></span><span class="circle-tab-time" data-node-time="wireframe" aria-live="off"></span></span>
+                            </button>
+                            <button type="button" class="circle-tab-item pending disabled nav-item" id="nav-prototype" onclick="switchDocument('prototype')" title="프로토타입">
+                                <span class="rail-bar"><span class="node-liquid" id="node-liquid-prototype"></span></span>
+                                <span class="circle-tab-label">프로토타입</span>
+                                <span class="rail-sub"><span class="node-percent" id="node-pct-prototype"></span><span class="circle-tab-time" data-node-time="prototype" aria-live="off"></span></span>
+                            </button>
+                            <button type="button" class="circle-tab-item pending disabled nav-item" id="nav-audit" onclick="switchDocument('audit')" title="QA 감사">
+                                <span class="rail-bar"><span class="node-liquid" id="node-liquid-audit"></span></span>
+                                <span class="circle-tab-label">QA 감사</span>
+                                <span class="rail-sub"><span class="node-percent" id="node-pct-audit"></span><span class="circle-tab-time" data-node-time="audit" aria-live="off"></span></span>
+                            </button>
                             </div>
                         </div>
                     </div>
@@ -5030,7 +5078,8 @@
                 suggestion_kanban_dashboard: '📊 에이전트 칸반 대시보드 툴',
                 history_section_title: '최근 작성한 기획서',
                 agent_status_active: '<span class="status-dot-pulse"></span> 에이전트 활성화',
-                new_plan_btn: '<i class="fa-solid fa-plus"></i> 새 기획 작성',
+                new_plan_btn: '<span><i class="fa-solid fa-plus"></i> 새 기획</span><kbd class="kbd-hint">⌘K</kbd>',
+                history_search_placeholder: '기획서 검색',
                 history_sidebar_title: '기획 히스토리',
                 stepper_header_title: '에이전트 워크플로우 진행 상태',
                 step_1_label: '1. 비즈니스 전략 기획 (Strategist)',
@@ -5068,7 +5117,8 @@
                 suggestion_kanban_dashboard: '📊 Agent Kanban Dashboard',
                 history_section_title: 'Recent Planning Run History',
                 agent_status_active: '<span class="status-dot-pulse"></span> Agents Active',
-                new_plan_btn: '<i class="fa-solid fa-plus"></i> New Product Idea',
+                new_plan_btn: '<span><i class="fa-solid fa-plus"></i> New plan</span><kbd class="kbd-hint">⌘K</kbd>',
+                history_search_placeholder: 'Search plans',
                 history_sidebar_title: 'Planning History',
                 stepper_header_title: 'Agent Workflow Progress',
                 step_1_label: '1. Business Strategy (Strategist)',
@@ -6085,6 +6135,7 @@ ${idea.slice(0, 2000)}`
                     idea: docs.idea || '',
                     summaryTitle: docs.summaryTitle || '',
                     timings: docs.timings || null,
+                    midReview: typeof docs.midReview === 'boolean' ? docs.midReview : null,
                     '1pager': docs['1pager'] || '',
                     'threec': docs['threec'] || '',
                     'swot': docs['swot'] || '',
@@ -6307,7 +6358,83 @@ ${idea.slice(0, 2000)}`
             }
         })();
 
-        // 진행 스트림: 단계 목록 · 에이전트 최근 활동 · 작성 중 문서 미리보기
+        // ── 테마: 시스템 / 라이트 / 다크 ──
+        function currentThemeMode() {
+            const v = localStorage.getItem('pitl_theme');
+            return v === 'light' || v === 'dark' ? v : 'system';
+        }
+
+        function syncThemeSeg() {
+            const mode = currentThemeMode();
+            document.querySelectorAll('.theme-seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeMode === mode)));
+        }
+
+        function setThemeMode(mode) {
+            if (mode === 'system') localStorage.removeItem('pitl_theme');
+            else localStorage.setItem('pitl_theme', mode);
+            const want = mode === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : mode;
+            if ((document.documentElement.getAttribute('data-theme') || 'dark') !== want) toggleTheme(false);
+            syncThemeSeg();
+        }
+
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncThemeSeg);
+        else syncThemeSeg();
+
+        // ── 공유: 아카이브 링크 복사 (아직 게시 전이면 게시 후 복사) ──
+        async function sharePlan() {
+            if (!generatedDocs) return;
+            const btn = document.getElementById('btn-plan-share');
+            let url = generatedDocs.archive && generatedDocs.archive.url;
+            if (!url) {
+                if (btn) { btn.disabled = true; btn.textContent = t('게시 중…', 'Publishing…'); }
+                url = await publishPlanToArchive(generatedDocs, { auto: false });
+                if (btn) btn.disabled = false;
+                updateRailMeta();
+                if (activeDoc === 'dashboard') switchDocument('dashboard');
+            }
+            if (!url) return;
+            try {
+                await navigator.clipboard.writeText(url);
+                showCompletionToast(t('기획서 링크를 복사했습니다.', 'Plan link copied.'));
+            } catch (e) {
+                pitlAlert(`${t('링크', 'Link')}: <a href="${vizEsc(url)}" target="_blank" rel="noopener">${vizEsc(url)}</a>`, 'info', t('공유', 'Share'));
+            }
+        }
+
+        function hidePlanMore() {
+            const menu = document.getElementById('plan-more-menu');
+            const btn = document.getElementById('btn-plan-more');
+            if (menu) menu.hidden = true;
+            if (btn) btn.setAttribute('aria-expanded', 'false');
+        }
+
+        function togglePlanMore(e) {
+            if (e) e.stopPropagation();
+            const menu = document.getElementById('plan-more-menu');
+            const btn = document.getElementById('btn-plan-more');
+            if (!menu || !btn) return;
+            menu.hidden = !menu.hidden;
+            btn.setAttribute('aria-expanded', String(!menu.hidden));
+        }
+
+        document.addEventListener('click', e => { if (!e.target.closest('.plan-more-wrap')) hidePlanMore(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') hidePlanMore(); });
+
+        // ── 에이전트 4팀: 단계별 담당 ──
+        const AGENT_META = {
+            strategist: { k: 'S', name: t('전략가', 'Strategist'), role: '1-Pager · 3C · SWOT · STP · MECE', color: 'var(--agent-s)' },
+            analyst:    { k: 'A', name: t('분석가', 'Analyst'), role: 'PRD', color: 'var(--agent-a)' },
+            architect:  { k: 'D', name: t('설계자', 'Architect'), role: t('와이어프레임 · 프로토타입', 'Wireframe · Prototype'), color: 'var(--agent-d)' },
+            reviewer:   { k: 'R', name: t('검수자', 'Reviewer'), role: t('QA 감사', 'QA audit'), color: 'var(--agent-r)' }
+        };
+        const AGENT_ORDER = ['strategist', 'analyst', 'architect', 'reviewer'];
+        const STEP_AGENT = { '1pager': 'strategist', threec: 'strategist', swot: 'strategist', stp: 'strategist', mece: 'strategist', prd: 'analyst', wireframe: 'architect', prototype: 'architect', audit: 'reviewer' };
+
+        function escHtml(v) {
+            return String(v == null ? '' : v).replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
+        }
+
+        // 진행 화면: 작성 중 문서 · 전체 진행 숫자 · 에이전트 흐름 · 활동
         function renderPipelineRunningProgressCard(targetArea) {
             const target = targetArea || document.getElementById('viewer-main-content');
             if (!target) return;
@@ -6315,21 +6442,34 @@ ${idea.slice(0, 2000)}`
             const currentPct = Math.round(window.pitlCurrentProgress || 0);
             target.innerHTML = `
                 <div class="document-wrapper run-stream-wrapper">
-                    <div class="run-stream" id="run-stream">
-                        <ol class="run-steps" id="run-steps"></ol>
-                        <div class="run-main">
-                            <div class="run-bar">
-                                <div class="run-heading"><span class="run-pulse" aria-hidden="true"></span><b id="run-active-label">${t('기획 파이프라인 실행 중', 'Pipeline running')}</b></div>
-                                <span id="progress-percent-label" class="run-percent">${currentPct}%</span>
+                    <div class="run-bento" id="run-stream">
+                        <section class="run-tile run-writer">
+                            <div class="run-tile-h"><span>${t('지금 작성 중', 'Now writing')}</span><span class="run-who" id="run-who"></span></div>
+                            <div class="run-paper">
+                                <div class="run-preview-head"><span id="run-preview-title">${t('문서 준비 중', 'Preparing document')}</span><span class="run-caret" aria-hidden="true"></span></div>
+                                <div class="run-sk" style="width: 92%"></div><div class="run-sk" style="width: 78%"></div><div class="run-sk" style="width: 85%"></div>
+                                <div class="run-sk run-sk-h" style="width: 40%"></div><div class="run-sk" style="width: 88%"></div><div class="run-sk" style="width: 64%"></div>
+                                <div class="run-sk run-sk-h" style="width: 34%"></div><div class="run-sk" style="width: 80%"></div><div class="run-sk" style="width: 72%"></div>
                             </div>
-                            <div class="progress-track run-track"><div id="pipeline-progress-fill" style="width: ${currentPct}%;"></div></div>
-                            ${timingStatsHtml()}
-                            <div class="run-thinking" id="run-thinking" aria-live="polite"></div>
-                            <div class="run-preview">
-                                <div class="run-preview-head"><i class="fa-regular fa-file-lines"></i> <span id="run-preview-title">${t('문서 준비 중', 'Preparing document')}</span><span class="run-caret" aria-hidden="true"></span></div>
-                                <div class="run-sk" style="width: 92%"></div><div class="run-sk" style="width: 78%"></div><div class="run-sk" style="width: 85%"></div><div class="run-sk" style="width: 60%"></div>
+                        </section>
+                        <section class="run-tile run-stat">
+                            <div class="run-tile-h"><span>${t('전체 진행', 'Overall')}</span><span id="run-step-pct"></span></div>
+                            <div class="run-big"><span id="progress-percent-label">${currentPct}%</span></div>
+                            <div class="run-stat-sub">
+                                <span>${t('남은 시간', 'Remaining')}<b data-timing="eta">—</b></span>
+                                <span>${t('경과', 'Elapsed')}<b data-timing="total">—</b></span>
+                                <span>${t('현재 단계', 'Current step')}<b data-timing="step">—</b></span>
                             </div>
-                        </div>
+                            <div class="run-mini" id="run-mini">${WORK_STEPS.map(() => '<i><b></b></i>').join('')}</div>
+                        </section>
+                        <section class="run-tile run-agents">
+                            <div class="run-tile-h"><span>${t('에이전트', 'Agents')}</span><span>${t('4팀', '4 teams')}</span></div>
+                            <div class="run-flow" id="run-flow"></div>
+                        </section>
+                        <section class="run-tile run-activity">
+                            <div class="run-tile-h"><span>${t('활동', 'Activity')}</span><span>${t('최근 6개', 'Latest 6')}</span></div>
+                            <ul class="run-feed" id="run-feed" aria-live="polite"></ul>
+                        </section>
                     </div>
                 </div>
             `;
@@ -6343,35 +6483,95 @@ ${idea.slice(0, 2000)}`
             return (div.textContent || '').replace(/\s+/g, ' ').trim();
         }
 
-        // 진행 카드가 화면에 있을 때 단계 목록·최근 활동·미리보기 제목을 갱신한다
+        // 진행 화면이 떠 있을 때 숫자·막대·에이전트·활동을 갱신한다
         function renderRunStream() {
-            const list = document.getElementById('run-steps');
-            if (!list) return;
+            if (!document.getElementById('run-stream')) return;
             const tm = window.pitlTiming;
             const active = tm ? tm.active : null;
-            const activeIdx = active ? PIPELINE_STEPS.indexOf(active) : (tm && tm.finishedAt ? PIPELINE_STEPS.length : -1);
-            list.innerHTML = PIPELINE_STEPS.map((key, idx) => {
-                const isGate = key === 'gate50';
-                const label = isGate ? t('중간 검토', 'Mid-review') : STEP_LABELS[key];
-                let cls = 'pending', time = '';
-                if (idx < activeIdx) { cls = 'done'; time = !isGate && tm && tm.steps[key] != null ? fmtDuration(tm.steps[key]) : ''; }
-                else if (idx === activeIdx) { cls = isGate ? 'waiting' : 'active'; time = tm ? fmtDuration(performance.now() - tm.activeStart) : ''; }
-                if (isGate && !isMidReviewEnabled() && cls === 'pending') time = 'OFF';
-                return `<li class="run-step ${cls}${isGate ? ' gate' : ''}"><span class="run-step-ic">${cls === 'done' ? '✓' : ''}</span><span>${label}</span><span class="run-step-t">${time}</span></li>`;
-            }).join('');
+            const activeIdx = active ? WORK_STEPS.indexOf(active) : (tm && tm.finishedAt ? WORK_STEPS.length : -1);
+            const stats = computeProgress();
 
-            const labelEl = document.getElementById('run-active-label');
+            const stepPct = document.getElementById('run-step-pct');
+            if (stepPct) stepPct.textContent = active === 'gate50' ? t('중간 검토 대기', 'Waiting for review')
+                : active && stats ? t(`${STEP_LABELS[active]} 단계 ${Math.round(stats.activeFraction * 100)}%`, `${STEP_LABELS[active]} step ${Math.round(stats.activeFraction * 100)}%`) : '';
+
+            document.querySelectorAll('#run-mini i').forEach((el, i) => {
+                const done = tm && tm.steps[WORK_STEPS[i]] != null && (activeIdx < 0 || i < activeIdx || active === 'gate50');
+                el.classList.toggle('done', !!done);
+                el.firstChild.style.width = (i === activeIdx && stats ? Math.round(stats.activeFraction * 100) : 0) + '%';
+            });
+
             const titleEl = document.getElementById('run-preview-title');
-            if (labelEl) labelEl.textContent = active === 'gate50' ? t('중간 검토 대기 중', 'Waiting for review')
-                : active ? t(`${STEP_LABELS[active]} 작성 중`, `Writing ${STEP_LABELS[active]}`) : t('기획 파이프라인 실행 중', 'Pipeline running');
             if (titleEl) titleEl.textContent = active && active !== 'gate50' ? t(`${STEP_LABELS[active]} 문서 작성 중`, `Drafting ${STEP_LABELS[active]}`) : t('문서 준비 중', 'Preparing document');
 
-            const thinking = document.getElementById('run-thinking');
-            if (thinking && typeof currentConsoleLogs !== 'undefined') {
-                const lines = currentConsoleLogs.slice(-4).map(l => stripLogText(l.msg)).filter(Boolean);
-                const html = lines.map(line => `<div>${line.replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]))}</div>`).join('');
-                if (thinking.dataset.sig !== html) { thinking.innerHTML = html; thinking.dataset.sig = html; }
+            const curAgent = active && active !== 'gate50' ? STEP_AGENT[active] : null;
+            const who = document.getElementById('run-who');
+            if (who) who.innerHTML = curAgent ? `<span class="run-av" style="background:${AGENT_META[curAgent].color}">${AGENT_META[curAgent].k}</span>${AGENT_META[curAgent].name}` : '';
+
+            const flow = document.getElementById('run-flow');
+            if (flow) {
+                const curIdx = curAgent ? AGENT_ORDER.indexOf(curAgent) : (active === 'gate50' ? 1 : (tm && tm.finishedAt ? 4 : 0));
+                const html = AGENT_ORDER.map((key, i) => {
+                    const m = AGENT_META[key];
+                    const cls = key === curAgent ? 'on' : i < curIdx ? 'done' : '';
+                    return `${i ? `<span class="run-link ${key === curAgent ? 'on' : ''}" aria-hidden="true"></span>` : ''}<div class="run-agent ${cls}" style="--c:${m.color}"><span class="run-node">${m.k}</span><b>${m.name}</b><small>${m.role}</small></div>`;
+                }).join('');
+                if (flow.dataset.sig !== html) { flow.innerHTML = html; flow.dataset.sig = html; }
             }
+
+            const feed = document.getElementById('run-feed');
+            if (feed && typeof currentConsoleLogs !== 'undefined') {
+                const html = currentConsoleLogs.slice(-6).reverse().map(l => {
+                    const m = AGENT_META[l.agent];
+                    const av = m ? `<span class="run-av" style="background:${m.color}">${m.k}</span>` : '<span class="run-av run-av-sys">·</span>';
+                    return `<li>${av}<span class="run-feed-msg">${escHtml(stripLogText(l.msg))}</span><span class="run-feed-t">${escHtml((String(l.time || '').match(/\d+/g) || []).slice(0, 2).map(n => n.padStart(2, '0')).join(':'))}</span></li>`;
+                }).join('');
+                if (feed.dataset.sig !== html) { feed.innerHTML = html; feed.dataset.sig = html; }
+            }
+        }
+
+        // ── 제목 영역 + 레일 머리글 ──
+        function extractIdeaField(idea, re) {
+            const m = String(idea || '').match(re);
+            if (!m) return '';
+            const v = m[m.length - 1].replace(/(이다|입니다|이며|이고|임)\s*$/, '').trim();
+            return v.length > 24 ? v.slice(0, 24) + '…' : v;
+        }
+
+        function updateRailMeta() {
+            const steps1 = ['1pager', 'threec', 'swot', 'stp', 'mece'], steps2 = ['prd', 'wireframe', 'prototype', 'audit'];
+            const doneCount = keys => keys.filter(k => { const el = document.getElementById(`nav-${k}`); return el && el.classList.contains('completed'); }).length;
+            const c1 = document.getElementById('rail-count-1'), c2 = document.getElementById('rail-count-2');
+            if (c1) c1.textContent = `${doneCount(steps1)}/5`;
+            if (c2) c2.textContent = `${doneCount(steps2)}/4`;
+            const gate = document.getElementById('nav-gate50');
+            if (gate) gate.classList.toggle('waiting', !!window.pitlWaitingGate50);
+
+            const head = document.getElementById('plan-head');
+            if (!head) return;
+            const tm = window.pitlTiming;
+            const running = !!(tm && tm.active && !tm.finishedAt);
+            const idea = running && !generatedDocs ? (window.pitlRunIdea || '') : ((generatedDocs && generatedDocs.idea) || window.pitlRunIdea || '');
+            const title = (generatedDocs && generatedDocs.summaryTitle) || (running && window.pitlRunTitle) || (idea && typeof summarizeIdeaToTitle === 'function' ? summarizeIdeaToTitle(idea) : '') || (generatedDocs && generatedDocs.title) || '';
+            head.hidden = !title;
+            if (!title) return;
+            document.getElementById('plan-title').textContent = title;
+            document.getElementById('plan-state').textContent = window.pitlWaitingGate50 ? t('중간 검토 대기', 'Waiting for review')
+                : running ? t('실행 중', 'Running') : t('완료', 'Done');
+            const target = extractIdeaField(idea, /(타겟|타깃|대상 고객|대상|target)\s*(유저|사용자|고객층?)?\s*(은|는|이|:|：)?\s*([^\n.,/]+)/i);
+            const comp = extractIdeaField(idea, /(경쟁사|경쟁자|경쟁 서비스|competitors?)\s*(은|는|:|：)?\s*([^\n./]+)/i);
+            const chips = [
+                target && `<span class="plan-chip">${t('타겟', 'Target')} · ${escHtml(target)}</span>`,
+                comp && `<span class="plan-chip">${t('경쟁', 'Competitors')} · ${escHtml(comp)}</span>`,
+                (running || (generatedDocs && typeof generatedDocs.midReview === 'boolean')) && `<span class="plan-chip">${(running && !generatedDocs ? isMidReviewEnabled() : generatedDocs.midReview) ? t('중간 검토 ON', 'Mid-review ON') : t('중간 검토 OFF', 'Mid-review OFF')}</span>`
+            ].filter(Boolean).join('');
+            const done = !!(generatedDocs && (generatedDocs.audit || generatedDocs.prototype));
+            const share = document.getElementById('btn-plan-share');
+            const more = document.getElementById('btn-plan-more');
+            if (share) { share.hidden = !done; share.textContent = generatedDocs && generatedDocs.archive && generatedDocs.archive.url ? t('링크 복사', 'Copy link') : t('공유', 'Share'); }
+            if (more) more.hidden = !generatedDocs;
+            const chipBox = document.getElementById('plan-chips');
+            if (chipBox.innerHTML !== chips) chipBox.innerHTML = chips;
         }
 
         // ── 중간 검토 체크포인트: 1단계 결과 요약 + 승인 / 수정 요청 / 다시 생성 ──
@@ -6735,7 +6935,7 @@ ${idea.slice(0, 2000)}`
                             }
                             if (ringEl) ringEl.style.strokeDashoffset = '0';
                             if (pctEl) pctEl.textContent = key === 'gate50' ? gateText('completed') : '100%';
-                            if (liquidEl) liquidEl.style.height = '100%';
+                            if (liquidEl) liquidEl.style.width = '100%';
                         });
                         setOverall(100);
                         // 방금 끝난 실행이면 실행 기록을, 히스토리를 연 경우면 저장된 기록을 보여준다
@@ -6743,6 +6943,8 @@ ${idea.slice(0, 2000)}`
                         renderNodeTimes(saved);
                         renderTimingStats(null, saved);
                         updateStatusPill(null);
+                        updateRailMeta();
+                        updateLiveHistoryRow();
                     }
                     return;
                 }
@@ -6777,12 +6979,12 @@ ${idea.slice(0, 2000)}`
                         };
                         if (ringEl)   ringEl.style.strokeDashoffset = '0';
                         if (pctEl)    pctEl.textContent = key === 'gate50' ? gateText('completed') : '100%';
-                        if (liquidEl) liquidEl.style.height = '100%';
+                        if (liquidEl) liquidEl.style.width = '100%';
                     } else if (idx > activeIdx) {
                         itemEl.className = 'circle-tab-item pending disabled nav-item';
                         if (ringEl)   ringEl.style.strokeDashoffset = String(CIRCUMFERENCE);
                         if (pctEl)    pctEl.textContent = key === 'gate50' ? gateText('pending') : '0%';
-                        if (liquidEl) liquidEl.style.height = '0%';
+                        if (liquidEl) liquidEl.style.width = '0%';
                     }
                 });
 
@@ -6816,15 +7018,17 @@ ${idea.slice(0, 2000)}`
                         const pct = Math.min(99, stats.activeFraction * 100);
                         if (activeRingEl)   activeRingEl.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - pct / 100));
                         if (activePctEl)    activePctEl.textContent = Math.round(pct) + '%';
-                        if (activeLiquidEl) activeLiquidEl.style.height = pct + '%';
+                        if (activeLiquidEl) activeLiquidEl.style.width = pct + '%';
                         if (activeItemEl)   activeItemEl.classList.add('organizing');
                     }
                     renderNodeTimes(null);
                     renderTimingStats(stats, null);
                     renderRunStream();
                     updateStatusPill(stats);
+                    updateLiveHistoryRow();
                 };
                 tick();
+                updateRailMeta();
                 window.pitlProgressTimer = setInterval(tick, 500);
 
             } catch (e) {
@@ -6889,6 +7093,10 @@ ${idea.slice(0, 2000)}`
         async function startProductPlanningClientSide(idea) {
             window.pitlResumeInFlight = false;
             window.pitlActiveSessionDate = null; // 새 기획은 오늘 날짜로 저장
+            window.pitlRunIdea = idea;
+            window.pitlRunTitle = '';
+            window.pitlCurrentHistoryKey = null;
+            document.querySelectorAll('#history-list .history-row.cur:not(.history-live)').forEach(row => row.classList.remove('cur'));
             if (!idea || typeof idea !== 'string') {
                 console.error('[Pipeline Error] Invalid idea parameter:', idea);
                 return;
@@ -7076,6 +7284,8 @@ ${idea.slice(0, 2000)}`
                 // 히스토리 제목 요약은 1단계 생성과 병렬로 진행 (전체 소요 시간에 영향 없음)
                 const summaryTitlePromise = summarizeTitleWithClaude(idea).then(title => {
                     logAgentClientSide('system', `히스토리 제목 요약: "${title}"`);
+                    window.pitlRunTitle = title;
+                    updateRailMeta();
                     return title;
                 });
                 
@@ -7486,6 +7696,7 @@ ${idea.slice(0, 2000)}`
                 generatedDocs = {
                     title: cleanTitle,
                     summaryTitle,
+                    midReview: midReview,
                     idea: ideaText,
                     '1pager': onePagerContent,
                     'threec': threeCContent,
@@ -7680,6 +7891,7 @@ ${idea.slice(0, 2000)}`
                 const resultDocs = {
                     title: cleanTitle,
                     summaryTitle,
+                    midReview: generatedDocs && typeof generatedDocs.midReview === 'boolean' ? generatedDocs.midReview : isMidReviewEnabled(),
                     timings: timingSnapshot(),
                     idea: idea,
                     '1pager': onePagerContent,
@@ -8888,6 +9100,7 @@ ${idea.slice(0, 2000)}`
         // Switch Computer Browser active document tab
         function switchDocument(docKey) {
             if (!generatedDocs && docKey !== '1pager' && docKey !== 'dashboard') return;
+            setTimeout(updateRailMeta, 0);
             
             // Clean active states of circle tabs
             document.querySelectorAll('.circle-tab-item, .chrome-tab').forEach(el => el.classList.remove('active'));
@@ -9944,6 +10157,24 @@ function toggleVizTable(btn) {
         }
 
         // Render Tile UI Dashboard View
+        // 완료 대시보드 상단 숫자 줄: 문서 수 · 총 소요 · QA 점수 · 검토 대기
+        function dashboardStatsHtml() {
+            if (!generatedDocs) return '';
+            const keys = ['1pager', 'threec', 'swot', 'stp', 'mece', 'prd', 'wireframe', 'prototype', 'audit'];
+            const docCount = keys.filter(k => String(generatedDocs[k] || '').trim()).length;
+            const tim = generatedDocs.timings || null;
+            const audit = String(generatedDocs.audit || '');
+            const m = audit.match(/(\d{2,3})\s*(?:점|\/\s*100)/);
+            const score = m && Number(m[1]) <= 100 ? Number(m[1]) : null;
+            const stat = (v, k, cls = '') => `<div class="dash-stat"><div class="dash-stat-v ${cls}">${v}</div><div class="dash-stat-k">${k}</div></div>`;
+            return `<div class="dash-stats">
+                ${stat(`${docCount}<sup>/9</sup>`, t('만든 문서', 'Documents'))}
+                ${stat(tim && tim.totalMs ? fmtDuration(tim.totalMs) : '—', t('총 분석 소요', 'Total analysis'))}
+                ${stat(score != null ? score : '—', t('QA 정합성 점수', 'QA score'), score != null ? 'good' : '')}
+                ${stat(tim && tim.reviewWaitMs >= 1000 ? fmtDuration(tim.reviewWaitMs) : '—', t('중간 검토 대기', 'Review wait'))}
+            </div>`;
+        }
+
         function renderTileDashboardView(targetArea) {
             if (!targetArea) return;
 
@@ -10079,6 +10310,7 @@ function toggleVizTable(btn) {
                         </p>
                     </div>
 
+                    ${dashboardStatsHtml()}
                     ${archiveBarHtml()}
                     <div class="tile-bento">
                         ${tileCardsHtml}
@@ -10735,6 +10967,84 @@ function toggleVizTable(btn) {
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPromptSlots);
         else initPromptSlots();
 
+        // 오늘 만든 기록은 완료 시각, 그 외는 "10월 31일"
+        function historyWhen(item, isToday) {
+            const fin = item.docs && item.docs.timings && item.docs.timings.finishedAt;
+            if (isToday && fin) return new Date(fin).toLocaleTimeString(t('ko-KR', 'en-US'), { hour: 'numeric', minute: '2-digit' });
+            const m = String(item.displayDate || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (!m) return item.displayDate || '';
+            return t(`${Number(m[2])}월 ${Number(m[3])}일`, new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+        }
+
+        function filterHistoryRows(query) {
+            const q = String(query || '').trim().toLowerCase();
+            const list = document.getElementById('history-list');
+            if (!list) return;
+            list.querySelectorAll('.history-row:not(.history-live)').forEach(row => { row.hidden = !!q && !(row.dataset.search || '').includes(q); });
+            // 보이는 행이 없는 날짜 묶음 머리글은 숨긴다
+            list.querySelectorAll('.history-group').forEach(head => {
+                let el = head.nextElementSibling, any = false;
+                while (el && !el.classList.contains('history-group')) { if (!el.hidden && el.classList.contains('history-row')) any = true; el = el.nextElementSibling; }
+                head.hidden = !any;
+            });
+        }
+
+        function startNewPlan() {
+            resetToLanding();
+            const ta = document.getElementById('idea-textarea');
+            if (ta) setTimeout(() => ta.focus(), 50);
+        }
+
+        document.addEventListener('keydown', e => {
+            if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                startNewPlan();
+            }
+        });
+
+        // 실행 중인 기획을 사이드바 "오늘" 맨 위에 보여 준다
+        function updateLiveHistoryRow() {
+            const list = document.getElementById('history-list');
+            if (!list) return;
+            const tm = window.pitlTiming;
+            const running = !!(tm && tm.active && !tm.finishedAt);
+            let row = document.getElementById('history-live-row');
+            const empty = list.querySelector('.sidebar-empty-state');
+            if (empty) empty.hidden = running;
+            if (!running) {
+                if (row) row.remove();
+                const h = document.getElementById('history-live-head');
+                if (h) h.remove();
+                return;
+            }
+            if (!row) {
+                row = document.createElement('div');
+                row.id = 'history-live-row';
+                row.className = 'history-item-card history-row history-live cur';
+                row.onclick = () => {
+                    document.body.classList.remove('state-landing');
+                    document.body.classList.add('state-workspace');
+                    if (window.pitlWaitingGate50) renderGateCheckpoint(); else renderPipelineRunningProgressCard();
+                };
+                const first = list.querySelector('.history-group');
+                let head = first && first.textContent === t('오늘', 'Today') ? first : null;
+                if (!head) {
+                    head = document.createElement('div');
+                    head.className = 'history-group';
+                    head.id = 'history-live-head';
+                    head.textContent = t('오늘', 'Today');
+                    list.prepend(head);
+                }
+                head.after(row);
+            }
+            const title = window.pitlRunTitle || (window.pitlRunIdea && typeof summarizeIdeaToTitle === 'function' ? summarizeIdeaToTitle(window.pitlRunIdea) : '') || t('새 기획', 'New plan');
+            const stats = computeProgress();
+            const status = window.pitlWaitingGate50 ? t('⏸ 검토 대기', '⏸ Waiting for review')
+                : `● ${t('실행 중', 'Running')} · ${STEP_LABELS[tm.active] || ''}${stats ? ` · ${t('전체', 'overall')} ${Math.round(stats.percent)}%` : ''}`;
+            const html = `<div class="history-row-main"><b class="history-row-title">${escHtml(title)}</b><span class="history-row-meta history-live-meta">${escHtml(status)}</span></div>`;
+            if (row.dataset.sig !== html) { row.innerHTML = html; row.dataset.sig = html; }
+        }
+
         function renderHistoryLists(data) {
             // 1. Sidebar List
             const listContainer = document.getElementById('history-list');
@@ -10747,27 +11057,34 @@ function toggleVizTable(btn) {
                         </div>
                     `;
                 } else {
+                    const today = new Date();
+                    const ymd = d => `${String(d.getFullYear()).slice(2)}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+                    const todayKey = ymd(today);
+                    const weekKey = ymd(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6));
+                    const groupOf = item => item.date === todayKey ? t('오늘', 'Today') : item.date >= weekKey ? t('최근 7일', 'Last 7 days') : t('이전', 'Earlier');
+                    let lastGroup = '';
                     listContainer.innerHTML = data.map(item => {
+                        const group = groupOf(item);
+                        const head = group !== lastGroup ? `<div class="history-group">${group}</div>` : '';
+                        lastGroup = group;
                         const fullIdeaText = item.idea || item.displayTitle || '';
-                        return `
-                        <div class="history-item-card" onclick="if (!String(window.getSelection())) loadHistoryItem('${item.title}', '${item.date}')">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
-                                <div class="history-card-title" style="user-select:text; flex: 1;">
-                                    <i class="fa-regular fa-file-lines" style="color: var(--accent-text); user-select:none; flex-shrink: 0;"></i> <span>${item.displayTitle}</span>
-                                </div>
-                                <button class="btn-delete-history" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button>
+                        const isCur = window.pitlCurrentHistoryKey === `${item.title}|${item.date}`;
+                        return `${head}
+                        <div class="history-item-card history-row${isCur ? ' cur' : ''}" data-key="${escHtml(item.title + '|' + item.date)}" data-search="${escHtml((item.displayTitle + ' ' + fullIdeaText).toLowerCase())}" onclick="if (!String(window.getSelection())) loadHistoryItem('${item.title}', '${item.date}')" title="${escHtml(fullIdeaText)}">
+                            <div class="history-row-main">
+                                <b class="history-row-title">${item.displayTitle}</b>
+                                <span class="history-row-meta">${item.types.length}${t('개 문서', ' docs')} · ${historyWhen(item, group === t('오늘', 'Today'))}</span>
                             </div>
-                            ${fullIdeaText ? `<div style="font-size:11px; color:var(--text-secondary); margin:4px 0 6px 0; line-height:1.45; white-space:normal; word-break:break-word; user-select:text; padding:2px 0;">${fullIdeaText}</div>` : ''}
-                            <div class="history-card-meta">
-                                <span style="user-select:text;">${item.displayDate}</span>
-                                <span class="landing-card-badge" style="background: rgba(var(--hairline-rgb), 0.06); color: var(--text-secondary);">${item.types.length} ${t("Files", "Files")}</span>
-                            </div>
+                            <button class="btn-delete-history" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
                         </div>
                         `;
                     }).join('');
                 }
+                updateLiveHistoryRow();
+                const q = document.getElementById('history-search');
+                if (q && q.value) filterHistoryRows(q.value);
             }
             
             // 2. Landing Recent history marquee (credit roll)
@@ -10858,6 +11175,8 @@ function toggleVizTable(btn) {
 
         // Fetch selected historical item
         async function loadHistoryItem(title, date) {
+            window.pitlCurrentHistoryKey = `${title}|${date}`;
+            document.querySelectorAll('#history-list .history-row:not(.history-live)').forEach(row => row.classList.toggle('cur', row.dataset.key === window.pitlCurrentHistoryKey));
             const btnSubmit = document.getElementById('btn-submit-planning');
             const ideaTextarea = document.getElementById('idea-textarea');
             if (btnSubmit) btnSubmit.disabled = true;
