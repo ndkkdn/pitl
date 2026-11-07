@@ -247,15 +247,15 @@
 
         /* ── Theme-Aware Pipeline Running Card ── */
         .pipeline-running-card {
-            background: rgba(30, 35, 45, 0.95);
+            background: var(--bg-card);
             backdrop-filter: blur(32px);
             -webkit-backdrop-filter: blur(32px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 54px 44px;
             width: 100%;
             max-width: 820px;
-            box-shadow: 0 35px 70px rgba(0,0,0,0.55);
+            box-shadow: var(--shadow-card, 0 20px 50px rgba(0, 0, 0, 0.12));
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -264,38 +264,23 @@
         }
 
         .pipeline-running-card h2 {
-            color: #ffffff !important;
+            color: var(--text-primary) !important;
         }
 
         .pipeline-running-card p {
-            color: #94a3b8 !important;
+            color: var(--text-secondary) !important;
         }
 
         .pipeline-running-card .running-progress-box {
             width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.07);
+            background: rgba(var(--hairline-rgb), 0.03);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 22px 28px;
         }
 
-        [data-theme="light"] .pipeline-running-card {
-            background: #ffffff !important;
-            border-color: #cbd5e1 !important;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08) !important;
-        }
-
-        [data-theme="light"] .pipeline-running-card h2 {
-            color: #0f172a !important;
-        }
-
-        [data-theme="light"] .pipeline-running-card p {
-            color: #334155 !important;
-        }
-
-        [data-theme="light"] .pipeline-running-card .running-progress-box {
-            background: #f8fafc !important;
-            border-color: #e2e8f0 !important;
+        .pipeline-running-card .progress-track {
+            background: rgba(var(--hairline-rgb), 0.08) !important;
         }
 
         [data-theme="light"] .history-card,
@@ -686,38 +671,6 @@
             background: rgba(255, 255, 255, 0.08);
             border-color: rgba(255, 255, 255, 0.14);
             box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
-        }
-
-        /* ── Starbucks Signature Floating Frap CTA Button ── */
-        .frap-floating-btn {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: var(--sb-accent);
-            color: #ffffff;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 0 6px rgba(0,0,0,0.24), 0 8px 16px rgba(0,0,0,0.28);
-            z-index: 900;
-            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background-color 0.2s ease;
-        }
-
-        .frap-floating-btn:hover {
-            background: var(--sb-green);
-            transform: translateY(-3px) scale(1.04);
-            box-shadow: 0 0 8px rgba(0,0,0,0.28), 0 12px 24px rgba(var(--accent-rgb), 0.45);
-        }
-
-        .frap-floating-btn:active {
-            transform: scale(0.95) !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         /* Universal Starbucks Button Active Micro-Press Interaction */
@@ -4386,6 +4339,92 @@
         .review-toggle-text { display: flex; flex-direction: column; gap: 1px; line-height: 1.35; }
         .review-toggle-text b { font-size: 13px; color: var(--text-primary); }
         .review-toggle-text small { font-size: 11.5px; color: var(--text-secondary); }
+        /* Fixed equal columns: ON/OFF copy changes length, so pills must not resize or shift */
+        .run-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .review-toggle { width: 100%; min-width: 0; }
+        .review-toggle-text { min-width: 0; }
+        .review-toggle-text b,
+        .review-toggle-text small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .review-toggle:active { transform: none !important; }
+        @media (max-width: 640px) {
+            .run-options { grid-template-columns: minmax(0, 1fr); }
+        }
+
+        /* ── Landing prompt: no focus outline, centered START button ── */
+        #idea-textarea:focus,
+        #idea-textarea:focus-visible {
+            outline: none !important;
+        }
+        .manus-prompt-container:focus-within {
+            border-color: var(--border-color) !important;
+            box-shadow: var(--neu-inset-sm), var(--neu-raised-sm) !important;
+        }
+        .manus-prompt-container:focus-within::before { opacity: 0 !important; }
+        .manus-prompt-container .prompt-box-inner {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .manus-prompt-container .prompt-submit-btn {
+            align-self: center;
+            width: auto;
+            height: 40px;
+            padding: 0 28px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+        }
+
+        /* ── Landing title: two lines fitted to the same width (see fitLandingTitle) ── */
+        .landing-title .title-pitl,
+        .landing-title .title-full {
+            display: block;
+            width: fit-content;
+            margin: 0 auto;
+            white-space: nowrap;
+            line-height: 1.05;
+            letter-spacing: -0.03em !important; /* em so spacing scales with the fitted size */
+        }
+        .landing-title .title-full {
+            background: none !important;
+            -webkit-text-fill-color: inherit;
+            animation: none;
+            font-family: inherit;
+            font-weight: 800;
+        }
+
+        /* ── Light theme fixes (code blocks, completed step circles) ── */
+        [data-theme="light"] .markdown-body pre {
+            background: rgba(var(--hairline-rgb), 0.05) !important;
+            border-color: var(--border-color) !important;
+            box-shadow: none;
+            color: var(--text-primary);
+        }
+        [data-theme="light"] .markdown-body pre code {
+            color: var(--text-primary) !important;
+        }
+        [data-theme="light"] .circle-tab-item.completed .node-percent {
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Tile dashboard: no paper panel in either theme */
+        .document-wrapper.tile-dashboard-wrapper,
+        [data-theme="light"] .document-wrapper.tile-dashboard-wrapper {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* ── Landing history: one step smaller type ── */
+        .landing-history-section .section-divider-title { font-size: 14px; }
+        .landing-history-card .landing-card-title { font-size: 14px; }
+        .landing-history-card .landing-card-idea { font-size: 11px !important; }
+        .landing-history-card .landing-card-footer,
+        .landing-history-card .landing-card-badge { font-size: 14px; }
 
         /* ── Pipeline timing: per-step durations & totals ── */
         .circle-tab-time {
@@ -4440,7 +4479,109 @@
         }
         .archive-bar i { color: var(--accent-text); margin-right: 4px; }
         .archive-bar a { color: var(--accent-text); font-weight: 600; }
-    </style>
+    
+        /* ── 구조화 입력 칩 ── */
+        .prompt-slots { display: flex; justify-content: space-between; align-items: center; gap: 10px 16px; flex-wrap: wrap; padding: 10px 4px 2px; border-top: 1px solid rgba(var(--hairline-rgb), .08); margin-top: 8px; }
+        .slot-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+        .slot-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px dashed rgba(var(--hairline-rgb), .25); border-radius: 999px; padding: 4px 12px 4px 7px; font-size: 12.5px; background: transparent; color: var(--text-secondary); cursor: pointer; transition: all .2s; font-family: inherit; }
+        .slot-chip .slot-dot { width: 15px; height: 15px; border-radius: 50%; border: 1.5px solid currentColor; display: grid; place-items: center; font-size: 9px; color: transparent; }
+        .slot-chip.filled { border-style: solid; border-color: rgba(var(--accent-rgb), .45); background: rgba(var(--accent-rgb), .08); color: var(--text-primary); }
+        .slot-chip.filled .slot-dot { background: rgb(var(--accent-rgb)); border-color: rgb(var(--accent-rgb)); color: #fff; }
+        .slot-status { display: flex; align-items: center; gap: 8px; min-width: 0; }
+        .slot-meter { display: inline-flex; gap: 3px; flex-shrink: 0; }
+        .slot-meter i { width: 14px; height: 4px; border-radius: 2px; background: rgba(var(--hairline-rgb), .12); transition: background .2s; }
+        .slot-meter i.on { background: rgb(var(--accent-rgb)); }
+        .slot-nudge { font-size: 12px; color: var(--text-secondary); }
+        .slot-nudge.warn { color: var(--accent-amber); }
+
+        /* ── 빈 상태 시작 카드 ── */
+        .landing-history-empty.starter-empty { flex-direction: column; text-align: center; gap: 6px; padding: 12px 0 8px; width: 100%; border: none; }
+        .landing-history-grid:has(.starter-empty) { width: 100%; }
+        .landing-history-marquee-wrapper:has(.starter-empty) { mask-image: none; -webkit-mask-image: none; }
+        .starter-glyph { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: rgba(var(--accent-rgb), .10); color: rgb(var(--accent-rgb)); font-size: 22px; margin-bottom: 4px; }
+        .starter-title { font-size: 15px; color: var(--text-primary); }
+        .starter-desc { font-size: 12.5px; color: var(--text-secondary); max-width: 420px; margin-bottom: 8px; }
+        .starter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; width: 100%; max-width: 720px; }
+        .starter-card { border: 1px solid var(--border-color); background: var(--bg-card); border-radius: 14px; padding: 12px 14px; text-align: left; cursor: pointer; transition: transform .2s, border-color .2s; font-family: inherit; color: var(--text-primary); }
+        .starter-card:hover { transform: translateY(-2px); border-color: rgba(var(--accent-rgb), .5); }
+        .starter-card b { display: block; font-size: 13.5px; margin-bottom: 3px; }
+        .starter-card span { display: block; font-size: 12px; color: var(--text-secondary); }
+        .starter-card em { display: block; margin-top: 6px; font-style: normal; font-size: 11.5px; color: var(--accent-text); font-weight: 700; }
+
+        /* ── 진행 스트림 ── */
+        .document-wrapper.run-stream-wrapper { background: transparent !important; border: none !important; box-shadow: none !important; padding: 32px 20px; display: flex; justify-content: center; }
+        .run-stream { width: 100%; max-width: 920px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-card); }
+        @media (max-width: 760px) { .run-stream { grid-template-columns: 1fr; } }
+        .run-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; align-content: start; }
+        .run-step { display: grid; grid-template-columns: 20px 1fr auto; gap: 10px; align-items: center; padding: 7px 10px; border-radius: 10px; font-size: 13px; color: var(--text-secondary); opacity: .7; }
+        .run-step-ic { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid rgba(var(--hairline-rgb), .25); display: grid; place-items: center; font-size: 9px; }
+        .run-step-t { font-size: 11.5px; font-variant-numeric: tabular-nums; }
+        .run-step.done { opacity: 1; }
+        .run-step.done .run-step-ic { background: #10b981; border-color: #10b981; color: #fff; }
+        .run-step.active { opacity: 1; color: var(--text-primary); background: rgba(var(--accent-rgb), .08); font-weight: 600; }
+        .run-step.active .run-step-ic { border-color: rgb(var(--accent-rgb)); border-top-color: transparent; animation: runSpin .9s linear infinite; }
+        .run-step.gate .run-step-ic { border-style: dashed; }
+        .run-step.waiting { opacity: 1; color: var(--accent-amber); background: rgba(245, 158, 11, .10); font-weight: 600; }
+        .run-step.waiting .run-step-ic { border-color: var(--accent-amber); }
+        @keyframes runSpin { to { transform: rotate(360deg); } }
+        .run-main { min-width: 0; display: grid; gap: 14px; align-content: start; }
+        .run-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .run-heading { display: flex; align-items: center; gap: 10px; font-size: 16px; color: var(--text-primary); min-width: 0; }
+        .run-percent { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800; color: var(--accent-text); font-variant-numeric: tabular-nums; }
+        .run-pulse { width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--accent-rgb)); flex-shrink: 0; animation: runPulse 1.6s infinite; }
+        @keyframes runPulse { 0% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), .5); } 70% { box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0); } 100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0); } }
+        .run-track { height: 6px !important; border-radius: 3px; overflow: hidden; }
+        .run-track > div { height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue, #3b82f6)); border-radius: 3px; transition: width .4s ease; }
+        .run-stream .timing-stats { margin: 0; justify-content: flex-start; }
+        .run-thinking { font-size: 13px; color: var(--text-secondary); display: grid; gap: 4px; min-height: 72px; }
+        .run-thinking div { animation: runFadeUp .35s ease both; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .run-thinking div::before { content: '›'; color: rgb(var(--accent-rgb)); margin-right: 8px; font-weight: 700; }
+        @keyframes runFadeUp { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+        .run-preview { border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; background: rgba(var(--hairline-rgb), .02); }
+        .run-preview-head { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .run-caret { display: inline-block; width: 7px; height: 14px; background: rgb(var(--accent-rgb)); animation: runBlink 1s step-end infinite; }
+        @keyframes runBlink { 50% { opacity: 0; } }
+        .run-sk { height: 10px; border-radius: 5px; margin: 9px 0; background: linear-gradient(90deg, rgba(var(--hairline-rgb), .06) 0%, rgba(var(--hairline-rgb), .14) 50%, rgba(var(--hairline-rgb), .06) 100%); background-size: 200% 100%; animation: runShimmer 1.4s linear infinite; }
+        @keyframes runShimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+        /* ── 중간 검토 체크포인트 ── */
+        .gate-checkpoint { width: 100%; max-width: 860px; border: 1px solid rgba(245, 158, 11, .45); background: var(--bg-card); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-card); animation: runFadeUp .3s ease both; }
+        .gate-cp-badge { display: inline-block; font-size: 12px; font-weight: 700; color: var(--accent-amber); background: rgba(245, 158, 11, .12); border-radius: 999px; padding: 3px 10px; margin-bottom: 10px; }
+        .gate-cp-head h3 { font-size: 18px; color: var(--text-primary); margin: 0 0 6px; border: none; padding: 0; }
+        .gate-cp-head p { font-size: 13.5px; color: var(--text-secondary); margin: 0 0 16px; }
+        .gate-cp-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-bottom: 18px; }
+        .gate-cp-item { text-align: left; border: 1px solid var(--border-color); background: rgba(var(--hairline-rgb), .02); border-radius: 12px; padding: 10px 12px; cursor: pointer; font-family: inherit; color: var(--text-secondary); font-size: 12px; line-height: 1.5; transition: border-color .2s; }
+        .gate-cp-item:hover { border-color: rgba(var(--accent-rgb), .5); }
+        .gate-cp-item b { display: block; color: var(--text-primary); font-size: 13px; margin-bottom: 2px; }
+        .gate-cp-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .gate-cp-btn { border: 1px solid var(--border-color); background: transparent; color: var(--text-primary); border-radius: 999px; padding: 9px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .gate-cp-btn:hover { border-color: rgba(var(--accent-rgb), .5); }
+        .gate-cp-btn.primary { background: var(--cta-gradient, rgb(var(--accent-rgb))); color: #fff; border: 0; }
+        .gate-cp-btn.ghost { color: var(--text-secondary); }
+        .gate-cp-edit { display: none; margin-top: 12px; gap: 8px; flex-direction: column; align-items: flex-start; }
+        .gate-cp-edit.show { display: flex; }
+        .gate-cp-edit textarea { width: 100%; min-height: 72px; border-radius: 12px; border: 1px solid var(--border-color); background: rgba(var(--hairline-rgb), .03); color: var(--text-primary); padding: 10px 12px; font-family: inherit; font-size: 13.5px; resize: vertical; outline: none; }
+
+        .gate-cp-edit textarea:focus, .gate-cp-edit textarea:focus-visible { outline: none !important; border-color: rgba(var(--hairline-rgb), .3) !important; box-shadow: none !important; }
+        /* ── 상태 알약 (반투명 유리) ── */
+        .status-pill { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 12px); width: min(400px, calc(100vw - 32px)); z-index: 900; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s;
+                       background: color-mix(in srgb, var(--bg-card) 72%, transparent); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
+                       border: 1px solid var(--border-color); border-radius: 22px; box-shadow: var(--shadow-card), 0 8px 30px rgba(0, 0, 0, .12); padding: 10px 14px; }
+        .status-pill.show { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+        .status-pill-row { display: flex; align-items: center; gap: 10px; border: 0; background: none; width: 100%; padding: 0; text-align: left; cursor: pointer; color: var(--text-primary); font-family: inherit; }
+        .status-pill-txt { flex: 1; font-size: 13.5px; font-weight: 600; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .status-pill-txt small { color: var(--text-secondary); font-weight: 500; margin-left: 6px; font-variant-numeric: tabular-nums; }
+        .status-pill-ring { width: 26px; height: 26px; flex-shrink: 0; }
+        .status-pill-ring circle { fill: none; stroke-width: 3; transition: stroke-dashoffset .4s; }
+        .status-pill-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease; }
+        .status-pill.open .status-pill-more { grid-template-rows: 1fr; }
+        .status-pill-more > div { overflow: hidden; }
+        .status-pill-more ul { list-style: none; padding: 10px 0 4px; margin: 0; display: grid; gap: 4px; font-size: 12.5px; color: var(--text-secondary); }
+        .status-pill-more li { display: flex; justify-content: space-between; }
+        .status-pill-more li.cur { color: var(--text-primary); font-weight: 600; }
+        .status-pill-open { margin: 6px 0 2px; width: 100%; border: 1px solid var(--border-color); background: transparent; color: var(--text-primary); border-radius: 999px; padding: 7px; font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        @media (prefers-reduced-motion: reduce) { .run-stream *, .gate-checkpoint, .status-pill, .run-sk, .run-pulse { animation: none !important; transition: none !important; } }
+</style>
 </head>
 <body class="state-landing dark-theme">
 
@@ -4563,39 +4704,25 @@
         <!-- Interactive Space Particle Network Canvas -->
         <canvas id="space-particle-canvas"></canvas>
         
-        <!-- Minimal Top Navigation -->
-        <div class="landing-top-bar">
-            <div class="landing-logo" onclick="showPipelineProgressView()" style="cursor: pointer;" title="진행률 뷰로 이동">
-                <i class="fa-solid fa-arrows-spin"></i>
-                <span>PITL Workspace</span>
-            </div>
-            <div class="landing-top-actions">
-                <button class="btn-minimal" onclick="goToWorkspaceDashboard()">
-                    <i class="fa-solid fa-desktop"></i> 워크스페이스
-                </button>
-                <button class="btn-minimal" onclick="logout()" title="로그아웃">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </button>
-            </div>
-        </div>
-
         <!-- Landing Centered Content -->
         <div class="landing-content">
-            <div class="badge-tag" data-i18n="badge_autonomous_agent">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Autonomous AI Agent Team
-            </div>
-            
             <div class="landing-header">
-                <h1 class="landing-title">Planning-in-the-Loop <span>Workspace</span></h1>
+                <h1 class="landing-title" id="landing-title"><span class="title-pitl">PITL.</span><span class="title-full">Planning-in-the-loop</span></h1>
             </div>
 
             <!-- Glowing Centered Prompt Input Box (Supports 3D Card Tilt) -->
             <div class="manus-prompt-container">
                 <div class="prompt-box-inner">
                     <textarea id="idea-textarea" placeholder="아이디어/타겟유저/경쟁사를 입력하세요." data-i18n-placeholder="prompt_placeholder" onkeydown="handleLandingKeydown(event)"></textarea>
-                    <button class="prompt-submit-btn" onclick="startPlanningFromLanding()" id="btn-submit-planning" title="기획 생성 시작">
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
+                    <button class="prompt-submit-btn" onclick="startPlanningFromLanding()" id="btn-submit-planning" title="기획 생성 시작">START</button>
+                </div>
+                <div class="prompt-slots" id="prompt-slots">
+                    <div class="slot-chips">
+                        <button type="button" class="slot-chip" data-slot="idea"><span class="slot-dot">✓</span>아이디어</button>
+                        <button type="button" class="slot-chip" data-slot="target"><span class="slot-dot">✓</span>타겟유저</button>
+                        <button type="button" class="slot-chip" data-slot="comp"><span class="slot-dot">✓</span>경쟁사</button>
+                    </div>
+                    <div class="slot-status"><span class="slot-meter" aria-hidden="true"><i></i><i></i><i></i></span><span class="slot-nudge" id="slot-nudge" aria-live="polite"></span></div>
                 </div>
             </div>
 
@@ -4638,7 +4765,7 @@
         
         <!-- PANEL 1: LEFT SIDEBAR (History, Actions, Reset) -->
         <aside class="sidebar-panel" id="panel-sidebar">
-            <div class="sidebar-logo-container" onclick="showPipelineProgressView()" style="cursor: pointer;" title="파이프라인 진행률 뷰로 이동">
+            <div class="sidebar-logo-container" onclick="resetToLanding()" style="cursor: pointer;" title="첫 화면으로 이동">
                 <h3>PITL Workspace</h3>
             </div>
             
@@ -4872,34 +4999,6 @@
                                 <div class="active-indicator-triangle"></div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Chrome bottom address bar with navigation button & action buttons -->
-                <div class="chrome-address-bar">
-                    <div class="chrome-nav-buttons">
-                        <i class="fa-solid fa-arrow-left chrome-nav-btn" style="opacity: 0.4; cursor: not-allowed;"></i>
-                        <i class="fa-solid fa-arrow-right chrome-nav-btn" style="opacity: 0.4; cursor: not-allowed;"></i>
-                        <i class="fa-solid fa-rotate-right chrome-nav-btn" onclick="reloadActiveDoc()"></i>
-                    </div>
-                    
-                    <div class="chrome-url-box">
-                        <i class="fa-solid fa-lock" style="color: var(--accent-text);"></i>
-                        <input type="text" id="mock-browser-url" value="pitl.ai/workspace/strategist-1pager">
-                    </div>
-                    
-                    <div class="chrome-actions">
-                        <span class="badge-qa" id="badge-qa-status" style="display: none;">
-                            <i class="fa-solid fa-circle-check"></i> QA PASS: Score 98%
-                        </span>
-                        
-                        <button class="btn-minimal lang-toggle-btn" onclick="toggleLanguage()" title="Change Language / 언어 변경">
-                            <i class="fa-solid fa-globe"></i>
-                        </button>
-                        
-                        <button class="btn-minimal" onclick="copyActiveDocument()" id="btn-copy" disabled style="opacity: 0.5; cursor: not-allowed;" data-i18n="btn_copy">
-                            <i class="fa-regular fa-copy"></i> 마크다운 복사
-                        </button>
                     </div>
                 </div>
             </div>
@@ -6208,49 +6307,188 @@ ${idea.slice(0, 2000)}`
             }
         })();
 
-        // Render attached image 100% exact design card when active circle progress node is clicked
+        // 진행 스트림: 단계 목록 · 에이전트 최근 활동 · 작성 중 문서 미리보기
         function renderPipelineRunningProgressCard(targetArea) {
             const target = targetArea || document.getElementById('viewer-main-content');
             if (!target) return;
-            
+
             const currentPct = Math.round(window.pitlCurrentProgress || 0);
             target.innerHTML = `
-                <div class="document-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 220px); padding: 40px 20px; text-align: center; border: none; background: transparent; box-shadow: none;">
-                    <div class="pipeline-running-card">
-                        
-                        <!-- Top Glowing Sparkle Wand Icon (Attached Image Matched 100%) -->
-                        <div style="width: 76px; height: 76px; border-radius: 50%; background: rgba(var(--accent-rgb), 0.12); border: 1.5px solid rgba(var(--accent-rgb), 0.35); display: flex; align-items: center; justify-content: center; margin-bottom: 28px; box-shadow: 0 0 35px rgba(var(--accent-rgb), 0.28);">
-                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 34px; color: var(--accent-text); animation: pulse 2s infinite ease-in-out;"></i>
-                        </div>
-
-                        <!-- Main Title -->
-                        <h2 style="font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif; font-size: 27px; font-weight: 800; margin-bottom: 14px; border: none; padding: 0; letter-spacing: -0.5px;">
-                            ${t("DHK 5단계 기획 파이프라인 가동 중...", "DHK 5-Stage Agentic Pipeline Running...")}
-                        </h2>
-                        
-                        <!-- Subtitle Description -->
-                        <p style="font-size: 14.5px; line-height: 1.65; max-width: 620px; margin-bottom: 36px; font-weight: 500;">
-                            ${t("상단 원형 탭 노드에서 9개 단계별 실시간 생성 진행률을 확인하실 수 있습니다.<br>에이전트 완공 완료 시 해당 탭으로 다이렉트 이동 및 렌더링됩니다.", "Monitor real-time progress across 9 stages via the top circle progress tabs.<br>Deliverables will automatically render upon completion.")}
-                        </p>
-
-                        <!-- Overall Pipeline Progress Bar Container (Attached Image Matched 100%) -->
-                        <div class="running-progress-box">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                                <span style="color: var(--text-secondary); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-                                    <i class="fa-solid fa-arrows-spin fa-spin" style="color: var(--accent-text); --fa-animation-duration: 3s;"></i>
-                                    ${t("전체 기획 파이프라인 진행률", "Overall Pipeline Progress")}
-                                </span>
-                                <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--accent-text);">${currentPct}%</span>
+                <div class="document-wrapper run-stream-wrapper">
+                    <div class="run-stream" id="run-stream">
+                        <ol class="run-steps" id="run-steps"></ol>
+                        <div class="run-main">
+                            <div class="run-bar">
+                                <div class="run-heading"><span class="run-pulse" aria-hidden="true"></span><b id="run-active-label">${t('기획 파이프라인 실행 중', 'Pipeline running')}</b></div>
+                                <span id="progress-percent-label" class="run-percent">${currentPct}%</span>
                             </div>
-                            <div style="width: 100%; height: 12px; background: rgba(255,255,255,0.06); border-radius: 6px; overflow: hidden; position: relative;">
-                                <div id="pipeline-progress-fill" style="width: ${currentPct}%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue, #3b82f6)); border-radius: 6px; transition: width 0.4s ease;"></div>
-                            </div>
-                        </div>
+                            <div class="progress-track run-track"><div id="pipeline-progress-fill" style="width: ${currentPct}%;"></div></div>
                             ${timingStatsHtml()}
-
+                            <div class="run-thinking" id="run-thinking" aria-live="polite"></div>
+                            <div class="run-preview">
+                                <div class="run-preview-head"><i class="fa-regular fa-file-lines"></i> <span id="run-preview-title">${t('문서 준비 중', 'Preparing document')}</span><span class="run-caret" aria-hidden="true"></span></div>
+                                <div class="run-sk" style="width: 92%"></div><div class="run-sk" style="width: 78%"></div><div class="run-sk" style="width: 85%"></div><div class="run-sk" style="width: 60%"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
+            renderRunStream();
+            updateStatusPill(computeProgress());
+        }
+
+        function stripLogText(msg) {
+            const div = document.createElement('div');
+            div.innerHTML = String(msg || '');
+            return (div.textContent || '').replace(/\s+/g, ' ').trim();
+        }
+
+        // 진행 카드가 화면에 있을 때 단계 목록·최근 활동·미리보기 제목을 갱신한다
+        function renderRunStream() {
+            const list = document.getElementById('run-steps');
+            if (!list) return;
+            const tm = window.pitlTiming;
+            const active = tm ? tm.active : null;
+            const activeIdx = active ? PIPELINE_STEPS.indexOf(active) : (tm && tm.finishedAt ? PIPELINE_STEPS.length : -1);
+            list.innerHTML = PIPELINE_STEPS.map((key, idx) => {
+                const isGate = key === 'gate50';
+                const label = isGate ? t('중간 검토', 'Mid-review') : STEP_LABELS[key];
+                let cls = 'pending', time = '';
+                if (idx < activeIdx) { cls = 'done'; time = !isGate && tm && tm.steps[key] != null ? fmtDuration(tm.steps[key]) : ''; }
+                else if (idx === activeIdx) { cls = isGate ? 'waiting' : 'active'; time = tm ? fmtDuration(performance.now() - tm.activeStart) : ''; }
+                if (isGate && !isMidReviewEnabled() && cls === 'pending') time = 'OFF';
+                return `<li class="run-step ${cls}${isGate ? ' gate' : ''}"><span class="run-step-ic">${cls === 'done' ? '✓' : ''}</span><span>${label}</span><span class="run-step-t">${time}</span></li>`;
+            }).join('');
+
+            const labelEl = document.getElementById('run-active-label');
+            const titleEl = document.getElementById('run-preview-title');
+            if (labelEl) labelEl.textContent = active === 'gate50' ? t('중간 검토 대기 중', 'Waiting for review')
+                : active ? t(`${STEP_LABELS[active]} 작성 중`, `Writing ${STEP_LABELS[active]}`) : t('기획 파이프라인 실행 중', 'Pipeline running');
+            if (titleEl) titleEl.textContent = active && active !== 'gate50' ? t(`${STEP_LABELS[active]} 문서 작성 중`, `Drafting ${STEP_LABELS[active]}`) : t('문서 준비 중', 'Preparing document');
+
+            const thinking = document.getElementById('run-thinking');
+            if (thinking && typeof currentConsoleLogs !== 'undefined') {
+                const lines = currentConsoleLogs.slice(-4).map(l => stripLogText(l.msg)).filter(Boolean);
+                const html = lines.map(line => `<div>${line.replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]))}</div>`).join('');
+                if (thinking.dataset.sig !== html) { thinking.innerHTML = html; thinking.dataset.sig = html; }
+            }
+        }
+
+        // ── 중간 검토 체크포인트: 1단계 결과 요약 + 승인 / 수정 요청 / 다시 생성 ──
+        function docSummaryLine(md) {
+            const line = String(md || '').split('\n').map(l => l.replace(/^[#>*\-\s|]+/, '').replace(/[*_`|]/g, '').trim())
+                .find(l => l.length > 12 && !/^\[?\d{2}\.\d{2}\.\d{2}\]?/.test(l)) || '';
+            return line.length > 70 ? line.slice(0, 70) + '…' : line;
+        }
+
+        function renderGateCheckpoint() {
+            const target = document.getElementById('viewer-main-content');
+            const st = window.pitlPendingState;
+            if (!target || !st) return;
+            activeDoc = 'gate50';
+            const items = [['1pager', st.onePagerContent], ['threec', st.threeCContent], ['swot', st.swotContent], ['stp', st.stpContent], ['mece', st.meceContent]];
+            const esc = v => String(v).replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
+            target.innerHTML = `
+                <div class="document-wrapper run-stream-wrapper">
+                    <div class="gate-checkpoint">
+                        <div class="gate-cp-head"><span class="gate-cp-badge">⏸ ${t('중간 검토', 'Checkpoint')}</span>
+                            <h3>${t('1단계 분석이 끝났습니다. 이대로 2단계를 진행할까요?', 'Phase 1 is done. Continue to phase 2?')}</h3>
+                            <p>${t('PRD·와이어프레임·프로토타입·QA는 아래 결과를 바탕으로 만들어집니다. 카드를 누르면 문서 전체를 볼 수 있습니다.', 'PRD, wireframes, prototype and QA build on these results. Click a card to read the full document.')}</p>
+                        </div>
+                        <div class="gate-cp-list">
+                            ${items.map(([key, md]) => `<button type="button" class="gate-cp-item" onclick="switchDocument('${key}')"><b>${STEP_LABELS[key]}</b><span>${esc(docSummaryLine(md)) || t('내용 없음', 'Empty')}</span></button>`).join('')}
+                        </div>
+                        <div class="gate-cp-actions">
+                            <button type="button" class="gate-cp-btn primary" onclick="approveGateCheckpoint()">${t('승인하고 계속', 'Approve & continue')}</button>
+                            <button type="button" class="gate-cp-btn" onclick="toggleGateRevision()">${t('수정 요청', 'Request changes')}</button>
+                            <button type="button" class="gate-cp-btn ghost" onclick="regenerateFromStart()">${t('1단계 다시 생성', 'Regenerate phase 1')}</button>
+                        </div>
+                        <div class="gate-cp-edit" id="gate-cp-edit">
+                            <textarea id="gate-cp-note" placeholder="${t('예) 타겟을 40대 1인 가구로 좁혀서 PRD를 써 주세요', 'e.g. Narrow the target to single-person households in their 40s')}">${esc(st.reviewNote || '')}</textarea>
+                            <button type="button" class="gate-cp-btn primary" onclick="approveGateCheckpoint(true)">${t('요청 반영해 계속', 'Continue with changes')}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            updateStatusPill(computeProgress());
+        }
+
+        function toggleGateRevision() {
+            const box = document.getElementById('gate-cp-edit');
+            if (!box) return;
+            box.classList.toggle('show');
+            if (box.classList.contains('show')) document.getElementById('gate-cp-note').focus();
+        }
+
+        function approveGateCheckpoint(withNote) {
+            const st = window.pitlPendingState;
+            if (!st) return;
+            const note = withNote ? (document.getElementById('gate-cp-note').value || '').trim() : '';
+            st.reviewNote = note;
+            if (note) logAgentClientSide('system', t(`✍️ 검토 요청 반영: ${note}`, `✍️ Review note applied: ${note}`));
+            renderPipelineRunningProgressCard();
+            resumePlanningAfterMece();
+        }
+
+        function regenerateFromStart() {
+            const ta = document.getElementById('idea-textarea');
+            const idea = (generatedDocs && generatedDocs.idea) || (window.pitlPendingState && window.pitlPendingState.idea) || '';
+            if (!ta || !idea) return;
+            window.pitlPendingState = null;
+            window.pitlWaitingGate50 = false;
+            ta.value = idea;
+            startProductPlanning();
+        }
+
+        // ── 상태 알약: 진행 카드가 안 보일 때 화면 하단에 진행 상황을 표시 ──
+        function updateStatusPill(stats) {
+            let pill = document.getElementById('pitl-status-pill');
+            const tm = window.pitlTiming;
+            const running = !!(tm && tm.active && !tm.finishedAt);
+            const visible = running && document.body.classList.contains('state-workspace') && !document.getElementById('run-stream') && !document.querySelector('.gate-checkpoint');
+            if (!pill) {
+                if (!visible) return;
+                pill = document.createElement('div');
+                pill.id = 'pitl-status-pill';
+                pill.className = 'status-pill';
+                pill.innerHTML = `
+                    <button type="button" class="status-pill-row" aria-expanded="false">
+                        <span class="run-pulse" aria-hidden="true"></span>
+                        <span class="status-pill-txt"></span>
+                        <svg class="status-pill-ring" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="10" stroke="rgba(127,127,127,.25)"/><circle class="status-pill-arc" cx="13" cy="13" r="10" stroke="rgb(var(--accent-rgb))" stroke-linecap="round" stroke-dasharray="62.8" stroke-dashoffset="62.8" transform="rotate(-90 13 13)"/></svg>
+                    </button>
+                    <div class="status-pill-more"><div><ul></ul><button type="button" class="status-pill-open">${t('진행 화면 열기', 'Open progress view')}</button></div></div>`;
+                pill.querySelector('.status-pill-row').addEventListener('click', () => {
+                    const open = pill.classList.toggle('open');
+                    pill.querySelector('.status-pill-row').setAttribute('aria-expanded', String(open));
+                });
+                pill.querySelector('.status-pill-open').addEventListener('click', () => {
+                    pill.classList.remove('open');
+                    if (window.pitlTiming && window.pitlTiming.active === 'gate50') renderGateCheckpoint();
+                    else renderPipelineRunningProgressCard();
+                    updateStatusPill(computeProgress());
+                });
+                document.body.appendChild(pill);
+            }
+            pill.classList.toggle('show', visible);
+            if (!visible || !stats) return;
+
+            const viewer = document.getElementById('viewer-main-content');
+            if (viewer) { const r = viewer.getBoundingClientRect(); pill.style.left = (r.left + r.width / 2) + 'px'; }
+            const pct = Math.round(stats.percent);
+            const isGate = tm.active === 'gate50';
+            pill.querySelector('.status-pill-txt').innerHTML = isGate
+                ? `${t('중간 검토 대기 중', 'Waiting for review')}<small>${t('눌러서 검토', 'tap to review')}</small>`
+                : `${t(`${STEP_LABELS[tm.active]} 작성 중`, `Writing ${STEP_LABELS[tm.active]}`)}<small>${pct}% · ${t(`약 ${fmtDuration(stats.etaSec * 1000)} 남음`, `~${fmtDuration(stats.etaSec * 1000)} left`)}</small>`;
+            pill.querySelector('.status-pill-arc').setAttribute('stroke-dashoffset', String(62.8 * (1 - pct / 100)));
+            const activeIdx = PIPELINE_STEPS.indexOf(tm.active);
+            const html = WORK_STEPS.map(key => {
+                const idx = PIPELINE_STEPS.indexOf(key);
+                const state = idx < activeIdx ? 'done' : idx === activeIdx ? 'cur' : '';
+                return `<li class="${state}"><span>${state === 'done' ? '✓' : state === 'cur' ? '●' : '○'} ${STEP_LABELS[key]}</span><span>${state === 'done' ? t('완료', 'Done') : state === 'cur' ? t('진행 중', 'Running') : t('대기', 'Queued')}</span></li>`;
+            }).join('');
+            const ul = pill.querySelector('ul');
+            if (ul.dataset.sig !== html) { ul.innerHTML = html; ul.dataset.sig = html; }
         }
 
         // Progress Popover Toggle when active circle node is clicked -> renders attached image card view
@@ -6267,7 +6505,7 @@ ${idea.slice(0, 2000)}`
         // 50% Gate Click Handler
         function handleGate50Click() {
             if (window.pitlWaitingGate50) {
-                resumePlanningAfterMece();
+                renderGateCheckpoint();
             } else {
                 switchDocument('mece');
             }
@@ -6504,6 +6742,7 @@ ${idea.slice(0, 2000)}`
                         const saved = running ? timingSnapshot() : (generatedDocs && generatedDocs.timings) || null;
                         renderNodeTimes(saved);
                         renderTimingStats(null, saved);
+                        updateStatusPill(null);
                     }
                     return;
                 }
@@ -6582,6 +6821,8 @@ ${idea.slice(0, 2000)}`
                     }
                     renderNodeTimes(null);
                     renderTimingStats(stats, null);
+                    renderRunStream();
+                    updateStatusPill(stats);
                 };
                 tick();
                 window.pitlProgressTimer = setInterval(tick, 500);
@@ -6688,7 +6929,8 @@ ${idea.slice(0, 2000)}`
                 navFirst.classList.add('active');
             }
 
-            document.getElementById('mock-browser-url').value = 'pitl.ai/workspace/strategist-1pager';
+            const mockUrl = document.getElementById('mock-browser-url');
+            if (mockUrl) mockUrl.value = 'pitl.ai/workspace/strategist-1pager';
 
             // Inject first System orchestrator notification in Middle panel
             const chatContainer = document.getElementById('chat-messages-container');
@@ -6702,41 +6944,7 @@ ${idea.slice(0, 2000)}`
 
             // Inject Live Agent Planning Stream Card into Main Viewer
             const targetArea = document.getElementById('viewer-main-content');
-            targetArea.innerHTML = `
-                <div class="document-wrapper" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 200px); padding: 40px 20px; text-align: center;">
-                    <div style="background: rgba(15, 18, 26, 0.85); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border: 1px solid rgba(var(--accent-rgb), 0.2); border-radius: 20px; padding: 48px 40px; width: 100%; max-width: 860px; box-shadow: 0 30px 60px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; position: relative;">
-                        
-                        <!-- Top Glowing Orb Icon -->
-                        <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(var(--accent-rgb), 0.1); border: 1px solid rgba(var(--accent-rgb), 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.25);">
-                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 32px; color: var(--accent-text); animation: pulse 2s infinite ease-in-out;"></i>
-                        </div>
-
-                        <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 800; color: #ffffff; margin-bottom: 12px; border: none; padding: 0;">
-                            ${t("DHK 5단계 기획 파이프라인 가동 중...", "DHK 5-Stage Agentic Pipeline Running...")}
-                        </h2>
-                        
-                        <p style="font-size: 14px; color: #94a3b8; line-height: 1.6; max-width: 600px; margin-bottom: 32px;">
-                            ${t("상단 원형 탭 노드에서 9개 단계별 실시간 생성 진행률을 확인하실 수 있습니다.<br>에이전트 완공 완료 시 해당 탭으로 다이렉트 이동 및 렌더링됩니다.", "Monitor real-time progress across 9 stages via the top circle progress tabs.<br>Deliverables will automatically render upon completion.")}
-                        </p>
-
-                        <!-- Overall Pipeline Progress Bar Only -->
-                        <div style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px 24px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                <span style="color: var(--text-secondary); display: flex; align-items: center; gap: 6px;">
-                                    <i class="fa-solid fa-arrows-spin fa-spin" style="color: var(--accent-text); --fa-animation-duration: 3s;"></i>
-                                    ${t("전체 기획 파이프라인 진행률", "Overall Pipeline Progress")}
-                                </span>
-                                <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800; color: var(--accent-text);">0%</span>
-                            </div>
-                            <div style="width: 100%; height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; overflow: hidden; position: relative;">
-                                <div id="pipeline-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue)); border-radius: 5px; transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);"></div>
-                            </div>
-                        </div>
-                            ${timingStatsHtml()}
-
-                    </div>
-                </div>
-            `;
+            renderPipelineRunningProgressCard(targetArea);
             /*
 
                             <div class="circle-step-item pending" id="circle-node-swot" title="SWOT 전략">
@@ -6848,7 +7056,7 @@ ${idea.slice(0, 2000)}`
                                 </span>
                                 <span id="progress-percent-label" style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--accent-text);">0%</span>
                             </div>
-                            <div style="width: 100%; height: 12px; background: rgba(255,255,255,0.06); border-radius: 6px; overflow: hidden; position: relative;">
+                            <div class="progress-track" style="width: 100%; height: 12px; background: rgba(var(--hairline-rgb), 0.08); border-radius: 6px; overflow: hidden; position: relative;">
                                 <div id="pipeline-progress-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue)); border-radius: 6px; transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);"></div>
                             </div>
                         </div>
@@ -7259,7 +7467,7 @@ ${idea.slice(0, 2000)}`
                 const midReview = isMidReviewEnabled();
                 if (midReview) {
                     logAgentClientSide('strategist', `⏸️ [중간 검토 관문] MECE 단계까지의 기획 분석 생성이 완료되었습니다.`);
-                    logAgentClientSide('system', `상단 [승인 & 계속] 원형 탭 또는 MECE 상세 페이지 하단의 알약 버튼을 클릭하면 PRD 등 후속 4단계 생성을 계속 진행합니다.`);
+                    logAgentClientSide('system', `검토 카드에서 [승인하고 계속] 또는 [수정 요청]을 고르면 PRD 등 후속 4단계 생성을 계속 진행합니다.`);
                 } else {
                     logAgentClientSide('system', t('중간 검토 OFF — 검토 대기 없이 2단계(PRD → 와이어프레임 → 프로토타입 → QA)를 바로 이어서 진행합니다.', 'Mid-review OFF — continuing straight to phase 2 (PRD → wireframes → prototype → QA).'));
                 }
@@ -7295,8 +7503,8 @@ ${idea.slice(0, 2000)}`
                     if (nav) nav.classList.remove('disabled');
                 });
 
-                switchDocument('mece');
-                if (!midReview) resumePlanningAfterMece();
+                if (midReview) renderGateCheckpoint();
+                else { switchDocument('mece'); resumePlanningAfterMece(); }
                 return;
             } catch (err) {
                 console.error("Client Mode planning failure:", err);
@@ -7312,7 +7520,7 @@ ${idea.slice(0, 2000)}`
             if (!window.pitlPendingState || window.pitlResumeInFlight) return; // 중복 실행 방지
             window.pitlResumeInFlight = true;
             window.pitlWaitingGate50 = false;
-            const { cleanTitle, summaryTitle, idea, onePagerContent, threeCContent, swotContent, stpContent, meceContent } = window.pitlPendingState;
+            const { cleanTitle, summaryTitle, idea, onePagerContent, threeCContent, swotContent, stpContent, meceContent, reviewNote } = window.pitlPendingState;
             const textarea = document.getElementById('user-idea-input') || document.getElementById('idea-textarea');
 
             // Lock UI during resumption
@@ -7327,7 +7535,7 @@ ${idea.slice(0, 2000)}`
                 logAgentClientSide('analyst', `1-pager 기획안 및 MECE 분석을 바탕으로 상세 개발 요구사항(PRD) 및 예외 정책 수립을 전개합니다.`);
                 const prdPrompt = `
                 다음 기획안(1-pager) 및 MECE 분석을 참조하여 기능 요구사항, KPI 지표, 정책 및 예외 처리가 포함된 정밀한 PRD를 작성하라.
-                
+                ${reviewNote ? `\n                [중간 검토 요청 — 반드시 반영] ${reviewNote}\n` : ''}
                 참조 기획안(1-pager):
                 ${onePagerContent}
                 
@@ -7525,14 +7733,15 @@ ${idea.slice(0, 2000)}`
         }
         async function startCascadingRegenerationClientSide(resumeFrom) {
             currentConsoleLogs = [];
-            document.getElementById('badge-qa-status').style.display = 'none';
-            document.getElementById('btn-copy').disabled = true;
-            document.getElementById('btn-pdf').disabled = true;
-            document.getElementById('btn-edit').disabled = true;
-
-            document.getElementById('btn-copy').style.opacity = '0.5';
-            document.getElementById('btn-pdf').style.opacity = '0.5';
-            document.getElementById('btn-edit').style.opacity = '0.5';
+            const badgeQaReset = document.getElementById('badge-qa-status');
+            if (badgeQaReset) badgeQaReset.style.display = 'none';
+            ['btn-copy', 'btn-pdf', 'btn-edit'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                }
+            });
 
             // Lock inputs
             document.getElementById('btn-submit-planning').disabled = true;
@@ -7547,7 +7756,8 @@ ${idea.slice(0, 2000)}`
             navFirst2.classList.remove('disabled');
             navFirst2.classList.add('active');
 
-            document.getElementById('mock-browser-url').value = 'pitl.ai/workspace/strategist-1pager';
+            const mockUrl = document.getElementById('mock-browser-url');
+            if (mockUrl) mockUrl.value = 'pitl.ai/workspace/strategist-1pager';
 
             const stageLabels = {
                 'prd': t('PRD 요구사항 정의', 'PRD Requirements Definition'),
@@ -7763,17 +7973,17 @@ ${idea.slice(0, 2000)}`
                 document.getElementById('idea-textarea').disabled = false;
 
                 document.querySelectorAll('.chrome-tab').forEach(el => el.classList.remove('disabled'));
-                document.getElementById('badge-qa-status').style.display = 'flex';
+                const badgeQaDone = document.getElementById('badge-qa-status');
+                if (badgeQaDone) badgeQaDone.style.display = 'flex';
                 
-                document.getElementById('btn-copy').disabled = false;
-                document.getElementById('btn-pdf').disabled = false;
-                document.getElementById('btn-edit').disabled = false;
-                document.getElementById('btn-copy').style.opacity = '1';
-                document.getElementById('btn-pdf').style.opacity = '1';
-                document.getElementById('btn-edit').style.opacity = '1';
-                document.getElementById('btn-copy').style.cursor = 'pointer';
-                document.getElementById('btn-pdf').style.cursor = 'pointer';
-                document.getElementById('btn-edit').style.cursor = 'pointer';
+                ['btn-copy', 'btn-pdf', 'btn-edit'].forEach(id => {
+                    const btn = document.getElementById(id);
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                    }
+                });
                 
                 completeAllPipelineSteps();
 
@@ -8279,9 +8489,9 @@ ${idea.slice(0, 2000)}`
 
             overlay.innerHTML = `
                 <div class="validation-modal-card" style="
-                    background: rgba(18, 22, 32, 0.95);
+                    background: var(--bg-card);
                     border: 1px solid rgba(245, 158, 11, 0.35);
-                    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.15);
+                    box-shadow: var(--shadow-card), 0 0 30px rgba(245, 158, 11, 0.15);
                     border-radius: 20px;
                     padding: 28px 32px;
                     max-width: 480px;
@@ -8291,19 +8501,19 @@ ${idea.slice(0, 2000)}`
                     flex-direction: column;
                     align-items: center;
                     gap: 16px;
-                    color: #f8fafc;
+                    color: var(--text-primary);
                 ">
-                    <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 26px;">
+                    <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); display: flex; align-items: center; justify-content: center; color: var(--accent-amber); font-size: 26px;">
                         <i class="fa-solid fa-circle-exclamation"></i>
                     </div>
                     <div>
-                        <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 800; margin-bottom: 8px; color: #f8fafc;">
+                        <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 800; margin-bottom: 8px; color: var(--text-primary);">
                             ${t('입력 정보 확인', 'Input Verification')}
                         </h3>
-                        <p style="font-size: 15px; font-weight: 700; color: #f59e0b; margin-bottom: 8px; line-height: 1.5;">
+                        <p style="font-size: 15px; font-weight: 700; color: var(--accent-amber); margin-bottom: 8px; line-height: 1.5;">
                             ${t('타겟유저와 경쟁사가 입력되지 않았습니다.<br>계속 진행할까요?', 'Target users and competitors were not detected.<br>Do you wish to proceed anyway?')}
                         </p>
-                        <p style="font-size: 13px; color: #94a3b8; line-height: 1.6; margin: 0;">
+                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin: 0;">
                             ${t('타겟유저와 경쟁사 정보를 함께 입력하시면 훨씬 깊이 있고 정밀한 분석 결과서가 생성됩니다.', 'Providing target users and competitors yields significantly deeper specifications.')}
                         </p>
                     </div>
@@ -8312,9 +8522,9 @@ ${idea.slice(0, 2000)}`
                             flex: 1;
                             padding: 12px 18px;
                             border-radius: 12px;
-                            border: 1px solid rgba(255, 255, 255, 0.15);
-                            background: rgba(255, 255, 255, 0.06);
-                            color: #e2e8f0;
+                            border: 1px solid var(--border-color);
+                            background: rgba(var(--hairline-rgb), 0.05);
+                            color: var(--text-primary);
                             font-size: 14px;
                             font-weight: 700;
                             cursor: pointer;
@@ -8380,22 +8590,7 @@ ${idea.slice(0, 2000)}`
                 return;
             }
 
-            const parseResult = checkIdeaParsing(idea);
-            if (parseResult.needsConfirmation) {
-                showValidationConfirmModal(
-                    () => {
-                        // OK -> Proceed to start planning
-                        executeStartPlanningTransition();
-                    },
-                    () => {
-                        // Re-input -> Focus back to textarea and move cursor to end
-                        textarea.focus();
-                        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-                    }
-                );
-                return;
-            }
-
+            // 타겟유저·경쟁사 누락은 입력창 아래 칩·안내 문구로만 알린다 (확인 팝업 없음)
             executeStartPlanningTransition();
         }
 
@@ -8485,7 +8680,8 @@ ${idea.slice(0, 2000)}`
             navFirst3.classList.remove('disabled');
             navFirst3.classList.add('active');
 
-            document.getElementById('mock-browser-url').value = 'pitl.ai/workspace/strategist-1pager';
+            const mockUrl = document.getElementById('mock-browser-url');
+            if (mockUrl) mockUrl.value = 'pitl.ai/workspace/strategist-1pager';
 
             // Inject empty workspace welcome in middle panel
             const chatContainer = document.getElementById('chat-messages-container');
@@ -8806,7 +9002,7 @@ ${idea.slice(0, 2000)}`
 
                 targetArea.innerHTML = `
                     <div class="document-wrapper markdown-body">
-                        <div class="stage-methodology-header" style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div class="stage-methodology-header" style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
                             <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; border-bottom: none; padding-bottom: 0;">
                                 <span style="display: inline-block; width: 6px; height: 24px; background: var(--accent-neon); border-radius: 3px; flex-shrink: 0;"></span>
                                 ${titleText}
@@ -9867,7 +10063,7 @@ function toggleVizTable(btn) {
             }).join('');
 
             targetArea.innerHTML = `
-                <div class="document-wrapper" style="padding: 24px;">
+                <div class="document-wrapper tile-dashboard-wrapper" style="padding: 24px;">
                     <div style="margin-bottom: 24px;">
                         <span style="font-size: 14px; font-weight: 700; color: var(--accent-text); letter-spacing: 1.5px; text-transform: uppercase;">
                             <i class="fa-solid fa-layer-group"></i> Architecture Overview
@@ -10027,7 +10223,7 @@ function toggleVizTable(btn) {
                                 100%
                             </span>
                         </div>
-                        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; position: relative;">
+                        <div style="width: 100%; height: 8px; background: rgba(var(--hairline-rgb), 0.08); border-radius: 4px; overflow: hidden; position: relative;">
                             <div id="pipeline-progress-fill" style="width: 100%; height: 100%; background: linear-gradient(90deg, var(--accent-neon), var(--accent-blue)); border-radius: 4px; transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);"></div>
                         </div>
                     </div>
@@ -10302,7 +10498,7 @@ function toggleVizTable(btn) {
         function renderWireframesContainer(targetArea) {
             targetArea.innerHTML = `
                 <div class="document-wrapper" style="padding: 24px;">
-                    <div class="stage-methodology-header" style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div class="stage-methodology-header" style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
                         <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; border-bottom: none; padding-bottom: 0;">
                             <span style="display: inline-block; width: 6px; height: 24px; background: var(--accent-neon); border-radius: 3px; flex-shrink: 0;"></span>
                             ${t("와이어프레임 3안 시안", "3 Wireframe Layout Options")}
@@ -10480,6 +10676,65 @@ function toggleVizTable(btn) {
         }
 
         // Helper to render history cards (used by loadHistoryList)
+        const STARTER_EXAMPLES = [
+            { title: '반찬 구독 앱', desc: '구독형 커머스 · 재구매 설계', fill: '1인 가구 반찬 구독 앱\n타겟유저: 30대 직장인\n경쟁사: 쿠캣, 배민 반찬' },
+            { title: 'PT 예약 SaaS', desc: 'B2B 예약 · 노쇼 방지', fill: '동네 헬스장 PT 예약 SaaS\n타겟유저: 트레이너 1~5인 센터\n경쟁사: 짐플, 바디코디' },
+            { title: 'AI 여행 일정', desc: '개인화 추천 · 일정 편집', fill: 'AI 여행 일정 짜주는 앱\n타겟유저: 20대 자유여행객\n경쟁사: 트리플, 마이리얼트립' }
+        ];
+
+        function fillStarterExample(i) {
+            const ta = document.getElementById('idea-textarea');
+            if (!ta || !STARTER_EXAMPLES[i]) return;
+            ta.value = STARTER_EXAMPLES[i].fill;
+            updatePromptSlots();
+            ta.focus();
+            ta.setSelectionRange(ta.value.length, ta.value.length);
+        }
+
+        // ── 구조화 입력: 아이디어·타겟유저·경쟁사 칩 ──
+        function detectPromptSlots(text) {
+            const parsed = checkIdeaParsing(text);
+            const firstLine = text.split(/\n|\//)[0].replace(/(타겟|타깃|경쟁|target|competitor).*/i, '').trim();
+            return { idea: firstLine.length >= 4, target: parsed.hasTarget, comp: parsed.hasCompetitor };
+        }
+
+        function updatePromptSlots() {
+            const ta = document.getElementById('idea-textarea');
+            const box = document.getElementById('prompt-slots');
+            if (!ta || !box) return;
+            const d = detectPromptSlots(ta.value);
+            let n = 0;
+            box.querySelectorAll('.slot-chip').forEach(el => { const on = !!d[el.dataset.slot]; el.classList.toggle('filled', on); if (on) n++; });
+            box.querySelectorAll('.slot-meter i').forEach((el, i) => el.classList.toggle('on', i < n));
+            const nudge = document.getElementById('slot-nudge');
+            const missing = [!d.target && t('타겟유저', 'target users'), !d.comp && t('경쟁사', 'competitors')].filter(Boolean).join('·');
+            nudge.classList.toggle('warn', d.idea && n < 3);
+            nudge.textContent = !ta.value.trim() ? t('아이디어부터 적어 주세요', 'Start with your idea')
+                : n === 3 ? t('세 항목이 모두 있어 분석이 더 정확해집니다', 'All three present: analysis will be sharper')
+                : !d.idea ? t('아이디어를 조금 더 구체적으로 적어 주세요', 'Describe the idea a little more')
+                : t(`${missing}를 더하면 분석이 깊어집니다 (없어도 시작 가능)`, `Add ${missing} for a deeper analysis (optional)`);
+        }
+
+        function initPromptSlots() {
+            const ta = document.getElementById('idea-textarea');
+            const box = document.getElementById('prompt-slots');
+            if (!ta || !box) return;
+            ta.addEventListener('input', updatePromptSlots);
+            box.querySelectorAll('.slot-chip').forEach(el => el.addEventListener('click', () => {
+                if (!el.classList.contains('filled') && el.dataset.slot !== 'idea') {
+                    const label = el.dataset.slot === 'target' ? t('타겟유저: ', 'Target users: ') : t('경쟁사: ', 'Competitors: ');
+                    ta.value = ta.value.replace(/\s*$/, '') + (ta.value.trim() ? '\n' : '') + label;
+                    updatePromptSlots();
+                }
+                ta.focus();
+                ta.setSelectionRange(ta.value.length, ta.value.length);
+            }));
+            updatePromptSlots();
+        }
+
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initPromptSlots);
+        else initPromptSlots();
+
         function renderHistoryLists(data) {
             // 1. Sidebar List
             const listContainer = document.getElementById('history-list');
@@ -10495,19 +10750,19 @@ function toggleVizTable(btn) {
                     listContainer.innerHTML = data.map(item => {
                         const fullIdeaText = item.idea || item.displayTitle || '';
                         return `
-                        <div class="history-item-card" onclick="loadHistoryItem('${item.title}', '${item.date}')">
+                        <div class="history-item-card" onclick="if (!String(window.getSelection())) loadHistoryItem('${item.title}', '${item.date}')">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
-                                <div class="history-card-title" style="user-select:text; flex: 1;" onclick="event.stopPropagation()">
+                                <div class="history-card-title" style="user-select:text; flex: 1;">
                                     <i class="fa-regular fa-file-lines" style="color: var(--accent-text); user-select:none; flex-shrink: 0;"></i> <span>${item.displayTitle}</span>
                                 </div>
                                 <button class="btn-delete-history" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}">
                                     <i class="fa-regular fa-trash-can"></i>
                                 </button>
                             </div>
-                            ${fullIdeaText ? `<div style="font-size:11px; color:var(--text-secondary); margin:4px 0 6px 0; line-height:1.45; white-space:normal; word-break:break-word; user-select:text; cursor:text; padding:2px 0;" onclick="event.stopPropagation()">${fullIdeaText}</div>` : ''}
+                            ${fullIdeaText ? `<div style="font-size:11px; color:var(--text-secondary); margin:4px 0 6px 0; line-height:1.45; white-space:normal; word-break:break-word; user-select:text; padding:2px 0;">${fullIdeaText}</div>` : ''}
                             <div class="history-card-meta">
-                                <span style="user-select:text;" onclick="event.stopPropagation()">${item.displayDate}</span>
-                                <span class="landing-card-badge" style="background: rgba(255,255,255,0.05); color: var(--text-secondary);">${item.types.length} ${t("Files", "Files")}</span>
+                                <span style="user-select:text;">${item.displayDate}</span>
+                                <span class="landing-card-badge" style="background: rgba(var(--hairline-rgb), 0.06); color: var(--text-secondary);">${item.types.length} ${t("Files", "Files")}</span>
                             </div>
                         </div>
                         `;
@@ -10522,28 +10777,32 @@ function toggleVizTable(btn) {
                 if (!data || data.length === 0) {
                     landingGrid.style.animation = 'none';
                     landingGrid.innerHTML = `
-                        <div class="landing-history-empty">
-                            <i class="fa-regular fa-folder-open"></i>
-                            <span>${t("최근 생성 완료된 기획안 히스토리가 없습니다.", "No recently completed planning history found.")}</span>
+                        <div class="landing-history-empty starter-empty">
+                            <div class="starter-glyph" aria-hidden="true">✦</div>
+                            <b class="starter-title">${t("첫 기획서를 만들어 보세요", "Create your first plan")}</b>
+                            <span class="starter-desc">${t("아이디어 한 줄이면 1-Pager부터 프로토타입·QA까지 9개 문서가 만들어집니다. 예시로 시작해도 좋아요.", "One idea line produces nine documents, from the 1-Pager to the prototype and QA. Start from an example if you like.")}</span>
+                            <div class="starter-grid">
+                                ${STARTER_EXAMPLES.map((ex, i) => `<button type="button" class="starter-card" onclick="fillStarterExample(${i})"><b>${ex.title}</b><span>${ex.desc}</span><em>${t("예시로 채우기 →", "Use example →")}</em></button>`).join('')}
+                            </div>
                         </div>
                     `;
                 } else {
                     const buildCard = (item) => {
                         const fullIdeaText = item.idea || item.displayTitle || '';
                         return `
-                        <div class="landing-history-card" onclick="loadHistoryItem('${item.title}', '${item.date}')">
+                        <div class="landing-history-card" onclick="if (!String(window.getSelection())) loadHistoryItem('${item.title}', '${item.date}')">
                             <div class="landing-card-content">
                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
-                                    <div class="landing-card-title" style="user-select:text; flex: 1;" onclick="event.stopPropagation()">
+                                    <div class="landing-card-title" style="user-select:text; flex: 1;">
                                         <i class="fa-regular fa-file-lines" style="color: var(--accent-text); margin-right: 6px; user-select:none;"></i> ${item.displayTitle}
                                     </div>
                                     <button class="btn-delete-history" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}">
                                         <i class="fa-regular fa-trash-can"></i>
                                     </button>
                                 </div>
-                                ${fullIdeaText ? `<div style="font-size:12px; color:var(--text-secondary); margin:6px 0 4px; line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:188px;" onclick="event.stopPropagation()">${fullIdeaText}</div>` : ''}
+                                ${fullIdeaText ? `<div class="landing-card-idea" style="font-size:12px; color:var(--text-secondary); margin:6px 0 4px; line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:188px;">${fullIdeaText}</div>` : ''}
                                 <div class="landing-card-footer">
-                                    <span style="user-select:text;" onclick="event.stopPropagation()">${item.displayDate}</span>
+                                    <span style="user-select:text;">${item.displayDate}</span>
                                     <span class="landing-card-badge">${item.types.length}${t("개 파일 완료", " files completed")}</span>
                                 </div>
                             </div>
@@ -10948,23 +11207,31 @@ function toggleVizTable(btn) {
             });
         }
     </script>
-    <!-- Starbucks Signature Floating Frap Circular CTA Button -->
-    <button class="frap-floating-btn" id="starbucks-frap-btn" onclick="handleFrapBtnClick()" title="Starbucks Frap Quick Action — 새로운 기획 작성">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
-    </button>
-
     <script>
-        function handleFrapBtnClick() {
-            if (document.body.classList.contains('state-workspace')) {
-                resetToLanding();
-            } else {
-                const textarea = document.getElementById('idea-textarea');
-                if (textarea) {
-                    textarea.focus();
-                    textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
+        // 두 줄 제목(PITL. / Planning-in-the-loop)의 가로 길이를 같게 맞춘다.
+        // 기준 폭은 56px 크기의 아래 줄 폭, 화면이 좁으면 제목 영역 폭.
+        function fitLandingTitle() {
+            const title = document.getElementById('landing-title');
+            if (!title) return;
+            const lines = title.querySelectorAll('.title-pitl, .title-full');
+            const BASE = 56;
+            lines.forEach(el => { el.style.fontSize = BASE + 'px'; });
+            const full = title.querySelector('.title-full');
+            const avail = Math.min(title.parentElement.clientWidth, window.innerWidth - 32);
+            if (!avail) return;
+            const target = Math.min(full.getBoundingClientRect().width, avail);
+            // 글자 크기와 폭이 정확히 비례하지 않아(힌팅·커닝) 두 번 보정한다
+            for (let pass = 0; pass < 2; pass++) {
+                lines.forEach(el => {
+                    const w = el.getBoundingClientRect().width;
+                    const size = parseFloat(el.style.fontSize);
+                    if (w > 0) el.style.fontSize = (size * target / w).toFixed(2) + 'px';
+                });
             }
         }
+        fitLandingTitle();
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitLandingTitle);
+        window.addEventListener('resize', fitLandingTitle);
     </script>
 </body>
 </html>
