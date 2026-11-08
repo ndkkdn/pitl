@@ -4733,15 +4733,15 @@
         .landing-dots { display: none; }
         @media (min-width: 1280px) {
             body.state-landing .landing-view-container { flex-direction: row; justify-content: center; column-gap: clamp(40px, 5vw, 88px); }
-            .landing-view-container .landing-content { max-width: 760px; flex: 0 1 760px; }
-            .landing-dots { display: flex; flex-direction: column; align-items: center; gap: 18px; flex: 0 0 clamp(340px, 28vw, 460px); position: relative; z-index: 2; margin-top: var(--sp-6, 48px); }
+            /* 두 칸이 한 줄에 들어가도록: 본문 폭 = 화면 - 여백 - 애니메이션 - 간격 (최대 760px) */
+            .landing-view-container .landing-content { max-width: 760px; flex: 0 0 min(760px, calc(100vw - 48px - clamp(380px, 34vw, 620px) - clamp(40px, 5vw, 88px) - 8px)); }
+            .landing-dots { display: flex; flex-direction: column; align-items: center; gap: 40px; flex: 0 0 clamp(380px, 34vw, 620px); position: relative; z-index: 2; margin-top: var(--sp-6, 48px); }
             /* 배경 점은 애니메이션 주변에서만 부드럽게 사라진다 (테마와 무관한 투명도 마스크라 경계가 보이지 않음) */
             body.state-landing #space-particle-canvas { -webkit-mask-image: radial-gradient(circle at var(--dots-x, 78%) var(--dots-y, 46%), transparent 0, transparent calc(var(--dots-r, 220px) * .45), #000 var(--dots-r, 220px)); mask-image: radial-gradient(circle at var(--dots-x, 78%) var(--dots-y, 46%), transparent 0, transparent calc(var(--dots-r, 220px) * .45), #000 var(--dots-r, 220px)); }
         }
         #landing-dots-canvas { width: 100%; aspect-ratio: 1 / 1.08; display: block; }
-        .landing-dots-caption { margin: 0; min-height: 30px; font: 400 19px/1.4 'Noto Sans KR', sans-serif; letter-spacing: -0.01em; color: var(--text-primary); text-align: center; opacity: 0; transform: translateY(6px); transition: opacity .6s ease, transform .6s ease; }
+        .landing-dots-caption { margin: 0; min-height: 18px; font: 400 12px/1.4 'Space Grotesk', 'Noto Sans KR', sans-serif; letter-spacing: -0.16px; color: var(--text-secondary); text-align: center; opacity: 0; transform: translateY(6px); transition: opacity .6s ease, transform .6s ease; }
         .landing-dots-caption.show { opacity: 1; transform: none; }
-        .landing-dots-caption:lang(en) { font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif; letter-spacing: 0; }
 
         /* ══ 최근 기획서: 화면 가로 끝까지 ══ */
         .landing-view-container > .landing-history-section { flex: none; width: calc(100% + 48px); max-width: none; margin: 8px -24px 0; z-index: 2; position: relative; }
@@ -4792,6 +4792,19 @@
         /* 대시보드 타일 컬러 줄: 위 → 아래 */
         .tile-card.ready::before { inset: auto 0 0 0 !important; }
         .tile-card { overflow: hidden; }
+
+        /* 선택 상태가 다크에서도 분명히 보이게: 선택은 채운 보라 + 흰 아이콘, 나머지는 한 단계 흐리게 */
+        [data-theme="dark"] .theme-seg button { color: rgba(240, 238, 233, .55); }
+        [data-theme="dark"] .theme-seg button:hover { color: var(--text-primary); }
+        [data-theme="dark"] .theme-seg button[aria-pressed="true"] { background: rgb(var(--accent-rgb)); color: #fff; box-shadow: 0 2px 10px rgba(var(--accent-rgb), .45); }
+        [data-theme="dark"] .plan-btn-icon.on { background: rgb(var(--accent-rgb)); border-color: rgb(var(--accent-rgb)); color: #fff; box-shadow: 0 2px 10px rgba(var(--accent-rgb), .45); }
+
+        /* ══ 최근 기획서: 두 줄 반대 방향, 낮은 타일 ══ */
+        .landing-history-marquee-wrapper { display: flex; flex-direction: column; gap: 10px; }
+        .landing-history-grid.reverse { animation-direction: reverse !important; }
+        .landing-history-grid[hidden] { display: none !important; }
+        .landing-history-card .landing-card-idea { display: none !important; }
+        .landing-history-card .landing-card-content { padding: 8px 11px !important; gap: 3px !important; }
 </style>
 </head>
 <body class="state-landing dark-theme">
@@ -4977,6 +4990,7 @@
                 <div class="landing-history-grid" id="landing-history-list">
                     <!-- History cards injected here (doubled for seamless loop) -->
                 </div>
+                <div class="landing-history-grid reverse" id="landing-history-list-2" hidden></div>
             </div>
         </div>
     </div>
@@ -11437,18 +11451,19 @@ function toggleVizTable(btn) {
         }
 
         // 작업 화면에서 첫 화면으로 돌아오면 (숨겨져 있던 동안 폭을 잴 수 없었으므로) 다시 채운다
-        new MutationObserver(() => {
-            const grid = document.getElementById('landing-history-list');
-            if (grid && grid.dataset.cards && document.body.classList.contains('state-landing')) fillHistoryMarquee(grid);
-        }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        function refillHistoryMarquees() {
+            if (!document.body.classList.contains('state-landing')) return;
+            ['landing-history-list', 'landing-history-list-2'].forEach(id => {
+                const grid = document.getElementById(id);
+                if (grid && grid.dataset.cards) fillHistoryMarquee(grid);
+            });
+        }
+        new MutationObserver(refillHistoryMarquees).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
         let historyMarqueeTimer = 0;
         window.addEventListener('resize', () => {
             clearTimeout(historyMarqueeTimer);
-            historyMarqueeTimer = setTimeout(() => {
-                const grid = document.getElementById('landing-history-list');
-                if (grid && grid.dataset.cards && document.body.classList.contains('state-landing')) fillHistoryMarquee(grid);
-            }, 200);
+            historyMarqueeTimer = setTimeout(refillHistoryMarquees, 200);
         });
 
         function renderHistoryLists(data) {
@@ -11496,10 +11511,12 @@ function toggleVizTable(btn) {
             // 2. Landing Recent history marquee (credit roll)
             const landingGrid = document.getElementById('landing-history-list');
             const marqueeWrapper = landingGrid ? landingGrid.closest('.landing-history-marquee-wrapper') : null;
+            const landingGrid2 = document.getElementById('landing-history-list-2');
             if (landingGrid) {
                 if (!data || data.length === 0) {
                     landingGrid.style.animation = 'none';
                     delete landingGrid.dataset.cards;
+                    if (landingGrid2) { landingGrid2.hidden = true; landingGrid2.innerHTML = ''; delete landingGrid2.dataset.cards; }
                     landingGrid.innerHTML = `
                         <div class="landing-history-empty starter-empty">
                             <div class="starter-glyph" aria-hidden="true">✦</div>
@@ -11533,9 +11550,17 @@ function toggleVizTable(btn) {
                         </div>`;
                     };
                     // 끊김 없는 흐름: 화면 폭을 채울 만큼 반복한 묶음을 두 번 이어 붙인다 (-50% 이동)
+                    // 두 줄이 서로 반대로 흐른다: 6개 이상이면 번갈아 나눠 담고, 적으면 두 줄 모두 전체(아랫줄은 역순)
+                    const row1 = data.length >= 6 ? data.filter((_, i) => i % 2 === 0) : data;
+                    const row2 = data.length >= 6 ? data.filter((_, i) => i % 2 === 1) : [...data].reverse();
                     landingGrid.style.animation = '';
-                    landingGrid.dataset.cards = data.map(buildCard).join('');
+                    landingGrid.dataset.cards = row1.map(buildCard).join('');
                     fillHistoryMarquee(landingGrid);
+                    if (landingGrid2) {
+                        landingGrid2.hidden = false;
+                        landingGrid2.dataset.cards = row2.map(buildCard).join('');
+                        fillHistoryMarquee(landingGrid2);
+                    }
                 }
             }
             
