@@ -16,6 +16,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = Number(process.env.PORT) || 7878;
 const HOST = '127.0.0.1';
+// 예전 포트(4000) 주소에 남은 브라우저 기록을 옮길 수 있도록 같은 서버를 이 포트로도 연다 (0이면 끔)
+const LEGACY_PORT = Number(process.env.LEGACY_PORT ?? 4000);
 
 // ── Claude CLI (claude -p) engine config ─────────────────────────────────────
 const CLAUDE_BIN = process.env.CLAUDE_BIN || 'claude';
@@ -31,7 +33,8 @@ const CLAUDE_VERSION = claudeCheck.status === 0 ? claudeCheck.stdout.trim() : nu
 // ── Local-only guard ─────────────────────────────────────────────────────────
 // 브라우저 요청은 원격 사이트에서 와도 IP가 127.0.0.1이므로, Host/Origin 헤더로
 // 같은 로컬 origin 또는 허용한 웹 화면(GitHub Pages)에서 온 요청만 받는다 (CSRF / DNS rebinding 차단).
-const ALLOWED_HOSTS = new Set([`localhost:${PORT}`, `127.0.0.1:${PORT}`]);
+const ALLOWED_HOSTS = new Set([`localhost:${PORT}`, `127.0.0.1:${PORT}`,
+    ...(LEGACY_PORT && LEGACY_PORT !== PORT ? [`localhost:${LEGACY_PORT}`, `127.0.0.1:${LEGACY_PORT}`] : [])]);
 // GitHub Pages(https://ndkkdn.github.io/pitl/)에서 연 화면이 이 로컬 서버를 쓸 수 있게 허용할 origin 목록
 const ALLOWED_ORIGINS = new Set((process.env.ALLOWED_ORIGINS ?? 'https://ndkkdn.github.io')
     .split(',').map(o => o.trim().replace(/\/$/, '')).filter(Boolean));
@@ -1290,6 +1293,10 @@ app.post('/api/llm', async (req, res) => {
 });
 
 // Start Server
+if (LEGACY_PORT && LEGACY_PORT !== PORT) {
+    app.listen(LEGACY_PORT, HOST, () => console.log(`[PITL Engine] Legacy port ${LEGACY_PORT} open for moving old browser history → opens then redirects to ${PORT}`))
+        .on('error', err => console.warn(`[PITL Engine] Legacy port ${LEGACY_PORT} not opened: ${err.message}`));
+}
 app.listen(PORT, HOST, () => {
     console.log(`[PITL Engine] Server is running on http://localhost:${PORT}`);
     if (ALLOWED_ORIGINS.size) console.log(`[PITL Engine] Also accepting the web app from: ${[...ALLOWED_ORIGINS].join(', ')}`);

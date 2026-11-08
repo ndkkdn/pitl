@@ -4818,6 +4818,25 @@
         .local-server-notice code { font-family: 'Fira Code', monospace; font-size: 12px; background: rgba(var(--hairline-rgb), .08); padding: 1px 6px; border-radius: 6px; }
         .local-server-notice button { border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); border-radius: 999px; padding: 5px 12px; font: 600 12.5px 'Noto Sans KR', sans-serif; cursor: pointer; white-space: nowrap; }
         .local-server-notice button:hover { border-color: rgba(var(--accent-rgb), .45); }
+
+        /* ══ 중간 검토: 벤토 (검토 카드 8칸 · 전체 진행 4칸 · 에이전트 12칸) ══ */
+        .gate-bento .gate-main { grid-column: span 8; max-width: none; width: auto; padding: 22px 26px; border-color: rgba(245, 158, 11, .45); background: linear-gradient(180deg, rgba(245, 158, 11, .06), transparent 45%), var(--bg-card); }
+        .gate-bento .gate-stat { grid-column: span 4; }
+        .gate-bento .gate-agents { grid-column: span 12; }
+        .gate-bento .gate-main .run-tile-h { margin-bottom: 14px; }
+        .gate-bento .gate-main .gate-cp-badge { margin: 0; letter-spacing: 0; }
+        .gate-bento .gate-main h3 { font: 800 clamp(20px, 2vw, 24px)/1.3 'Noto Sans KR', sans-serif; letter-spacing: -0.02em; color: var(--text-primary); margin: 0 0 8px; border: 0; padding: 0; }
+        .gate-bento .gate-main > p { font-size: 13.5px; color: var(--text-secondary); margin: 0 0 18px; line-height: 1.6; }
+        .gate-bento .gate-cp-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+        .gate-bento .gate-cp-item { padding: 12px 14px; border-radius: 12px; background: rgba(var(--hairline-rgb), .03); }
+        .gate-bento .gate-cp-item b { font-size: 13.5px; margin-bottom: 4px; }
+        .gate-bento .gate-cp-item span { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .run-big small { font-size: .38em; letter-spacing: -0.02em; color: var(--text-secondary); margin-left: 4px; }
+        .gate-bento .run-flow { justify-content: space-between; }
+        .gate-bento .run-link { flex: 1 1 auto; margin-left: 10px; margin-right: 10px; }
+        .gate-bento .run-agent { flex: 0 0 auto; min-width: 96px; max-width: 200px; }
+        @media (max-width: 1100px) { .gate-bento .gate-cp-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 560px) { .gate-bento .gate-cp-list { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body class="state-landing dark-theme">
@@ -6886,25 +6905,47 @@ ${idea.slice(0, 2000)}`
             setTimeout(updateRailMeta, 0);
             const items = [['1pager', st.onePagerContent], ['threec', st.threeCContent], ['swot', st.swotContent], ['stp', st.stpContent], ['mece', st.meceContent]];
             const esc = v => String(v).replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
+            const tm = window.pitlTiming;
+            const stats = computeProgress();
+            const phase1Ms = tm ? ['1pager', 'threec', 'swot', 'stp', 'mece'].reduce((sum, k) => sum + (tm.steps[k] || 0), 0) : 0;
+            const phase2Sec = tm ? ['prd', 'wireframe', 'prototype', 'audit'].reduce((sum, k) => sum + (tm.est[k] || 0), 0) : 0;
+            const pct = Math.round(stats ? stats.percent : (window.pitlCurrentProgress || 0));
+            const flow = AGENT_ORDER.map((key, i) => {
+                const m = AGENT_META[key];
+                return `${i ? '<span class="run-link" aria-hidden="true"></span>' : ''}<div class="run-agent ${key === 'strategist' ? 'done' : ''}" style="--c:${m.color}"><span class="run-node">${m.k}</span><b>${m.name}</b><small>${m.role}</small></div>`;
+            }).join('');
             target.innerHTML = `
                 <div class="document-wrapper run-stream-wrapper">
-                    <div class="gate-checkpoint">
-                        <div class="gate-cp-head"><span class="gate-cp-badge">⏸ ${t('중간 검토', 'Checkpoint')}</span>
-                            <h3>${t('1단계 분석이 끝났습니다. 이대로 2단계를 진행할까요?', 'Phase 1 is done. Continue to phase 2?')}</h3>
-                            <p>${t('PRD·와이어프레임·프로토타입·QA는 아래 결과를 바탕으로 만들어집니다. 카드를 누르면 문서 전체를 볼 수 있습니다.', 'PRD, wireframes, prototype and QA build on these results. Click a card to read the full document.')}</p>
-                        </div>
-                        <div class="gate-cp-list">
-                            ${items.map(([key, md]) => `<button type="button" class="gate-cp-item" onclick="switchDocument('${key}')"><b>${STEP_LABELS[key]}</b><span>${esc(docSummaryLine(md)) || t('내용 없음', 'Empty')}</span></button>`).join('')}
-                        </div>
-                        <div class="gate-cp-actions">
-                            <button type="button" class="gate-cp-btn primary" onclick="approveGateCheckpoint()">${t('승인하고 계속', 'Approve & continue')}</button>
-                            <button type="button" class="gate-cp-btn" onclick="toggleGateRevision()">${t('수정 요청', 'Request changes')}</button>
-                            <button type="button" class="gate-cp-btn ghost" onclick="regenerateFromStart()">${t('1단계 다시 생성', 'Regenerate phase 1')}</button>
-                        </div>
-                        <div class="gate-cp-edit" id="gate-cp-edit">
-                            <textarea id="gate-cp-note" placeholder="${t('예) 타겟을 40대 1인 가구로 좁혀서 PRD를 써 주세요', 'e.g. Narrow the target to single-person households in their 40s')}">${esc(st.reviewNote || '')}</textarea>
-                            <button type="button" class="gate-cp-btn primary" onclick="approveGateCheckpoint(true)">${t('요청 반영해 계속', 'Continue with changes')}</button>
-                        </div>
+                    <div class="run-bento gate-bento">
+                        <section class="run-tile gate-checkpoint gate-main">
+                            <div class="run-tile-h"><span class="gate-cp-badge">⏸ ${t('중간 검토', 'Checkpoint')}</span><span>${t('전략가 작업 완료', 'Strategist done')}</span></div>
+                            <h3>${t('1단계가 끝났습니다. 이대로 2단계로 갈까요?', 'Phase 1 is done. Continue to phase 2?')}</h3>
+                            <p>${t('PRD·와이어프레임·프로토타입·QA는 아래 다섯 문서를 바탕으로 만들어집니다. 카드를 누르면 전체 문서가 열립니다.', 'PRD, wireframes, prototype and QA build on the five documents below. Click a card to open the full document.')}</p>
+                            <div class="gate-cp-list">
+                                ${items.map(([key, md]) => `<button type="button" class="gate-cp-item" onclick="switchDocument('${key}')"><b>${STEP_LABELS[key]}</b><span>${esc(docSummaryLine(md)) || t('내용 없음', 'Empty')}</span></button>`).join('')}
+                            </div>
+                            <div class="gate-cp-actions">
+                                <button type="button" class="gate-cp-btn primary" onclick="approveGateCheckpoint()">${t('승인하고 계속', 'Approve & continue')}</button>
+                                <button type="button" class="gate-cp-btn" onclick="toggleGateRevision()">${t('수정 요청', 'Request changes')}</button>
+                                <button type="button" class="gate-cp-btn ghost" onclick="regenerateFromStart()">${t('1단계 다시 생성', 'Regenerate phase 1')}</button>
+                            </div>
+                            <div class="gate-cp-edit" id="gate-cp-edit">
+                                <textarea id="gate-cp-note" placeholder="${t('예) 타겟을 40대 1인 가구로 좁혀서 PRD를 써 주세요', 'e.g. Narrow the target to single-person households in their 40s')}">${esc(st.reviewNote || '')}</textarea>
+                                <button type="button" class="gate-cp-btn primary" onclick="approveGateCheckpoint(true)">${t('요청 반영해 계속', 'Continue with changes')}</button>
+                            </div>
+                        </section>
+                        <section class="run-tile run-stat gate-stat">
+                            <div class="run-tile-h"><span>${t('전체 진행', 'Overall')}</span><span>${t('검토 대기', 'Waiting for review')}</span></div>
+                            <div class="run-big">${pct}<small>%</small></div>
+                            <div class="run-stat-sub">
+                                <span>${t('1단계 소요', 'Phase 1 time')}<b>${phase1Ms ? fmtDuration(phase1Ms) : '—'}</b></span>
+                                <span>${t('2단계 예상', 'Phase 2 estimate')}<b>${phase2Sec ? t(`약 ${fmtDuration(phase2Sec * 1000)}`, `~${fmtDuration(phase2Sec * 1000)}`) : '—'}</b></span>
+                            </div>
+                        </section>
+                        <section class="run-tile run-agents gate-agents">
+                            <div class="run-tile-h"><span>${t('에이전트', 'Agents')}</span><span>${t('다음: 분석가', 'Next: Analyst')}</span></div>
+                            <div class="run-flow">${flow}</div>
+                        </section>
                     </div>
                 </div>
             `;
@@ -8872,7 +8913,14 @@ ${idea.slice(0, 2000)}`
                 const res = await fetch(PITL_API + '/api/proxy-status', { signal: AbortSignal.timeout(PITL_API ? 60000 : 3000) });
                 if (!res.ok) { if (PITL_API) showLocalServerNotice(true); return; }
                 const data = await res.json();
-                if (data.ok) migrateBrowserHistory().then(moved => { if (moved || window.pitlHistoryOffline) loadHistoryList(); });
+                if (data.ok) migrateBrowserHistory().then(moved => {
+                    if (moved || window.pitlHistoryOffline) loadHistoryList();
+                    // 예전 포트(4000) 주소로 열었다면 기록만 옮기고 새 주소로 보낸다
+                    if (!PITL_API && String(data.port) !== location.port) {
+                        showCompletionToast(t(`기록 정리가 끝났습니다. 새 주소(localhost:${data.port})로 이동합니다.`, `Done. Moving to the new address (localhost:${data.port}).`));
+                        setTimeout(() => { location.href = `http://localhost:${data.port}/`; }, moved ? 2500 : 800);
+                    }
+                });
                 if (data.ok && data.proxyAvailable) {
                     window.PITL_USE_LOCAL_PROXY = true;
                     showLocalServerNotice(false);
