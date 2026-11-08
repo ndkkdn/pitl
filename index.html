@@ -4709,11 +4709,6 @@
         .plan-btn:hover { border-color: rgba(var(--accent-rgb), .45); }
         .plan-btn[hidden] { display: none; }
         .plan-btn-icon { width: 36px; padding: 7px 0; text-align: center; }
-        .plan-more-wrap { position: relative; }
-        .plan-more-menu { position: absolute; right: 0; top: calc(100% + 6px); min-width: 210px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: var(--shadow-card), 0 12px 32px rgba(0, 0, 0, .14); padding: 6px; display: grid; z-index: 70; }
-        .plan-more-menu[hidden] { display: none; }
-        .plan-more-menu button { border: 0; background: none; text-align: left; padding: 8px 10px; border-radius: 8px; font: 13px 'Noto Sans KR', sans-serif; color: var(--text-primary); cursor: pointer; }
-        .plan-more-menu button:hover { background: rgba(var(--hairline-rgb), .06); }
         .plan-head { padding-right: 360px; }
         .chrome-title-bar.pitl-rail-bar:has(.plan-head[hidden]) { padding-top: 64px !important; }
         @media (max-width: 900px) { .plan-actions { position: static; justify-content: flex-end; margin-bottom: 8px; } .plan-head { padding-right: 0; } }
@@ -4740,7 +4735,8 @@
             body.state-landing .landing-view-container { flex-direction: row; justify-content: center; column-gap: clamp(40px, 5vw, 88px); }
             .landing-view-container .landing-content { max-width: 760px; flex: 0 1 760px; }
             .landing-dots { display: flex; flex-direction: column; align-items: center; gap: 18px; flex: 0 0 clamp(340px, 28vw, 460px); position: relative; z-index: 2; margin-top: var(--sp-6, 48px); }
-            .landing-dots::before { content: ''; position: absolute; inset: -12% -16%; z-index: -1; background: radial-gradient(closest-side, var(--bg-base) 62%, transparent); pointer-events: none; }
+            /* 배경 점은 애니메이션 주변에서만 부드럽게 사라진다 (테마와 무관한 투명도 마스크라 경계가 보이지 않음) */
+            body.state-landing #space-particle-canvas { -webkit-mask-image: radial-gradient(circle at var(--dots-x, 78%) var(--dots-y, 46%), transparent 0, transparent calc(var(--dots-r, 220px) * .45), #000 var(--dots-r, 220px)); mask-image: radial-gradient(circle at var(--dots-x, 78%) var(--dots-y, 46%), transparent 0, transparent calc(var(--dots-r, 220px) * .45), #000 var(--dots-r, 220px)); }
         }
         #landing-dots-canvas { width: 100%; aspect-ratio: 1 / 1.08; display: block; }
         .landing-dots-caption { margin: 0; min-height: 30px; font: 400 19px/1.4 'Noto Sans KR', sans-serif; letter-spacing: -0.01em; color: var(--text-primary); text-align: center; opacity: 0; transform: translateY(6px); transition: opacity .6s ease, transform .6s ease; }
@@ -4767,6 +4763,35 @@
         .landing-history-card .landing-card-footer { font-size: 10.5px !important; line-height: 1.4 !important; }
         .landing-history-card .landing-card-badge { font-size: 10px !important; padding: 1px 6px !important; letter-spacing: 0 !important; }
         .landing-history-card .btn-delete-history { font-size: 11px; }
+
+        /* ══ 라이트 테마 대비 보정 (WCAG AA) ══ */
+        [data-theme="light"] .dash-stat-v.good { color: #0B7A5A; }
+        [data-theme="light"] .pitl-modal-btn-primary { color: #ffffff !important; }
+        [data-theme="light"] .tile-card .tile-status { color: #065F46 !important; }
+        [data-theme="light"] .slot-nudge.warn { color: #845A00; }
+
+        /* ══ 알림 토스트 · 터미널 · 편집기: 테마 토큰 적용 (어두운 고정 배경 제거) ══ */
+        .pitl-toast-container { background: color-mix(in srgb, var(--bg-card) 92%, transparent) !important; color: var(--text-primary) !important; border: 1px solid var(--border-color) !important; box-shadow: var(--shadow-card), 0 12px 32px rgba(0, 0, 0, .16) !important; }
+        [data-theme="light"] .pitl-toast-icon { color: #0B7A5A; background: rgba(11, 122, 90, .12); box-shadow: none; animation: none; }
+        [data-theme="light"] .terminal-container,
+        [data-theme="light"] .editor-textarea-custom { background: rgba(var(--hairline-rgb), .04) !important; color: var(--text-primary) !important; }
+        [data-theme="light"] .chat-follow-up-bar { background: var(--bg-card); }
+
+        /* ══ 공유 · 내보내기 메뉴 ══ */
+        .export-wrap { position: relative; }
+        .export-wrap[hidden] { display: none; }
+        .export-menu { position: absolute; right: 0; top: calc(100% + 6px); min-width: 250px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; box-shadow: var(--shadow-card), 0 14px 36px rgba(0, 0, 0, .16); padding: 6px; display: grid; gap: 2px; z-index: 80; }
+        .export-menu[hidden] { display: none; }
+        .export-menu button { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: center; border: 0; background: none; text-align: left; padding: 9px 10px; border-radius: 10px; font: 13.5px 'Noto Sans KR', sans-serif; color: var(--text-primary); cursor: pointer; }
+        .export-menu button[hidden] { display: none; }
+        .export-menu button i { color: rgb(var(--accent-rgb)); text-align: center; }
+        .export-menu button small { display: block; font-size: 11.5px; color: var(--text-secondary); margin-top: 1px; }
+        .export-menu button:hover, .export-menu button:focus-visible { background: rgba(var(--hairline-rgb), .06); }
+        .export-menu button:focus-visible { outline: none !important; box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), .45); }
+
+        /* 대시보드 타일 컬러 줄: 위 → 아래 */
+        .tile-card.ready::before { inset: auto 0 0 0 !important; }
+        .tile-card { overflow: hidden; }
 </style>
 </head>
 <body class="state-landing dark-theme">
@@ -5024,14 +5049,16 @@
                         <button type="button" data-theme-mode="light" aria-pressed="false" onclick="setThemeMode('light')" title="라이트" aria-label="라이트 테마"><i class="fa-solid fa-sun"></i></button>
                         <button type="button" data-theme-mode="dark" aria-pressed="false" onclick="setThemeMode('dark')" title="다크" aria-label="다크 테마"><i class="fa-solid fa-moon"></i></button>
                     </div>
-                        <button type="button" class="plan-btn plan-btn-icon" id="btn-plan-share" onclick="sharePlan()" title="공유 (아카이브 링크 복사)" aria-label="공유" hidden><i class="fa-solid fa-share-nodes"></i></button>
-                        <div class="plan-more-wrap">
-                            <button type="button" class="plan-btn plan-btn-icon" id="btn-plan-more" onclick="togglePlanMore(event)" aria-haspopup="menu" aria-expanded="false" aria-label="더 보기" hidden>⋯</button>
-                            <div class="plan-more-menu" id="plan-more-menu" role="menu" hidden>
-                                <button type="button" role="menuitem" onclick="hidePlanMore(); copyActiveDocument()">현재 문서 마크다운 복사</button>
-                                <button type="button" role="menuitem" onclick="hidePlanMore(); regenerateFromStart()">같은 아이디어로 다시 실행</button>
+                        <div class="export-wrap" id="export-wrap" hidden>
+                            <button type="button" class="plan-btn plan-btn-icon" id="btn-plan-export" onclick="toggleExportMenu(event)" title="공유 · 내보내기" aria-label="공유 · 내보내기" aria-haspopup="menu" aria-expanded="false" aria-controls="export-menu"><i class="fa-solid fa-arrow-up-from-bracket"></i></button>
+                            <div class="export-menu" id="export-menu" role="menu" hidden>
+                                <button type="button" role="menuitem" id="export-link" onclick="runExport('link')" hidden><i class="fa-solid fa-link"></i><span>링크 복사 <small>아카이브</small></span></button>
+                                <button type="button" role="menuitem" id="export-native" onclick="runExport('native')" hidden><i class="fa-solid fa-share-nodes"></i><span>시스템 공유… <small>메일 · 메신저 · AirDrop</small></span></button>
+                                <button type="button" role="menuitem" onclick="runExport('page')"><i class="fa-solid fa-file-arrow-down"></i><span>HTML 문서 내려받기 <small>모든 분석을 한 페이지로</small></span></button>
+                                <button type="button" role="menuitem" onclick="runExport('slides')"><i class="fa-solid fa-person-chalkboard"></i><span>HTML 슬라이드 내려받기 <small>발표용 · ← → 키로 넘김</small></span></button>
                             </div>
                         </div>
+                        <button type="button" class="plan-btn plan-btn-icon" id="btn-plan-rerun" onclick="confirmRerunPlan()" title="같은 아이디어로 다시 실행" aria-label="같은 아이디어로 다시 실행" hidden><i class="fa-solid fa-rotate-right"></i></button>
                     </div>
 
                     <!-- 기획서 제목 + 정보 칩 -->
@@ -5469,7 +5496,8 @@
         // Custom Alert Modal (replaces native alert())
         // Usage: pitlAlert(message, type='info'|'warn'|'error'|'success', title='')
         // ───────────────────────────────────────────────────────────────
-        function pitlAlert(message, type = 'info', title = '') {
+        // autoClose(ms)를 주면 그 사이 다른 알림이 뜨지 않은 경우에만 저절로 닫힌다
+        function pitlAlert(message, type = 'info', title = '', { autoClose = 0 } = {}) {
             const overlay  = document.getElementById('pitl-alert-overlay');
             const iconWrap = document.getElementById('pitl-alert-icon-wrap');
             const icon     = document.getElementById('pitl-alert-icon');
@@ -5497,6 +5525,9 @@
             </button>`;
 
             overlay.style.display = 'flex';
+            const alertId = String((Number(overlay.dataset.alertId) || 0) + 1);
+            overlay.dataset.alertId = alertId;
+            if (autoClose > 0) setTimeout(() => { if (overlay.dataset.alertId === alertId) overlay.style.display = 'none'; }, autoClose);
             // Re-trigger animation
             const card = document.getElementById('pitl-alert-card');
             card.style.animation = 'none';
@@ -6479,12 +6510,12 @@ ${idea.slice(0, 2000)}`
         // ── 공유: 아카이브 링크 복사 (아직 게시 전이면 게시 후 복사) ──
         async function sharePlan() {
             if (!generatedDocs) return;
-            const btn = document.getElementById('btn-plan-share');
+            const btn = document.getElementById('btn-plan-export');
             let url = generatedDocs.archive && generatedDocs.archive.url;
             if (!url) {
                 if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; }
                 url = await publishPlanToArchive(generatedDocs, { auto: false });
-                if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-share-nodes"></i>'; }
+                if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-arrow-up-from-bracket"></i>'; }
                 updateRailMeta();
                 if (activeDoc === 'dashboard') switchDocument('dashboard');
             }
@@ -6497,23 +6528,237 @@ ${idea.slice(0, 2000)}`
             }
         }
 
-        function hidePlanMore() {
-            const menu = document.getElementById('plan-more-menu');
-            const btn = document.getElementById('btn-plan-more');
-            if (menu) menu.hidden = true;
-            if (btn) btn.setAttribute('aria-expanded', 'false');
+        // ── 공유 · 내보내기 메뉴 ──
+        // 링크 복사는 이미 게시됐거나 GitHub 인증이 있을 때만, 시스템 공유는 브라우저가 파일 공유를 지원할 때만 보인다
+        window.pitlArchiveAuth = null;
+        function planShareFile() {
+            return new File([buildPlanPageHtml(generatedDocs)], planFileName('page'), { type: 'text/html' });
         }
 
-        function togglePlanMore(e) {
+        function syncExportItems() {
+            const link = document.getElementById('export-link');
+            const native = document.getElementById('export-native');
+            const published = !!(generatedDocs && generatedDocs.archive && generatedDocs.archive.url);
+            if (link) link.hidden = !(published || window.pitlArchiveAuth === true);
+            if (native) {
+                let ok = false;
+                try { ok = !!(navigator.canShare && generatedDocs && navigator.canShare({ files: [new File(['x'], 'x.html', { type: 'text/html' })] })); } catch (e) { ok = false; }
+                native.hidden = !ok;
+            }
+        }
+
+        function hideExportMenu() {
+            const menu = document.getElementById('export-menu');
+            const btn = document.getElementById('btn-plan-export');
+            if (menu && !menu.hidden) { menu.hidden = true; if (btn) btn.setAttribute('aria-expanded', 'false'); }
+        }
+
+        function toggleExportMenu(e) {
             if (e) e.stopPropagation();
-            const menu = document.getElementById('plan-more-menu');
-            const btn = document.getElementById('btn-plan-more');
+            const menu = document.getElementById('export-menu');
+            const btn = document.getElementById('btn-plan-export');
             if (!menu || !btn) return;
-            menu.hidden = !menu.hidden;
-            btn.setAttribute('aria-expanded', String(!menu.hidden));
+            if (!menu.hidden) { hideExportMenu(); return; }
+            syncExportItems();
+            menu.hidden = false;
+            btn.setAttribute('aria-expanded', 'true');
+            // 키보드로 열었을 때만 첫 항목에 초점을 둔다 (마우스로 열면 초점 테두리가 생기지 않게)
+            const first = menu.querySelector('button:not([hidden])');
+            if (first && e && e.detail === 0) first.focus();
+            // 아카이브 인증 상태는 처음 열 때 한 번 확인한다
+            if (window.pitlArchiveAuth === null) {
+                window.pitlArchiveAuth = false;
+                fetch('/api/archive/status').then(r => r.json()).then(st => { window.pitlArchiveAuth = !!(st && st.authenticated); syncExportItems(); }).catch(() => {});
+            }
         }
 
-        document.addEventListener('click', e => { if (!e.target.closest('.plan-more-wrap')) hidePlanMore(); });
+        async function runExport(kind) {
+            hideExportMenu();
+            if (!generatedDocs) return;
+            if (kind === 'link') return sharePlan();
+            if (kind === 'page' || kind === 'slides') return downloadPlanHtml(kind);
+            if (kind === 'native') {
+                try {
+                    await navigator.share({ files: [planShareFile()], title: generatedDocs.summaryTitle || 'PITL' });
+                } catch (err) {
+                    if (err && err.name === 'AbortError') return; // 사용자가 공유 창을 닫음
+                    pitlAlert(t('시스템 공유를 열지 못했습니다. HTML 문서 내려받기를 이용해 주세요.', 'Could not open the system share sheet. Please use the HTML download instead.'), 'warn', t('공유', 'Share'));
+                }
+            }
+        }
+
+        document.addEventListener('click', e => { if (!e.target.closest('.export-wrap')) hideExportMenu(); });
+        document.addEventListener('keydown', e => {
+            const menu = document.getElementById('export-menu');
+            if (!menu || menu.hidden) return;
+            if (e.key === 'Escape') { hideExportMenu(); document.getElementById('btn-plan-export').focus(); return; }
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                const items = Array.from(menu.querySelectorAll('button:not([hidden])'));
+                const k = items.indexOf(document.activeElement);
+                items[(k + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus();
+            }
+        });
+
+        function confirmRerunPlan() {
+            pitlConfirm(t('같은 아이디어로 기획을 처음부터 다시 실행할까요?<br>지금 결과는 기록에 그대로 남습니다.', 'Run the plan again from the start with the same idea?<br>The current result stays in your history.'),
+                () => regenerateFromStart(),
+                { title: t('다시 실행', 'Run again'), confirmLabel: t('다시 실행', 'Run again') });
+        }
+
+        // ── 내려받기: 모든 분석을 HTML 문서(page) 또는 HTML 슬라이드(slides) 한 파일로 ──
+        function planFileName(kind) {
+            const title = (generatedDocs && (generatedDocs.summaryTitle || generatedDocs.title)) || 'PITL';
+            const safe = String(title).replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, '_').slice(0, 60);
+            return `${safe}_PITL_${kind === 'slides' ? t('슬라이드', 'slides') : t('기획서', 'report')}.html`;
+        }
+
+        function prototypeSrcdoc(docs) {
+            if (!docs.prototype) return '';
+            return vizEsc(extractPureHtmlCode(docs.prototype, docs.title || 'pitl', docs.idea || ''));
+        }
+
+        // 아카이브용 기획서 HTML을 한 파일로: 별도 prototype.html 대신 프로토타입을 문서 안에 넣는다
+        function buildPlanPageHtml(docs) {
+            return buildArchiveReportHtml(docs)
+                .replace('<iframe src="prototype.html"', `<iframe srcdoc="${prototypeSrcdoc(docs)}"`)
+                .replace(/<a class="open" href="prototype\.html"[^>]*>[\s\S]*?<\/a>/, '');
+        }
+
+        // 발표용 슬라이드: 표지 → 목차 → 문서마다 표지 + 소제목(##) 단위 슬라이드 → 마무리
+        function buildPlanSlidesHtml(docs) {
+            const esc = vizEsc;
+            const title = docs.summaryTitle || summarizeIdeaToTitle(docs.idea || docs.title || '');
+            const timings = docs.timings || null;
+            const present = ARCHIVE_DOCS.filter(([key]) => (docs[key] || '').trim());
+            const slides = [];
+            slides.push(`<section class="slide cover"><div class="eyebrow">PITL · PLANNING-IN-THE-LOOP</div><h1>${esc(title)}</h1><p class="idea">${esc(docs.idea || '')}</p>
+                <div class="meta"><span class="chip">${esc(archiveDate(docs))}</span><span class="chip">${present.length}${esc(t('개 문서', ' documents'))}</span>${timings && timings.totalMs ? `<span class="chip">${esc(t('총 분석 소요', 'Total analysis'))} ${esc(fmtDuration(timings.totalMs))}</span>` : ''}</div></section>`);
+            slides.push(`<section class="slide agenda"><h2>${esc(t('목차', 'Contents'))}</h2><ol>${present.map(([, label]) => `<li>${esc(label)}</li>`).join('')}</ol></section>`);
+            present.forEach(([key, label], n) => {
+                const ms = timings && timings.steps ? timings.steps[key] : null;
+                slides.push(`<section class="slide divider"><span class="num">${String(n + 1).padStart(2, '0')}</span><h2>${esc(label)}</h2>${ms != null ? `<p class="doc-time">${esc(t('분석 소요', 'Analysis time'))} ${esc(fmtDuration(ms))}</p>` : ''}</section>`);
+                if (key === 'prototype') {
+                    slides.push(`<section class="slide proto"><h3>${esc(label)}</h3><div class="proto-frame"><iframe srcdoc="${prototypeSrcdoc(docs)}" sandbox="allow-scripts allow-forms allow-modals" title="${esc(label)}"></iframe></div></section>`);
+                    return;
+                }
+                const { markdown, data } = splitVizBlock(docs[key]);
+                const holder = document.createElement('div');
+                holder.innerHTML = renderMarkdownEnhanced(markdown.trim());
+                holder.querySelectorAll('table').forEach(table => { const wrap = document.createElement('div'); wrap.className = 'table-wrap'; table.replaceWith(wrap); wrap.appendChild(table); });
+                holder.querySelectorAll('h1').forEach(h => h.remove()); // 문서 제목은 표지 슬라이드에 있다
+                // ## 소제목마다 새 슬라이드
+                const chunks = [[]];
+                Array.from(holder.childNodes).forEach(node => {
+                    if (node.nodeType === 1 && node.tagName === 'H2' && chunks[chunks.length - 1].length) chunks.push([]);
+                    chunks[chunks.length - 1].push(node);
+                });
+                const viz = VIZ_DOC_KEYS.has(key) && vizDataUsable(key, data) ? renderFrameworkViz(key, data) : '';
+                if (viz) slides.push(`<section class="slide content"><p class="crumb">${esc(label)}</p><div class="markdown-body">${viz}</div></section>`);
+                chunks.forEach(nodes => {
+                    const box = document.createElement('div');
+                    nodes.forEach(nd => box.appendChild(nd));
+                    if (!box.textContent.trim() && !box.querySelector('table, img')) return;
+                    slides.push(`<section class="slide content"><p class="crumb">${esc(label)}</p><div class="markdown-body">${box.innerHTML}</div></section>`);
+                });
+            });
+            slides.push(`<section class="slide cover end"><div class="eyebrow">PITL</div><h1>${esc(t('감사합니다', 'Thank you'))}</h1><p class="idea">${esc(t('Planning-in-the-Loop가 자동 생성한 기획서입니다. 수치는 모델 추정치를 포함합니다.', 'Generated by Planning-in-the-Loop. Figures include model estimates.'))}</p></section>`);
+
+            return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>${esc(title)} · PITL 슬라이드</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>${collectArchiveCss()}${ARCHIVE_PAGE_CSS}${SLIDE_DECK_CSS}</style>
+</head>
+<body>
+<main class="deck" id="deck">${slides.join('\n')}</main>
+<div class="bar"><button type="button" id="prev" aria-label="${esc(t('이전 슬라이드', 'Previous slide'))}">‹</button><span id="count"></span><button type="button" id="next" aria-label="${esc(t('다음 슬라이드', 'Next slide'))}">›</button><button type="button" id="full" aria-label="${esc(t('전체 화면', 'Full screen'))}">⤢</button></div>
+<div class="progress"><i id="prog"></i></div>
+<script>
+(() => {
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+    const show = n => {
+        i = Math.max(0, Math.min(slides.length - 1, n));
+        slides.forEach((s, k) => s.classList.toggle('on', k === i));
+        document.getElementById('count').textContent = (i + 1) + ' / ' + slides.length;
+        document.getElementById('prog').style.width = ((i + 1) / slides.length * 100) + '%';
+        history.replaceState(null, '', '#' + (i + 1));
+    };
+    document.getElementById('prev').onclick = () => show(i - 1);
+    document.getElementById('next').onclick = () => show(i + 1);
+    document.getElementById('full').onclick = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    document.addEventListener('keydown', e => {
+        if (e.target.closest && e.target.closest('iframe, input, textarea')) return;
+        if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(i + 1); }
+        else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(i - 1); }
+        else if (e.key === 'Home') show(0);
+        else if (e.key === 'End') show(slides.length - 1);
+        else if (e.key === 'f') document.getElementById('full').click();
+    });
+    show(i);
+})();
+<\/script>
+</body>
+</html>`;
+        }
+
+        const SLIDE_DECK_CSS = `
+            html, body { height: 100%; overflow: hidden; }
+            body { display: grid; place-items: center; background: var(--bg-base); }
+            .deck { position: relative; width: min(100vw, 177.78vh); height: min(56.25vw, 100vh); container-type: size; }
+            .slide { position: absolute; inset: 0; display: none; flex-direction: column; padding: 5.5cqh 6cqw 9cqh; background: var(--bg-card); overflow: hidden; }
+            .slide.on { display: flex; }
+            .slide h1 { font-size: 5.4cqw; line-height: 1.15; letter-spacing: -0.03em; margin: 2cqh 0 3cqh; }
+            .slide h2 { font-size: 3.4cqw; letter-spacing: -0.02em; margin: 0 0 2cqh; }
+            .slide h3 { font-size: 2.2cqw; margin: 0 0 2cqh; }
+            .eyebrow { font-size: 1.2cqw; }
+            .cover { justify-content: center; }
+            .cover .idea { font-size: 1.7cqw; max-width: 70cqw; }
+            .cover .chip { font-size: 1.15cqw; }
+            .agenda ol { columns: 2; column-gap: 6cqw; font-size: 2cqw; line-height: 2.1; margin: 0; padding-left: 3cqw; }
+            .divider { justify-content: center; }
+            .divider .num { font: 700 9cqw/1 'Pretendard Variable', sans-serif; letter-spacing: -0.05em; background: var(--cta-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+            .divider h2 { font-size: 4.4cqw; margin-top: 1cqh; }
+            .divider .doc-time { font-size: 1.3cqw; }
+            .crumb { font-size: 1.1cqw; font-weight: 700; letter-spacing: .06em; color: var(--accent-text); margin: 0 0 1.5cqh; }
+            .content .markdown-body { flex: 1; min-height: 0; overflow: auto; font-size: 1.45cqw; line-height: 1.65; padding-right: 1cqw; }
+            .content .markdown-body h2 { font-size: 2.8cqw; margin-top: 0; }
+            .content .markdown-body h3 { font-size: 1.9cqw; }
+            .content .markdown-body table { font-size: 1.2cqw; }
+            .proto .proto-frame { flex: 1; height: auto; }
+            .bar { position: fixed; right: 16px; bottom: 14px; display: flex; gap: 6px; align-items: center; font: 600 12px 'Pretendard Variable', sans-serif; color: var(--text-secondary); background: color-mix(in srgb, var(--bg-card) 85%, transparent); border: 1px solid var(--border-color); border-radius: 999px; padding: 4px 6px; z-index: 5; }
+            .bar button { border: 0; background: none; color: var(--text-primary); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+            .bar button:hover { background: rgba(var(--accent-rgb), .12); }
+            .bar span { min-width: 56px; text-align: center; font-variant-numeric: tabular-nums; }
+            .progress { position: fixed; left: 0; right: 0; bottom: 0; height: 3px; background: transparent; z-index: 5; }
+            .progress i { display: block; height: 100%; width: 0; background: var(--cta-gradient); transition: width .3s ease; }
+            @media print { html, body { height: auto; overflow: visible; display: block; } .deck { width: 100%; height: auto; container-type: inline-size; } .slide { position: relative; display: flex !important; height: 56.25vw; page-break-after: always; } .bar, .progress { display: none; } }
+        `;
+
+        function downloadPlanHtml(kind) {
+            if (!generatedDocs) return;
+            let html;
+            try {
+                html = kind === 'slides' ? buildPlanSlidesHtml(generatedDocs) : buildPlanPageHtml(generatedDocs);
+            } catch (err) {
+                pitlAlert(t('파일을 만들지 못했습니다: ', 'Could not build the file: ') + vizEsc(err.message), 'error', t('내려받기', 'Download'));
+                return;
+            }
+            const url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = planFileName(kind);
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            showCompletionToast(kind === 'slides' ? t('HTML 슬라이드를 내려받았습니다.', 'HTML slides downloaded.') : t('HTML 문서를 내려받았습니다.', 'HTML document downloaded.'));
+        }
 
         // ── 맨 위로: 스크롤 영역의 끝에 닿으면 버튼을 보여 준다 ──
         (function initScrollTop() {
@@ -6534,13 +6779,12 @@ ${idea.slice(0, 2000)}`
                 const el = e.target === document ? document.scrollingElement : e.target;
                 if (!el || el.nodeType !== 1 || el.scrollHeight - el.clientHeight < 400) return;
                 // 사이드바 기록 목록 같은 작은 영역은 제외한다
-                if (el.closest && el.closest('.sidebar-panel, .chat-panel, .plan-more-menu')) return;
+                if (el.closest && el.closest('.sidebar-panel, .chat-panel')) return;
                 scroller = el;
                 const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 120;
                 btn.classList.toggle('show', atBottom && el.scrollTop > 200);
             }, { capture: true, passive: true });
         })();
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') hidePlanMore(); });
 
         // ── 에이전트 4팀: 단계별 담당 ──
         const AGENT_META = {
@@ -6689,10 +6933,12 @@ ${idea.slice(0, 2000)}`
                 (running || (generatedDocs && typeof generatedDocs.midReview === 'boolean')) && `<span class="plan-chip">${(running && !generatedDocs ? isMidReviewEnabled() : generatedDocs.midReview) ? t('중간 검토 ON', 'Mid-review ON') : t('중간 검토 OFF', 'Mid-review OFF')}</span>`
             ].filter(Boolean).join('');
             const done = !!(generatedDocs && (generatedDocs.audit || generatedDocs.prototype));
-            const share = document.getElementById('btn-plan-share');
-            const more = document.getElementById('btn-plan-more');
-            if (share) { share.hidden = !done; share.title = generatedDocs && generatedDocs.archive && generatedDocs.archive.url ? t('아카이브 링크 복사', 'Copy archive link') : t('공유 (아카이브에 게시 후 링크 복사)', 'Share (publish, then copy link)'); }
-            if (more) more.hidden = !generatedDocs;
+            const exportWrap = document.getElementById('export-wrap');
+            const tmNow = window.pitlTiming;
+            const isRunning = !!(tmNow && tmNow.active && !tmNow.finishedAt);
+            if (exportWrap) { exportWrap.hidden = !done; if (!done) hideExportMenu(); }
+            const rerun = document.getElementById('btn-plan-rerun');
+            if (rerun) rerun.hidden = !generatedDocs || isRunning;
             const dash = document.getElementById('btn-plan-dashboard');
             if (dash) { dash.hidden = !generatedDocs; dash.classList.toggle('on', activeDoc === 'dashboard'); }
             const back = document.getElementById('btn-plan-back');
@@ -11455,11 +11701,11 @@ function toggleVizTable(btn) {
             completeAllPipelineSteps();
 
             isEditing = false;
-            // Directly display the restored 1-Pager document in the right viewer
-            switchDocument('1pager');
+            // 기록을 열면 9개 문서를 한눈에 보는 타일 대시보드부터 보여 준다
+            switchDocument('dashboard');
             
             const displayIdea = data.idea || title.replace(/_/g, ' ');
-            pitlAlert(t(`'<strong>${displayIdea}</strong>' 기획서 세션이 복원되었습니다.<br>상단 원형 탭을 누르면 각 단계별 분석 내용(1-Pager, 3C, SWOT, STP, MECE, PRD, 와이어프레임 등)을 확인하실 수 있습니다.`, `'<strong>${displayIdea}</strong>' planning session restored.<br>Click top circle tabs to review each stage analysis (1-Pager, 3C, SWOT, STP, MECE, PRD, Wireframes, etc.).`), 'success', t('히스토리 로드 완료', 'History Loaded'));
+            pitlAlert(t(`'<strong>${displayIdea}</strong>' 기획서를 불러왔습니다.<br>타일이나 상단 단계 막대를 누르면 각 문서(1-Pager, 3C, SWOT, STP, MECE, PRD, 와이어프레임 등)를 볼 수 있습니다.`, `'<strong>${displayIdea}</strong>' plan loaded.<br>Click a tile or a step in the top rail to open each document (1-Pager, 3C, SWOT, STP, MECE, PRD, Wireframes, etc.).`), 'success', t('히스토리 로드 완료', 'History Loaded'), { autoClose: 3000 });
         }
 
         // Removed duplicate toggleTheme — master version lives above at initTheme block.
@@ -11803,8 +12049,19 @@ function toggleVizTable(btn) {
                 textColor = bcs.getPropertyValue('--text-primary').trim() || '#222';
                 muted = bcs.getPropertyValue('--text-secondary').trim() || '#888';
             }
+            // 배경 점 캔버스의 마스크 중심을 애니메이션 위치에 맞춘다
+            function placeParticleMask() {
+                const bgCanvas = document.getElementById('space-particle-canvas');
+                if (!bgCanvas) return;
+                const a = canvas.getBoundingClientRect(), b = bgCanvas.getBoundingClientRect();
+                if (!a.width || !b.width) return;
+                bgCanvas.style.setProperty('--dots-x', (a.left + a.width / 2 - b.left) + 'px');
+                bgCanvas.style.setProperty('--dots-y', (a.top + a.height / 2 - b.top) + 'px');
+                bgCanvas.style.setProperty('--dots-r', Math.round(Math.max(a.width, a.height) * .75) + 'px');
+            }
             function resize() {
                 const r = canvas.getBoundingClientRect();
+                placeParticleMask();
                 if (!r.width) return;
                 const dpr = Math.min(2, window.devicePixelRatio || 1);
                 W = r.width; H = r.height;
