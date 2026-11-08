@@ -75,7 +75,7 @@ if (!fs.existsSync(outputsDir)) fs.mkdirSync(outputsDir);
 
 // Helper to call Claude via the local CLI (claude -p)
 // 도구·MCP·설정·슬래시 커맨드를 모두 끈 순수 텍스트 생성 모드로 실행한다.
-function callClaude(systemInstruction, userPrompt, logCallback = null) {
+function callClaude(systemInstruction, userPrompt, logCallback = null, signal = null) {
     return new Promise((resolve, reject) => {
         if (!CLAUDE_VERSION) {
             return reject(new Error(`Claude CLI(${CLAUDE_BIN})를 찾을 수 없습니다. 설치 및 로그인 여부를 확인하세요.`));
@@ -104,6 +104,13 @@ function callClaude(systemInstruction, userPrompt, logCallback = null) {
         // 청크 경계에서 한글(멀티바이트 UTF-8)이 깨지지 않도록 스트림 디코딩
         child.stdout.setEncoding('utf8');
         child.stderr.setEncoding('utf8');
+        // 브라우저가 요청을 끊으면(중지) claude -p 프로세스도 바로 끝낸다
+        let aborted = false;
+        const onAbort = () => { aborted = true; child.kill('SIGTERM'); };
+        if (signal) {
+            if (signal.aborted) onAbort();
+            else signal.addEventListener('abort', onAbort, { once: true });
+        }
         child.stdout.on('data', chunk => { stdout += chunk; });
         child.stderr.on('data', chunk => { stderr += chunk; });
         child.on('error', err => {
@@ -112,6 +119,8 @@ function callClaude(systemInstruction, userPrompt, logCallback = null) {
         });
         child.on('close', code => {
             clearTimeout(timer);
+            if (signal) signal.removeEventListener('abort', onAbort);
+            if (aborted) return reject(new Error('요청이 취소되었습니다.'));
             if (timedOut) {
                 if (logCallback) logCallback(`[타임아웃] claude -p 응답이 ${CLAUDE_TIMEOUT_MS / 1000}초를 넘었습니다.`);
                 return reject(new Error(`claude -p 응답 시간 초과 (${CLAUDE_TIMEOUT_MS / 1000}s)`));
@@ -1284,11 +1293,13 @@ app.post('/api/llm', async (req, res) => {
         return res.status(503).json({ error: `Claude CLI(${CLAUDE_BIN})를 찾을 수 없습니다.` });
     }
 
+    const ac = new AbortController();
+    res.on('close', () => { if (!res.writableEnded) ac.abort(); });
     try {
-        const text = await callClaude(systemInstruction, userPrompt);
+        const text = await callClaude(systemInstruction, userPrompt, null, ac.signal);
         res.json({ ok: true, text });
     } catch (err) {
-        res.status(500).json({ ok: false, error: err.message });
+        if (!res.writableEnded && !ac.signal.aborted) res.status(500).json({ ok: false, error: err.message });
     }
 });
 

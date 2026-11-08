@@ -4837,7 +4837,18 @@
         .gate-bento .run-agent { flex: 0 0 auto; min-width: 96px; max-width: 200px; }
         @media (max-width: 1100px) { .gate-bento .gate-cp-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         @media (max-width: 560px) { .gate-bento .gate-cp-list { grid-template-columns: 1fr; } }
-</style>
+        /* ── 중지 · 재개 ── */
+        .run-pause-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; width: 100%; padding: 9px 14px; border-radius: 999px; border: 1px solid var(--border-color); background: transparent; color: var(--text-primary); font: 600 13px 'Space Grotesk', 'Noto Sans KR', sans-serif; cursor: pointer; transition: background .2s, border-color .2s; }
+        .run-pause-btn[hidden] { display: none; }
+        .run-pause-btn:hover { background: rgba(var(--hairline-rgb), 0.06); }
+        .run-pause-btn:focus-visible { outline: 2px solid rgb(var(--accent-rgb)); outline-offset: 2px; }
+        .run-pause-btn i { font-size: 11px; }
+        .run-pause-btn.is-paused { border-color: var(--text-primary); background: var(--text-primary); color: var(--bg-base); }
+        .run-pause-btn.is-paused:hover { opacity: .88; background: var(--text-primary); }
+        .status-pill-open.run-pause-btn { margin-top: 8px; }
+        body.pitl-paused .run-caret, body.pitl-paused .run-pulse, body.pitl-paused .run-sk, body.pitl-paused .run-node, body.pitl-paused .run-link { animation-play-state: paused !important; }
+        body.pitl-paused .run-writer .run-paper { opacity: .55; }
+    </style>
 </head>
 <body class="state-landing dark-theme">
 
@@ -5475,13 +5486,87 @@
                 'error', t('로컬 서버 필요', 'Local Server Required'));
         }
 
+        // ── 중지 · 재개 ──
+        // 중지하면 진행 중인 claude -p 요청을 끊고(서버가 프로세스를 종료), 다음 호출은 재개될 때까지 기다린다.
+        const pitlPause = { paused: false, since: 0, ctrls: new Set(), waiters: [] };
+        window.pitlPause = pitlPause;
+
+        function waitIfPaused() {
+            return pitlPause.paused ? new Promise(resolve => pitlPause.waiters.push(resolve)) : Promise.resolve();
+        }
+
+        // 중지된 동안은 시간이 흐르지 않은 것으로 계산한다
+        function pitlRunNow() {
+            return pitlPause.paused ? pitlPause.since : performance.now();
+        }
+
+        function canPausePipeline() {
+            const tm = window.pitlTiming;
+            return !!(tm && tm.active && tm.active !== 'gate50' && !tm.finishedAt);
+        }
+
+        function pausePipeline() {
+            if (pitlPause.paused || !canPausePipeline()) return;
+            pitlPause.paused = true;
+            pitlPause.since = performance.now();
+            pitlPause.ctrls.forEach(c => { c.pitlPaused = true; c.abort(); });
+            const tm = window.pitlTiming;
+            logAgentClientSide('system', t(`⏸ 중지했습니다. 재개하면 ${STEP_LABELS[tm.active]} 단계부터 다시 작성합니다.`, `⏸ Paused. Resuming restarts the ${STEP_LABELS[tm.active]} step.`));
+            syncPauseUi();
+        }
+
+        function resumePipeline() {
+            if (!pitlPause.paused) return;
+            const tm = window.pitlTiming;
+            if (tm && tm.active) tm.activeStart += performance.now() - pitlPause.since;
+            pitlPause.paused = false;
+            logAgentClientSide('system', t('▶ 재개했습니다.', '▶ Resumed.'));
+            const waiters = pitlPause.waiters.splice(0);
+            waiters.forEach(resolve => resolve());
+            syncPauseUi();
+        }
+
+        function togglePausePipeline() {
+            if (pitlPause.paused) resumePipeline(); else pausePipeline();
+            const stats = computeProgress();
+            renderTimingStats(stats);
+            renderRunStream();
+            updateStatusPill(stats);
+            if (typeof updateRailMeta === 'function') updateRailMeta();
+            if (typeof updateLiveHistoryRow === 'function') updateLiveHistoryRow();
+        }
+
+        // 새 기획을 시작하면 이전 실행의 중지 상태는 버린다 (멈춰 있던 이전 실행은 그대로 둔다)
+        function resetPauseState() {
+            pitlPause.paused = false;
+            pitlPause.waiters = [];
+            syncPauseUi();
+        }
+
+        function syncPauseUi() {
+            document.body.classList.toggle('pitl-paused', pitlPause.paused);
+            const show = pitlPause.paused || canPausePipeline();
+            document.querySelectorAll('[data-pause-btn]').forEach(btn => {
+                btn.hidden = !show;
+                btn.classList.toggle('is-paused', pitlPause.paused);
+                btn.setAttribute('aria-pressed', String(pitlPause.paused));
+                const label = pitlPause.paused ? t('재개', 'Resume') : t('중지', 'Pause');
+                btn.setAttribute('aria-label', label);
+                btn.title = pitlPause.paused ? t('재개 — 멈춘 단계부터 다시 작성', 'Resume from the paused step') : t('중지 — 지금 작성을 멈춤', 'Pause writing now');
+                btn.innerHTML = `<i class="fa-solid ${pitlPause.paused ? 'fa-play' : 'fa-pause'}" aria-hidden="true"></i><span>${label}</span>`;
+            });
+        }
+
         async function callClaudeLocal(systemInstruction, userPrompt, logCallback = null) {
             const currentLang = localStorage.getItem('pitl_lang') || 'ko';
             let finalPrompt = userPrompt;
             if (currentLang === 'en') finalPrompt += '\n\nCRITICAL: You must write the entire output/content/report in English. Do not write any Korean.';
 
+            for (;;) {
+            await waitIfPaused();
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), CLAUDE_CLIENT_TIMEOUT_MS);
+            pitlPause.ctrls.add(controller);
             try {
                 const res = await fetch(PITL_API + '/api/llm', {
                     method: 'POST',
@@ -5497,6 +5582,8 @@
                 if (!data.text) throw new Error(t('로컬 Claude 엔진에서 응답 텍스트를 받지 못했습니다.', 'No response text from local Claude engine.'));
                 return data.text;
             } catch (err) {
+                // 사용자가 중지함: 이 호출은 버리고, 재개하면 같은 단계를 처음부터 다시 요청한다
+                if (controller.pitlPaused) continue;
                 const errMsg = err.name === 'AbortError'
                     ? t('로컬 Claude 응답 시간 초과. 백업 템플릿으로 전환합니다.', 'Local Claude timed out. Switching to backup template.')
                     : err.message;
@@ -5504,6 +5591,8 @@
                 throw new Error(errMsg);
             } finally {
                 clearTimeout(timeoutId);
+                pitlPause.ctrls.delete(controller);
+            }
             }
         }
 
@@ -6770,6 +6859,7 @@ ${idea.slice(0, 2000)}`
                                 <span>${t('현재 단계', 'Current step')}<b data-timing="step">—</b></span>
                             </div>
                             <div class="run-mini" id="run-mini">${WORK_STEPS.map(() => '<i><b></b></i>').join('')}</div>
+                            <button type="button" class="run-pause-btn" data-pause-btn onclick="togglePausePipeline()" hidden></button>
                         </section>
                         <section class="run-tile run-agents">
                             <div class="run-tile-h"><span>${t('에이전트', 'Agents')}</span><span>${t('4팀', '4 teams')}</span></div>
@@ -6801,7 +6891,8 @@ ${idea.slice(0, 2000)}`
             const stats = computeProgress();
 
             const stepPct = document.getElementById('run-step-pct');
-            if (stepPct) stepPct.textContent = active === 'gate50' ? t('중간 검토 대기', 'Waiting for review')
+            if (stepPct) stepPct.textContent = pitlPause.paused && active ? t('중지됨', 'Paused')
+                : active === 'gate50' ? t('중간 검토 대기', 'Waiting for review')
                 : active && stats ? t(`${STEP_LABELS[active]} 단계 ${Math.round(stats.activeFraction * 100)}%`, `${STEP_LABELS[active]} step ${Math.round(stats.activeFraction * 100)}%`) : '';
 
             document.querySelectorAll('#run-mini i').forEach((el, i) => {
@@ -6811,7 +6902,8 @@ ${idea.slice(0, 2000)}`
             });
 
             const titleEl = document.getElementById('run-preview-title');
-            if (titleEl) titleEl.textContent = active && active !== 'gate50' ? t(`${STEP_LABELS[active]} 문서 작성 중`, `Drafting ${STEP_LABELS[active]}`) : t('문서 준비 중', 'Preparing document');
+            if (titleEl) titleEl.textContent = pitlPause.paused && active ? t(`${STEP_LABELS[active]} 작성 중지됨`, `${STEP_LABELS[active]} paused`)
+                : active && active !== 'gate50' ? t(`${STEP_LABELS[active]} 문서 작성 중`, `Drafting ${STEP_LABELS[active]}`) : t('문서 준비 중', 'Preparing document');
 
             const curAgent = active && active !== 'gate50' ? STEP_AGENT[active] : null;
             const who = document.getElementById('run-who');
@@ -6827,6 +6919,7 @@ ${idea.slice(0, 2000)}`
                 }).join('');
                 if (flow.dataset.sig !== html) { flow.innerHTML = html; flow.dataset.sig = html; }
             }
+            syncPauseUi();
 
             const feed = document.getElementById('run-feed');
             if (feed && typeof currentConsoleLogs !== 'undefined') {
@@ -6866,6 +6959,7 @@ ${idea.slice(0, 2000)}`
             if (!title) return;
             document.getElementById('plan-title').textContent = title;
             document.getElementById('plan-state').textContent = window.pitlWaitingGate50 ? t('중간 검토 대기', 'Waiting for review')
+                : running && pitlPause.paused ? t('중지됨', 'Paused')
                 : running ? t('실행 중', 'Running') : t('완료', 'Done');
             const target = extractIdeaField(idea, /(타겟|타깃|대상 고객|대상|target)\s*(유저|사용자|고객층?)?\s*(은|는|이|:|：)?\s*([^\n.,/]+)/i);
             const comp = extractIdeaField(idea, /(경쟁사|경쟁자|경쟁 서비스|competitors?)\s*(은|는|:|：)?\s*([^\n./]+)/i);
@@ -6996,18 +7090,19 @@ ${idea.slice(0, 2000)}`
                         <span class="status-pill-txt"></span>
                         <svg class="status-pill-ring" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="10" stroke="rgba(127,127,127,.25)"/><circle class="status-pill-arc" cx="13" cy="13" r="10" stroke="rgb(var(--accent-rgb))" stroke-linecap="round" stroke-dasharray="62.8" stroke-dashoffset="62.8" transform="rotate(-90 13 13)"/></svg>
                     </button>
-                    <div class="status-pill-more"><div><ul></ul><button type="button" class="status-pill-open">${t('진행 화면 열기', 'Open progress view')}</button></div></div>`;
+                    <div class="status-pill-more"><div><ul></ul><button type="button" class="status-pill-open run-pause-btn" data-pause-btn onclick="togglePausePipeline()" hidden></button><button type="button" class="status-pill-open">${t('진행 화면 열기', 'Open progress view')}</button></div></div>`;
                 pill.querySelector('.status-pill-row').addEventListener('click', () => {
                     const open = pill.classList.toggle('open');
                     pill.querySelector('.status-pill-row').setAttribute('aria-expanded', String(open));
                 });
-                pill.querySelector('.status-pill-open').addEventListener('click', () => {
+                pill.querySelector('.status-pill-open:not([data-pause-btn])').addEventListener('click', () => {
                     pill.classList.remove('open');
                     if (window.pitlTiming && window.pitlTiming.active === 'gate50') renderGateCheckpoint();
                     else renderPipelineRunningProgressCard();
                     updateStatusPill(computeProgress());
                 });
                 document.body.appendChild(pill);
+                syncPauseUi();
             }
             pill.classList.toggle('show', visible);
             if (!visible || !stats) return;
@@ -7018,6 +7113,7 @@ ${idea.slice(0, 2000)}`
             const isGate = tm.active === 'gate50';
             pill.querySelector('.status-pill-txt').innerHTML = isGate
                 ? `${t('중간 검토 대기 중', 'Waiting for review')}<small>${t('눌러서 검토', 'tap to review')}</small>`
+                : pitlPause.paused ? `${t(`${STEP_LABELS[tm.active]} 중지됨`, `${STEP_LABELS[tm.active]} paused`)}<small>${pct}% · ${t('눌러서 재개', 'tap to resume')}</small>`
                 : `${t(`${STEP_LABELS[tm.active]} 작성 중`, `Writing ${STEP_LABELS[tm.active]}`)}<small>${pct}% · ${t(`약 ${fmtDuration(stats.etaSec * 1000)} 남음`, `~${fmtDuration(stats.etaSec * 1000)} left`)}</small>`;
             pill.querySelector('.status-pill-arc').setAttribute('stroke-dashoffset', String(62.8 * (1 - pct / 100)));
             const activeIdx = PIPELINE_STEPS.indexOf(tm.active);
@@ -7096,13 +7192,14 @@ ${idea.slice(0, 2000)}`
 
         function timingBegin() {
             window.pitlTiming = { est: loadStepEstimates(), steps: {}, active: null, activeStart: 0, reviewWaitMs: 0, startedAt: Date.now(), finishedAt: null };
+            resetPauseState();
         }
 
         // 활성 단계 전환: 이전 단계의 소요시간을 확정하고 기록한다
         function timingEnter(key) {
             const tm = window.pitlTiming;
             if (!tm) return;
-            const now = performance.now();
+            const now = pitlRunNow();
             if (tm.active && tm.active !== key) {
                 const ms = now - tm.activeStart;
                 if (tm.active === 'gate50') {
@@ -7163,7 +7260,7 @@ ${idea.slice(0, 2000)}`
                 if (tm.steps[key] != null && idx < activeIdx) {
                     done += tm.est[key];
                 } else if (key === tm.active) {
-                    activeElapsedMs = performance.now() - tm.activeStart;
+                    activeElapsedMs = pitlRunNow() - tm.activeStart;
                     activeFraction = activeStepFraction(activeElapsedMs / 1000, tm.est[key]);
                     done += tm.est[key] * activeFraction;
                     remaining += Math.max(5, tm.est[key] - activeElapsedMs / 1000);
@@ -7171,7 +7268,7 @@ ${idea.slice(0, 2000)}`
                     remaining += tm.est[key];
                 }
             });
-            if (tm.active === 'gate50') activeElapsedMs = performance.now() - tm.activeStart;
+            if (tm.active === 'gate50') activeElapsedMs = pitlRunNow() - tm.activeStart;
             const completedMs = Object.values(tm.steps).reduce((a, b) => a + b, 0);
             return {
                 percent: tm.finishedAt ? 100 : Math.min(99, (done / total) * 100),
@@ -7190,14 +7287,14 @@ ${idea.slice(0, 2000)}`
                 if (!el) return;
                 let text = '';
                 if (key === 'gate50') {
-                    const wait = timings ? timings.reviewWaitMs : (tm ? tm.reviewWaitMs + (tm.active === 'gate50' ? performance.now() - tm.activeStart : 0) : 0);
+                    const wait = timings ? timings.reviewWaitMs : (tm ? tm.reviewWaitMs + (tm.active === 'gate50' ? pitlRunNow() - tm.activeStart : 0) : 0);
                     text = wait >= 1000 ? t(`대기 ${fmtDuration(wait)}`, `wait ${fmtDuration(wait)}`) : '';
                 } else if (timings && timings.steps && timings.steps[key] != null) {
                     text = fmtDuration(timings.steps[key]);
                 } else if (tm && tm.steps[key] != null) {
                     text = fmtDuration(tm.steps[key]);
                 } else if (tm && tm.active === key) {
-                    text = fmtDuration(performance.now() - tm.activeStart);
+                    text = fmtDuration(pitlRunNow() - tm.activeStart);
                 }
                 el.textContent = text;
             });
@@ -7214,7 +7311,8 @@ ${idea.slice(0, 2000)}`
                 return;
             }
             if (!stats || !tm) return;
-            set('step', tm.active === 'gate50' ? t(`검토 대기 ${fmtDuration(stats.activeElapsedMs)}`, `Review wait ${fmtDuration(stats.activeElapsedMs)}`)
+            set('step', pitlPause.paused && tm.active ? t(`중지됨 · ${STEP_LABELS[tm.active]}`, `Paused · ${STEP_LABELS[tm.active]}`)
+                : tm.active === 'gate50' ? t(`검토 대기 ${fmtDuration(stats.activeElapsedMs)}`, `Review wait ${fmtDuration(stats.activeElapsedMs)}`)
                 : tm.active ? `${STEP_LABELS[tm.active]} ${fmtDuration(stats.activeElapsedMs)}` : t('완료', 'Done'));
             set('total', fmtDuration(stats.totalElapsedMs));
             set('eta', tm.finishedAt ? '—' : t(`약 ${fmtDuration(stats.etaSec * 1000)}`, `~${fmtDuration(stats.etaSec * 1000)}`));
@@ -11364,7 +11462,7 @@ function toggleVizTable(btn) {
             const title = window.pitlRunTitle || (window.pitlRunIdea && typeof summarizeIdeaToTitle === 'function' ? summarizeIdeaToTitle(window.pitlRunIdea) : '') || t('새 기획', 'New plan');
             const stats = computeProgress();
             const status = window.pitlWaitingGate50 ? t('⏸ 검토 대기', '⏸ Waiting for review')
-                : `● ${t('실행 중', 'Running')} · ${STEP_LABELS[tm.active] || ''}${stats ? ` · ${t('전체', 'overall')} ${Math.round(stats.percent)}%` : ''}`;
+                : `${pitlPause.paused ? `⏸ ${t('중지됨', 'Paused')}` : `● ${t('실행 중', 'Running')}`} · ${STEP_LABELS[tm.active] || ''}${stats ? ` · ${t('전체', 'overall')} ${Math.round(stats.percent)}%` : ''}`;
             const html = `<div class="history-row-main"><b class="history-row-title">${escHtml(title)}</b><span class="history-row-meta history-live-meta">${escHtml(status)}</span></div>`;
             if (row.dataset.sig !== html) { row.innerHTML = html; row.dataset.sig = html; }
         }
