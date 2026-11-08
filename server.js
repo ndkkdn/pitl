@@ -66,6 +66,8 @@ app.use(express.json({ limit: '20mb' }));
 const sendIndex = (req, res) => res.sendFile(path.join(__dirname, 'index.html'));
 app.get('/', sendIndex);
 app.get('/index.html', sendIndex);
+// 공개 기획서(GitHub Pages에도 올라가는 예시 기획서)
+app.use('/shared', express.static(path.join(__dirname, 'shared'), { index: false }));
 
 // Ensure directories exist
 const workspaceDir = path.join(__dirname, '_workspace');

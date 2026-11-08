@@ -4848,6 +4848,8 @@
         .status-pill-open.run-pause-btn { margin-top: 8px; }
         body.pitl-paused .run-caret, body.pitl-paused .run-pulse, body.pitl-paused .run-sk, body.pitl-paused .run-node, body.pitl-paused .run-link { animation-play-state: paused !important; }
         body.pitl-paused .run-writer .run-paper { opacity: .55; }
+            /* 공개 기획서 표시 */
+        .shared-badge { font-style: normal; font-size: 10.5px; font-weight: 600; padding: 1px 6px; margin-right: 6px; border-radius: 999px; border: 1px solid var(--border-color); color: var(--text-secondary); }
     </style>
 </head>
 <body class="state-landing dark-theme">
@@ -11524,11 +11526,11 @@ function toggleVizTable(btn) {
                         <div class="history-item-card history-row${isCur ? ' cur' : ''}" data-key="${escHtml(item.title + '|' + item.date)}" data-search="${escHtml((item.displayTitle + ' ' + fullIdeaText).toLowerCase())}" onclick="if (!String(window.getSelection())) loadHistoryItem('${item.title}', '${item.date}')" title="${escHtml(fullIdeaText)}">
                             <div class="history-row-main">
                                 <b class="history-row-title">${item.displayTitle}</b>
-                                <span class="history-row-meta">${item.types.length}${t('개 문서', ' docs')} · ${historyWhen(item, group === t('오늘', 'Today'))}</span>
+                                <span class="history-row-meta">${item.shared ? `<em class="shared-badge">${t('공개', 'Public')}</em>` : ''}${item.types.length}${t('개 문서', ' docs')} · ${historyWhen(item, group === t('오늘', 'Today'))}</span>
                             </div>
-                            <button class="btn-delete-history" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}">
+                            ${item.shared ? '' : `<button class="btn-delete-history" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}">
                                 <i class="fa-regular fa-trash-can"></i>
-                            </button>
+                            </button>`}
                         </div>
                         `;
                     }).join('');
@@ -11567,14 +11569,14 @@ function toggleVizTable(btn) {
                                     <div class="landing-card-title" style="user-select:text; flex: 1;">
                                         <i class="fa-regular fa-file-lines" style="color: var(--accent-text); margin-right: 6px; user-select:none;"></i> ${item.displayTitle}
                                     </div>
-                                    <button class="btn-delete-history" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}">
+                                    ${item.shared ? '' : `<button class="btn-delete-history" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}">
                                         <i class="fa-regular fa-trash-can"></i>
-                                    </button>
+                                    </button>`}
                                 </div>
                                 ${fullIdeaText ? `<div class="landing-card-idea" style="font-size:12px; color:var(--text-secondary); margin:6px 0 4px; line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:188px;">${fullIdeaText}</div>` : ''}
                                 <div class="landing-card-footer">
                                     <span style="user-select:text;">${item.displayDate}</span>
-                                    <span class="landing-card-badge">${item.types.length}${t("개 파일 완료", " files completed")}</span>
+                                    <span class="landing-card-badge">${item.shared ? `${t('공개', 'Public')} · ` : ''}${item.types.length}${t("개 파일 완료", " files completed")}</span>
                                 </div>
                             </div>
                         </div>`;
@@ -11603,10 +11605,23 @@ function toggleVizTable(btn) {
             }, 200);
         }
 
+        // 공개 기획서: shared/plans.json 에 올린 기획서는 서버 없이도 (GitHub Pages 방문자 포함) 누구나 본다
+        let sharedPlansPromise = null;
+        function loadSharedPlans() {
+            if (!sharedPlansPromise) {
+                sharedPlansPromise = fetch('shared/plans.json', { cache: 'no-cache' })
+                    .then(res => res.ok ? res.json() : [])
+                    .then(list => (Array.isArray(list) ? list : []).map(item => ({ ...item, shared: true })))
+                    .catch(() => []);
+            }
+            return sharedPlansPromise;
+        }
+
         // Planning history fetching
-        // 기록 목록은 로컬 서버에서만 읽는다. 서버에 연결되지 않으면 기록을 보여 주지 않는다.
+        // 내 기록은 로컬 서버에서만 읽는다. 서버에 연결되지 않으면 공개 기획서만 보인다.
         window.pitlHistoryCache = [];
         async function loadHistoryList() {
+            const sharedPromise = loadSharedPlans();
             try {
                 const res = await fetch(PITL_API + '/api/history');
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -11618,6 +11633,10 @@ function toggleVizTable(btn) {
                 window.pitlHistoryOffline = true;
                 window.pitlHistoryCache = [];
             }
+            // 같은 기획서가 내 기록에도 있으면 내 기록을 쓴다
+            const own = new Set(window.pitlHistoryCache.map(item => `${item.title}|${item.date}`));
+            const shared = (await sharedPromise).filter(item => !own.has(`${item.title}|${item.date}`));
+            window.pitlHistoryCache = [...window.pitlHistoryCache, ...shared].sort((a, b) => String(b.date).localeCompare(String(a.date)));
             renderHistoryLists(window.pitlHistoryCache);
         }
 
@@ -11666,9 +11685,11 @@ function toggleVizTable(btn) {
                 `;
             }
 
-            // 로컬 서버의 기록 파일에서 불러온다
+            // 로컬 서버의 기록 파일에서 불러온다 (공개 기획서는 shared/ 파일에서)
             const currentLang = localStorage.getItem('pitl_lang') || 'ko';
-            fetch(`${PITL_API}/api/history/load?title=${encodeURIComponent(title)}&date=${encodeURIComponent(date)}&lang=${currentLang}`)
+            fetch(foundItem && foundItem.shared
+                ? `shared/${encodeURIComponent(foundItem.file)}`
+                : `${PITL_API}/api/history/load?title=${encodeURIComponent(title)}&date=${encodeURIComponent(date)}&lang=${currentLang}`)
             .then(res => {
                 if (!res.ok) throw new Error("네트워크 서버 통신 오류");
                 return res.json();
