@@ -4809,39 +4809,6 @@
 </head>
 <body class="state-landing dark-theme">
 
-    <!-- Password Lock Screen Overlay -->
-    <div id="pitl-password-overlay" class="password-overlay-wrapper" style="display: none;">
-        <div class="password-card">
-            <div class="password-card-glow"></div>
-            <div class="password-header">
-                <div class="password-logo">
-                    <i class="fa-solid fa-key"></i>
-                </div>
-                <h2 class="password-title">PITL Agent</h2>
-                <p class="password-subtitle" data-i18n="password_subtitle">
-                    Planning-in-the-Loop Agentic Workspace가 암호화되어 있습니다.<br>
-                    비밀번호를 입력하세요.
-                </p>
-            </div>
-            
-            <div class="password-input-group">
-                <div class="password-input-wrapper">
-                    <i class="fa-solid fa-lock input-icon"></i>
-                    <input type="password" id="pitl-password-input" placeholder="암호입력" data-i18n-placeholder="password_placeholder" onkeydown="handlePasswordKeydown(event)">
-                    <button class="password-toggle-btn" onclick="togglePasswordVisibility()">
-                        <i class="fa-regular fa-eye" id="password-eye-icon"></i>
-                    </button>
-                </div>
-                <div id="password-error-message" class="password-error" data-i18n="password_error">올바르지 않은 암호입니다. 다시 시도해 주세요.</div>
-            </div>
-            
-            <button class="password-submit-btn" onclick="checkMasterPassword()">
-                <span data-i18n="unlock_btn">접근 해제</span>
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
-        </div>
-    </div>
-
     <!-- ========================================================
          PITL Custom Alert Modal (replaces all native alert())
          ======================================================== -->
@@ -5409,101 +5376,6 @@
             }
             
             return enMsg;
-        }
-
-        // Check if already authenticated on load
-        (function checkAuthOnLoad() {
-            const isAuth = sessionStorage.getItem('pitl_auth') === 'true';
-            
-            // Add a styling rule or handle rendering dynamically
-            const style = document.createElement('style');
-            style.id = 'pitl-auth-initial-hide';
-            if (!isAuth) {
-                // Hide body content structure visually until authenticated to prevent layout flash
-                style.innerHTML = `
-                    .landing-view-container, .workspace-view-container {
-                        display: none !important;
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-        })();
-
-        // Logout function
-        function logout() {
-            sessionStorage.removeItem('pitl_auth');
-            location.reload();
-        }
-
-        // Helper to compute today's YYYYMMDD password
-        function getTodayPassword() {
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const dd = String(today.getDate()).padStart(2, '0');
-            return `${yyyy}${mm}${dd}`;
-        }
-
-        // Toggle password character visibility
-        function togglePasswordVisibility() {
-            const input = document.getElementById('pitl-password-input');
-            const icon = document.getElementById('password-eye-icon');
-            if (input && icon) {
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    icon.className = 'fa-regular fa-eye-slash';
-                } else {
-                    input.type = 'password';
-                    icon.className = 'fa-regular fa-eye';
-                }
-            }
-        }
-
-        // Verify password entered
-        function checkMasterPassword() {
-            const input = document.getElementById('pitl-password-input');
-            const errorMsg = document.getElementById('password-error-message');
-            const overlay = document.getElementById('pitl-password-overlay');
-            
-            if (!input || !errorMsg || !overlay) return;
-            
-            const rawPass = input.value;
-            const correctPass = getTodayPassword();
-            if (rawPass === correctPass) {
-                sessionStorage.setItem('pitl_auth', 'true');
-                errorMsg.style.display = 'none';
-                
-                // Animate lock screen out beautifully
-                overlay.style.opacity = '0';
-                overlay.style.transform = 'scale(1.05)';
-                
-                // Show core dashboard panels
-                const hideStyle = document.getElementById('pitl-auth-initial-hide');
-                if (hideStyle) hideStyle.remove();
-                
-                setTimeout(() => {
-                    overlay.remove();
-                }, 500);
-            } else {
-                errorMsg.style.display = 'block';
-                input.value = '';
-                input.focus();
-                
-                // Subtle shake animation on the card
-                const card = document.querySelector('.password-card');
-                if (card) {
-                    card.style.animation = 'none';
-                    card.offsetHeight; /* trigger reflow */
-                    card.style.animation = 'shake 0.4s ease-in-out';
-                }
-            }
-        }
-
-        // Handle Enter keypress inside password field
-        function handlePasswordKeydown(event) {
-            if (event.key === 'Enter') {
-                checkMasterPassword();
-            }
         }
 
         // ───────────────────────────────────────────────────────────────
@@ -8615,36 +8487,6 @@ ${idea.slice(0, 2000)}`
             }
         }
 
-
-        // Run authentication screen initialization
-        function initLockScreen() {
-            const hostname = window.location.hostname;
-            const isLocalHost = hostname === 'localhost' || 
-                                hostname === '127.0.0.1' || 
-                                hostname === '::1' || 
-                                hostname === '';
-
-            const isAuth = sessionStorage.getItem('pitl_auth') === 'true' || isLocalHost;
-            if (isAuth) {
-                const overlay = document.getElementById('pitl-password-overlay');
-                if (overlay) overlay.remove();
-                
-                const hideStyle = document.getElementById('pitl-auth-initial-hide');
-                if (hideStyle) hideStyle.remove();
-            } else {
-                const overlay = document.getElementById('pitl-password-overlay');
-                if (overlay) {
-                    overlay.style.display = 'flex';
-                }
-                const input = document.getElementById('pitl-password-input');
-                if (input) {
-                    setTimeout(() => input.focus(), 300);
-                }
-            }
-        }
-
-        // Init lock screen immediately
-        initLockScreen();
 
         // Starfield / Sparkle Particles Canvas Animation
         const canvas = document.getElementById('canvas-backplane');
