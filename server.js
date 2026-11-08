@@ -6,6 +6,7 @@ import axios from 'axios';
 import { fileURLToPath } from 'url';
 import os from 'os';
 import { spawn, spawnSync } from 'child_process';
+import crypto from 'crypto';
 
 dotenv.config();
 
@@ -56,7 +57,7 @@ function localOnlyGuard(req, res, next) {
 }
 
 app.use(localOnlyGuard);
-app.use(express.json({ limit: '5mb' }));
+app.use(express.json({ limit: '20mb' }));
 
 // 정적 파일은 앱 화면(index.html)만 제공한다 (소스·문서·outputs 노출 방지)
 const sendIndex = (req, res) => res.sendFile(path.join(__dirname, 'index.html'));
@@ -476,10 +477,67 @@ app.post('/api/save-edit', (req, res) => {
 });
 
 // API: Get Planning History List
+// ── 기획 기록: 이 컴퓨터의 _workspace/history/ 에 기획 하나당 JSON 파일 하나로 저장한다 ──
+// (_workspace/ 는 .gitignore 대상이라 저장소에 올라가지 않는다)
+const historyDir = path.join(__dirname, '_workspace', 'history');
+fs.mkdirSync(historyDir, { recursive: true });
+const HISTORY_DOC_KEYS = ['1pager', 'threec', 'swot', 'stp', 'mece', 'prd', 'wireframe', 'audit', 'prototype'];
+
+function validHistoryKey(title, date) {
+    return typeof title === 'string' && title.length > 0 && title.length <= 300 && /^\d{6}$/.test(String(date));
+}
+function historyFilePath(title, date) {
+    const hash = crypto.createHash('sha1').update(title).digest('hex').slice(0, 16);
+    return path.join(historyDir, `${date}_${hash}.json`);
+}
+function readHistoryRecords() {
+    return fs.readdirSync(historyDir)
+        .filter(name => /^\d{6}_[0-9a-f]{16}\.json$/.test(name))
+        .map(name => { try { return JSON.parse(fs.readFileSync(path.join(historyDir, name), 'utf-8')); } catch (e) { return null; } })
+        .filter(rec => rec && validHistoryKey(rec.title, rec.date));
+}
+
+// API: Save (create or update) a planning record
+app.post('/api/history', (req, res) => {
+    const item = req.body && req.body.item;
+    if (!item || !validHistoryKey(item.title, item.date) || typeof item.docs !== 'object' || !item.docs) {
+        return res.status(400).json({ error: 'title, date(YYMMDD), docs are required' });
+    }
+    try {
+        const docs = {};
+        for (const key of ['title', 'idea', 'summaryTitle', 'midReview', 'timings', 'archive', ...HISTORY_DOC_KEYS]) {
+            if (item.docs[key] !== undefined) docs[key] = item.docs[key];
+        }
+        const record = {
+            title: item.title,
+            date: String(item.date),
+            displayTitle: String(item.displayTitle || item.title).slice(0, 200),
+            displayDate: String(item.displayDate || ''),
+            idea: String(item.idea || ''),
+            types: HISTORY_DOC_KEYS.filter(key => typeof docs[key] === 'string' && docs[key].trim()),
+            savedAt: new Date().toISOString(),
+            docs
+        };
+        const file = historyFilePath(record.title, record.date);
+        fs.writeFileSync(file + '.tmp', JSON.stringify(record));
+        fs.renameSync(file + '.tmp', file);
+        return res.json({ ok: true });
+    } catch (error) {
+        console.error('Save History Error:', error.message);
+        return res.status(500).json({ error: error.message });
+    }
+});
+
 app.get('/api/history', (req, res) => {
     try {
+        // 목록에는 문서 본문을 빼고 요약 정보만 보낸다
+        const saved = readHistoryRecords().map(rec => ({
+            title: rec.title, date: rec.date, displayTitle: rec.displayTitle, displayDate: rec.displayDate,
+            idea: rec.idea, types: rec.types, finishedAt: rec.docs && rec.docs.timings ? rec.docs.timings.finishedAt || null : null,
+            archiveUrl: rec.docs && rec.docs.archive ? rec.docs.archive.url || null : null
+        }));
         if (!fs.existsSync(outputsDir)) {
-            return res.json([]);
+            return res.json(saved.sort((a, b) => b.date.localeCompare(a.date)));
         }
 
         const files = fs.readdirSync(outputsDir);
@@ -508,8 +566,9 @@ app.get('/api/history', (req, res) => {
             }
         });
 
-        const historyList = Object.values(groups).sort((a, b) => {
-            return b.date.localeCompare(a.date) || a.title.localeCompare(b.title);
+        const legacy = Object.values(groups).filter(g => !saved.some(s => s.title === g.title && s.date === g.date));
+        const historyList = [...saved, ...legacy].sort((a, b) => {
+            return b.date.localeCompare(a.date) || String(b.finishedAt || '').localeCompare(String(a.finishedAt || '')) || a.title.localeCompare(b.title);
         });
 
         return res.json(historyList);
@@ -524,6 +583,14 @@ app.get('/api/history/load', (req, res) => {
     const { title, date, lang } = req.query;
     if (!title || !date) {
         return res.status(400).json({ error: "title and date are required" });
+    }
+    if (validHistoryKey(title, date) && fs.existsSync(historyFilePath(title, date))) {
+        try {
+            const rec = JSON.parse(fs.readFileSync(historyFilePath(title, date), 'utf-8'));
+            return res.json({ ...rec.docs, title: rec.docs.title || rec.title, idea: rec.docs.idea || rec.idea });
+        } catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
     }
     if (typeof title !== 'string' || sanitizeFilename(title) !== title || !/^\d{6}$/.test(String(date))) {
         return res.status(400).json({ error: "invalid title or date" });
@@ -571,16 +638,22 @@ app.get('/api/history/load', (req, res) => {
 const HISTORY_FILE_TYPES = ['1pager', 'threec', 'swot', 'stp', 'mece', 'prd', 'wireframe', 'audit'];
 app.delete('/api/history', (req, res) => {
     const { title, date } = req.query;
-    if (typeof title !== 'string' || sanitizeFilename(title) !== title || !/^\d{6}$/.test(String(date))) {
+    if (!validHistoryKey(title, date)) {
         return res.status(400).json({ error: "invalid title or date" });
     }
 
     try {
+        let deleted = 0;
+        const recordFile = historyFilePath(title, date);
+        if (fs.existsSync(recordFile)) { fs.unlinkSync(recordFile); deleted++; }
+        if (sanitizeFilename(title) !== title) {
+            console.log(`[History Deleted] ${title}_${date} (${deleted} files)`);
+            return res.json({ success: true, deleted });
+        }
         const names = [
             ...HISTORY_FILE_TYPES.map(type => `${type}_${title}_${date}.md`),
             `prototype_${title}_${date}.html`
         ];
-        let deleted = 0;
         for (const name of names) {
             const filePath = path.join(outputsDir, name);
             if (path.dirname(filePath) !== outputsDir) continue;

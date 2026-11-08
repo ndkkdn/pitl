@@ -6091,37 +6091,26 @@ ${idea.slice(0, 2000)}`
             }
         }
 
-        function saveClientHistoryLocally(docs, keyDateOverride) {
-            let clientHistory = localStorage.getItem('pitl_client_history');
-            clientHistory = clientHistory ? JSON.parse(clientHistory) : [];
-            
+        // 기획 기록은 이 컴퓨터의 PITL 서버(_workspace/history/)에만 저장한다 (브라우저 저장소에는 남기지 않음)
+        function buildHistoryRecord(docs, keyDateOverride) {
             const cleanTitle = docs.title;
             const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '').slice(2);
             const keyDate = /^\d{6}$/.test(keyDateOverride || '') ? keyDateOverride : dateStr;
-            const year = '20' + keyDate.slice(0, 2);
-            const month = keyDate.slice(2, 4);
-            const day = keyDate.slice(4, 6);
-            
             // 분석 시작 때 요약한 제목(summaryTitle)을 쓰고, 없으면 규칙 기반 요약으로 대체
             const displayTitle = docs.summaryTitle || summarizeIdeaToTitle(docs.idea || cleanTitle);
-            const displayDate = `${year}-${month}-${day}`;
-            
-            const existingIdx = clientHistory.findIndex(item => item.title === cleanTitle && item.date === keyDate);
-            
-            const types = ['1pager', 'threec', 'swot', 'stp', 'mece', 'prd', 'wireframe', 'audit', 'prototype'];
-            const historyItem = {
+            return {
                 title: cleanTitle,
                 date: keyDate,
-                displayTitle: displayTitle,
-                displayDate: displayDate,
+                displayTitle,
+                displayDate: `20${keyDate.slice(0, 2)}-${keyDate.slice(2, 4)}-${keyDate.slice(4, 6)}`,
                 idea: docs.idea || displayTitle,
-                types: types,
                 docs: {
                     title: cleanTitle,
                     idea: docs.idea || '',
                     summaryTitle: docs.summaryTitle || '',
                     timings: docs.timings || null,
                     midReview: typeof docs.midReview === 'boolean' ? docs.midReview : null,
+                    archive: docs.archive || null,
                     '1pager': docs['1pager'] || '',
                     'threec': docs['threec'] || '',
                     'swot': docs['swot'] || '',
@@ -6133,14 +6122,49 @@ ${idea.slice(0, 2000)}`
                     'prototype': docs['prototype'] || ''
                 }
             };
-            
-            if (existingIdx > -1) {
-                clientHistory[existingIdx] = historyItem;
-            } else {
-                clientHistory.unshift(historyItem);
+        }
+
+        async function postHistoryRecord(item) {
+            const res = await fetch(PITL_API + '/api/history', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ item })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+        }
+
+        async function saveHistoryRecord(docs, keyDateOverride) {
+            if (!docs || !docs.title) return;
+            try {
+                await postHistoryRecord(buildHistoryRecord(docs, keyDateOverride));
+                loadHistoryList();
+            } catch (err) {
+                console.warn('[PITL] 기록 저장 실패:', err);
+                pitlAlert(t('기획 기록을 로컬 서버에 저장하지 못했습니다: ', 'Could not save the plan to the local server: ') + vizEsc(err.message)
+                    + t('<br>서버가 켜져 있는지 확인해 주세요. 지금 화면의 결과는 그대로 볼 수 있습니다.', '<br>Check that the server is running. The current results stay on screen.'), 'error', t('기록 저장 실패', 'Save failed'));
             }
-            
-            localStorage.setItem('pitl_client_history', JSON.stringify(clientHistory));
+        }
+
+        // 예전에 브라우저 저장소(localStorage)에 쌓인 기록을 로컬 서버로 한 번 옮긴다.
+        // 옮긴 뒤 원본은 지우고, 만일을 위해 같은 브라우저에 백업 키로만 남긴다.
+        async function migrateBrowserHistory() {
+            let items;
+            try { items = JSON.parse(localStorage.getItem('pitl_client_history') || '[]'); } catch (e) { items = []; }
+            if (!Array.isArray(items) || !items.length) return 0;
+            let moved = 0;
+            const failed = [];
+            for (const item of items) {
+                if (!item || !item.docs || !item.title || !item.date) continue;
+                try { await postHistoryRecord(item); moved++; } catch (e) { failed.push(item); }
+            }
+            try {
+                localStorage.setItem('pitl_client_history_backup', JSON.stringify(items));
+                if (failed.length) localStorage.setItem('pitl_client_history', JSON.stringify(failed));
+                else localStorage.removeItem('pitl_client_history');
+            } catch (e) { /* 저장소 접근 불가 시 다음 접속 때 다시 시도 */ }
+            if (moved) showCompletionToast(t(`브라우저에 있던 기록 ${moved}개를 로컬 서버로 옮겼습니다.`, `Moved ${moved} plans from the browser to the local server.`));
+            return moved;
         }
 
         // ─────────────────────────────────────────────────────
@@ -8182,7 +8206,7 @@ ${idea.slice(0, 2000)}`
                 };
                 
                 generatedDocs = resultDocs;
-                saveClientHistoryLocally(resultDocs);
+                saveHistoryRecord(resultDocs);
                 // 분석이 끝난 기획서를 아카이브에 자동 게시 (첫 화면의 업로드 스위치가 ON일 때, 실패해도 기획 결과에는 영향 없음)
                 if (isArchiveUploadEnabled()) {
                     publishPlanToArchive(resultDocs, { auto: true });
@@ -8452,9 +8476,9 @@ ${idea.slice(0, 2000)}`
                     logAgentClientSide('architect', `[⚠️ 프로토타입 갱신 실패] 에러: ${protoErr.message}`);
                 }
 
-                saveClientHistoryLocally(generatedDocs);
+                saveHistoryRecord(generatedDocs);
 
-                logAgentClientSide('system', `브라우저 로컬 저장소(localStorage)에 갱신된 기획 서류 7종 동기화 완료.`);
+                logAgentClientSide('system', `갱신된 기획 서류를 로컬 서버 기록에 저장합니다.`);
                 
                 // Unlock
                 document.getElementById('btn-submit-planning').disabled = false;
@@ -8848,6 +8872,7 @@ ${idea.slice(0, 2000)}`
                 const res = await fetch(PITL_API + '/api/proxy-status', { signal: AbortSignal.timeout(PITL_API ? 60000 : 3000) });
                 if (!res.ok) { if (PITL_API) showLocalServerNotice(true); return; }
                 const data = await res.json();
+                if (data.ok) migrateBrowserHistory().then(moved => { if (moved || window.pitlHistoryOffline) loadHistoryList(); });
                 if (data.ok && data.proxyAvailable) {
                     window.PITL_USE_LOCAL_PROXY = true;
                     showLocalServerNotice(false);
@@ -10064,7 +10089,7 @@ ${idea.slice(0, 2000)}`
             try {
                 const data = await extractVizData(docKey, body);
                 generatedDocs[docKey] = withVizBlock(body, data);
-                saveClientHistoryLocally(generatedDocs, window.pitlActiveSessionDate);
+                saveHistoryRecord(generatedDocs, window.pitlActiveSessionDate);
                 switchDocument(docKey);
             } catch (err) {
                 pitlAlert(t('시각화 생성에 실패했습니다: ', 'Failed to generate charts: ') + vizEsc(err.message), 'error', t('시각화 생성 실패', 'Chart generation failed'));
@@ -10367,7 +10392,7 @@ function toggleVizTable(btn) {
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
                 docs.archive = { slug, url: data.url, commit: data.commit, publishedAt: new Date().toISOString(), date: dateKey };
-                saveClientHistoryLocally(docs, window.pitlActiveSessionDate);
+                saveHistoryRecord(docs, window.pitlActiveSessionDate);
                 say(t(`📦 아카이브 게시 완료: ${data.url} (GitHub Pages 반영까지 1~2분)`, `📦 Published to the archive: ${data.url} (live in 1-2 min)`));
                 showCompletionToast(t('기획서를 아카이브에 게시했습니다.', 'Plan published to the archive.'));
                 return data.url;
@@ -10698,7 +10723,7 @@ function toggleVizTable(btn) {
             isEditing = false;
             const btnEdit = document.getElementById('btn-edit');
             if (btnEdit) { btnEdit.innerHTML = '<i class="fa-regular fa-pen-to-square"></i> 기획 수정'; btnEdit.classList.remove('active'); }
-            saveClientHistoryLocally(generatedDocs);
+            saveHistoryRecord(generatedDocs);
             startCascadingRegenerationClientSide(resumeFrom);
         }
 
@@ -11133,35 +11158,21 @@ function toggleVizTable(btn) {
         function deleteHistoryItem(title, date, event) {
             if (event) event.stopPropagation();
             pitlConfirm(
-                t('이 기획을 삭제할까요?<br>브라우저 기록과 서버 <code>outputs/</code> 폴더의 파일이 모두 지워지며 되돌릴 수 없습니다.',
-                  'Delete this plan?<br>Both the browser record and the files in the server <code>outputs/</code> folder will be removed. This cannot be undone.'),
+                t('이 기획을 삭제할까요?<br>이 컴퓨터의 PITL 기록 파일이 지워지며 되돌릴 수 없습니다. (아카이브에 게시한 기획서는 그대로 남습니다)',
+                  'Delete this plan?<br>The plan file on this computer will be removed. This cannot be undone. (Copies published to the archive stay.)'),
                 () => performHistoryDelete(title, date),
                 { title: t('기획 삭제', 'Delete plan'), confirmLabel: t('삭제', 'Delete') }
             );
         }
 
         async function performHistoryDelete(title, date) {
-            // 1. 브라우저 저장소
-            let clientHistory = localStorage.getItem('pitl_client_history');
-            if (clientHistory) {
-                try {
-                    let parsed = JSON.parse(clientHistory);
-                    const filtered = parsed.filter(item => !(item.title === title && item.date === date));
-                    localStorage.setItem('pitl_client_history', JSON.stringify(filtered));
-                } catch(e){}
-            }
-
-            // 2. 서버 outputs/ 파일
             try {
                 const res = await fetch(`${PITL_API}/api/history?title=${encodeURIComponent(title)}&date=${encodeURIComponent(date)}`, { method: 'DELETE' });
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-                showCompletionToast(data.deleted
-                    ? t(`히스토리 항목이 삭제되었습니다. (서버 파일 ${data.deleted}개)`, `History item deleted (${data.deleted} server files).`)
-                    : t('히스토리 항목이 삭제되었습니다.', 'History item deleted.'));
+                showCompletionToast(t('기획 기록을 삭제했습니다.', 'Plan deleted.'));
             } catch (err) {
-                pitlAlert(t('브라우저 기록은 지웠지만 서버 파일 삭제에 실패했습니다: ', 'Removed from the browser, but deleting the server files failed: ') + vizEsc(err.message),
-                    'error', t('삭제 실패', 'Delete failed'));
+                pitlAlert(t('기록 삭제에 실패했습니다: ', 'Delete failed: ') + vizEsc(err.message), 'error', t('삭제 실패', 'Delete failed'));
             }
 
             // 지금 열려 있는 기획을 지웠으면 랜딩으로 돌아간다
@@ -11234,7 +11245,7 @@ function toggleVizTable(btn) {
 
         // 오늘 만든 기록은 완료 시각, 그 외는 "10월 31일"
         function historyWhen(item, isToday) {
-            const fin = item.docs && item.docs.timings && item.docs.timings.finishedAt;
+            const fin = item.finishedAt || (item.docs && item.docs.timings && item.docs.timings.finishedAt);
             if (isToday && fin) return new Date(fin).toLocaleTimeString(t('ko-KR', 'en-US'), { hour: 'numeric', minute: '2-digit' });
             const m = String(item.displayDate || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
             if (!m) return item.displayDate || '';
@@ -11346,8 +11357,8 @@ function toggleVizTable(btn) {
                 if (!data || data.length === 0) {
                     listContainer.innerHTML = `
                         <div class="sidebar-empty-state">
-                            <i class="fa-regular fa-folder-open"></i>
-                            <span>${t("히스토리가 없습니다", "No History")}</span>
+                            <i class="fa-regular ${window.pitlHistoryOffline ? 'fa-circle-xmark' : 'fa-folder-open'}"></i>
+                            <span>${window.pitlHistoryOffline ? t("로컬 서버에 연결하면 기록이 보입니다", "Connect the local server to see your plans") : t("히스토리가 없습니다", "No History")}</span>
                         </div>
                     `;
                 } else {
@@ -11447,33 +11458,21 @@ function toggleVizTable(btn) {
         }
 
         // Planning history fetching
+        // 기록 목록은 로컬 서버에서만 읽는다. 서버에 연결되지 않으면 기록을 보여 주지 않는다.
+        window.pitlHistoryCache = [];
         async function loadHistoryList() {
-            fetch(PITL_API + '/api/history')
-            .then(res => {
-                if (!res.ok) throw new Error();
-                return res.json();
-            })
-            .then(data => {
-                // Merge server history and localStorage client history
-                let clientHistory = localStorage.getItem('pitl_client_history');
-                clientHistory = clientHistory ? JSON.parse(clientHistory) : [];
-                
-                // Deduplicate items based on title and date (prioritizing server items)
-                const merged = [...data];
-                clientHistory.forEach(cItem => {
-                    if (!merged.some(sItem => sItem.title === cItem.title && sItem.date === cItem.date)) {
-                        merged.push(cItem);
-                    }
-                });
-                
-                renderHistoryLists(merged.sort((a, b) => b.date.localeCompare(a.date)));
-            })
-            .catch(err => {
-                console.warn("Backend history API unavailable. Loading from localStorage...");
-                let clientHistory = localStorage.getItem('pitl_client_history');
-                clientHistory = clientHistory ? JSON.parse(clientHistory) : [];
-                renderHistoryLists(clientHistory);
-            });
+            try {
+                const res = await fetch(PITL_API + '/api/history');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                window.pitlHistoryOffline = false;
+                window.pitlHistoryCache = Array.isArray(data) ? data : [];
+            } catch (err) {
+                console.warn('[PITL] 로컬 서버에 연결되지 않아 기록을 불러오지 못했습니다.');
+                window.pitlHistoryOffline = true;
+                window.pitlHistoryCache = [];
+            }
+            renderHistoryLists(window.pitlHistoryCache);
         }
 
         // Fetch selected historical item
@@ -11496,10 +11495,7 @@ function toggleVizTable(btn) {
             if (container) container.classList.remove('sidebar-open');
             if (overlay) overlay.classList.remove('active');
 
-            // Find full idea description from local storage or server data first
-            let clientHistory = localStorage.getItem('pitl_client_history');
-            clientHistory = clientHistory ? JSON.parse(clientHistory) : [];
-            const foundItem = clientHistory.find(item => item.title === title && item.date === date);
+            const foundItem = (window.pitlHistoryCache || []).find(item => item.title === title && item.date === date);
             const rawIdea = foundItem ? (foundItem.idea || foundItem.displayTitle) : title.replace(/_/g, ' ');
 
             // Populate system loaded message card in timeline
@@ -11524,15 +11520,7 @@ function toggleVizTable(btn) {
                 `;
             }
 
-            // 이 브라우저에서 생성한 기획(localStorage)을 먼저 찾고, 없으면 서버 outputs/에서 로드
-            let localHistory = localStorage.getItem('pitl_client_history');
-            localHistory = localHistory ? JSON.parse(localHistory) : [];
-            const localItem = localHistory.find(item => item.title === title && item.date === date);
-            if (localItem && localItem.docs) {
-                setupLoadedSession(localItem.docs, title, date);
-                return;
-            }
-
+            // 로컬 서버의 기록 파일에서 불러온다
             const currentLang = localStorage.getItem('pitl_lang') || 'ko';
             fetch(`${PITL_API}/api/history/load?title=${encodeURIComponent(title)}&date=${encodeURIComponent(date)}&lang=${currentLang}`)
             .then(res => {
@@ -11543,18 +11531,11 @@ function toggleVizTable(btn) {
                 setupLoadedSession(data, title, date);
             })
             .catch(err => {
-                console.warn("Backend load failed. Loading from localStorage...");
-                let clientHistory = localStorage.getItem('pitl_client_history');
-                clientHistory = clientHistory ? JSON.parse(clientHistory) : [];
-                const foundItem = clientHistory.find(item => item.title === title && item.date === date);
-                if (foundItem && foundItem.docs) {
-                    setupLoadedSession(foundItem.docs, title, date);
-                } else {
-                    pitlAlert(t('히스토리 로드에 실패했습니다.<br>해당 항목을 로컬 저장소에서 찾을 수 없습니다.', 'History load failed.<br>Item not found in local storage.'), 'error', t('히스토리 로드 실패', 'History Load Failed'));
-                    if (btnSubmit) btnSubmit.disabled = false;
-                    if (ideaTextarea) ideaTextarea.disabled = false;
-                    resetToLanding();
-                }
+                console.warn('[PITL] 기록 불러오기 실패:', err);
+                pitlAlert(t('기록을 불러오지 못했습니다.<br>로컬 PITL 서버가 켜져 있는지 확인해 주세요.', 'Could not load the plan.<br>Check that the local PITL server is running.'), 'error', t('히스토리 로드 실패', 'History Load Failed'));
+                if (btnSubmit) btnSubmit.disabled = false;
+                if (ideaTextarea) ideaTextarea.disabled = false;
+                resetToLanding();
             });
         }
 
