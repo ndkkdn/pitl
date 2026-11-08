@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <script>
+        // 로컬 서버가 직접 제공한 화면이면 같은 origin, GitHub Pages 등에서 열었으면 내 컴퓨터의 PITL 서버(7878)로 요청한다
+        window.PITL_LOCAL_PORT = 7878;
+        window.PITL_API = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && /^https?:$/.test(location.protocol) ? '' : `http://localhost:${window.PITL_LOCAL_PORT}`;
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark light">
@@ -4805,6 +4811,13 @@
         .landing-history-grid[hidden] { display: none !important; }
         .landing-history-card .landing-card-idea { display: none !important; }
         .landing-history-card .landing-card-content { padding: 8px 11px !important; gap: 3px !important; }
+
+        /* ══ 웹에서 열었을 때 로컬 서버 미연결 안내 ══ */
+        .local-server-notice { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 1200; display: flex; align-items: center; gap: 10px; max-width: calc(100vw - 32px); padding: 8px 8px 8px 14px; border-radius: 999px; border: 1px solid rgba(245, 158, 11, .45); background: color-mix(in srgb, var(--bg-card) 92%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--shadow-card); font: 13px 'Noto Sans KR', sans-serif; color: var(--text-primary); }
+        .local-server-notice i { color: var(--accent-amber); }
+        .local-server-notice code { font-family: 'Fira Code', monospace; font-size: 12px; background: rgba(var(--hairline-rgb), .08); padding: 1px 6px; border-radius: 6px; }
+        .local-server-notice button { border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-primary); border-radius: 999px; padding: 5px 12px; font: 600 12.5px 'Noto Sans KR', sans-serif; cursor: pointer; white-space: nowrap; }
+        .local-server-notice button:hover { border-color: rgba(var(--accent-rgb), .45); }
 </style>
 </head>
 <body class="state-landing dark-theme">
@@ -5438,8 +5451,8 @@
 
         function showLocalServerRequired() {
             pitlAlert(
-                t('로컬 PITL 서버에 연결할 수 없거나 Claude CLI를 찾을 수 없습니다.<br>터미널에서 <code>npm start</code>로 서버를 실행한 뒤 <code>http://localhost:4000</code> 으로 접속해 주세요.',
-                  'Cannot reach the local PITL server or the Claude CLI.<br>Run <code>npm start</code> and open <code>http://localhost:4000</code>.'),
+                t(`로컬 PITL 서버에 연결할 수 없거나 Claude CLI를 찾을 수 없습니다.<br>터미널의 PITL 폴더에서 <code>npm start</code>로 서버(포트 ${window.PITL_LOCAL_PORT})를 실행한 뒤 이 페이지를 새로고침해 주세요.${PITL_API ? '<br><small>브라우저가 "로컬 네트워크 접근"을 물으면 허용해 주세요. Safari는 로컬 접속을 막을 수 있어 Chrome을 권장합니다.</small>' : ''}`,
+                  `Cannot reach the local PITL server or the Claude CLI.<br>Run <code>npm start</code> in the PITL folder (port ${window.PITL_LOCAL_PORT}) and reload this page.${PITL_API ? '<br><small>Allow local network access if your browser asks. Chrome is recommended; Safari may block localhost.</small>' : ''}`),
                 'error', t('로컬 서버 필요', 'Local Server Required'));
         }
 
@@ -5451,7 +5464,7 @@
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), CLAUDE_CLIENT_TIMEOUT_MS);
             try {
-                const res = await fetch('/api/llm', {
+                const res = await fetch(PITL_API + '/api/llm', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ systemInstruction, userPrompt: finalPrompt }),
@@ -6454,7 +6467,7 @@ ${idea.slice(0, 2000)}`
             // 아카이브 인증 상태는 처음 열 때 한 번 확인한다
             if (window.pitlArchiveAuth === null) {
                 window.pitlArchiveAuth = false;
-                fetch('/api/archive/status').then(r => r.json()).then(st => { window.pitlArchiveAuth = !!(st && st.authenticated); syncExportItems(); }).catch(() => {});
+                fetch(PITL_API + '/api/archive/status').then(r => r.json()).then(st => { window.pitlArchiveAuth = !!(st && st.authenticated); syncExportItems(); }).catch(() => {});
             }
         }
 
@@ -8810,17 +8823,33 @@ ${idea.slice(0, 2000)}`
         loadHistoryList();
 
         // ── Local Proxy Detection (OAuth-like) ─────────────────────────────────
-        // 같은 origin의 /api/proxy-status 를 호출하여 로컬 서버 + Claude CLI 사용 가능 여부 감지
+        // /api/proxy-status 로 로컬 서버 + Claude CLI 사용 가능 여부 감지
+        // (GitHub Pages에서 연 경우 http://localhost:7878 로 확인한다)
         window.PITL_USE_LOCAL_PROXY = false;
+        function showLocalServerNotice(show) {
+            let el = document.getElementById('local-server-notice');
+            if (!show) { if (el) el.remove(); return; }
+            if (el) return;
+            el = document.createElement('div');
+            el.id = 'local-server-notice';
+            el.className = 'local-server-notice';
+            el.setAttribute('role', 'status');
+            el.innerHTML = `<i class="fa-solid fa-plug-circle-xmark"></i><span>${t(`로컬 PITL 서버(localhost:${window.PITL_LOCAL_PORT})에 연결되지 않았습니다. 터미널에서 <code>npm start</code> 후`, `Not connected to the local PITL server (localhost:${window.PITL_LOCAL_PORT}). Run <code>npm start</code>, then`)}</span><button type="button" onclick="retryLocalProxy()">${t('다시 연결', 'Reconnect')}</button>`;
+            document.body.appendChild(el);
+        }
+        async function retryLocalProxy() {
+            window.PITL_PROXY_READY = detectLocalProxy();
+            await window.PITL_PROXY_READY;
+            if (window.PITL_USE_LOCAL_PROXY) loadHistoryList();
+        }
         async function detectLocalProxy() {
-            // GitHub Pages 등 외부 도메인에서는 시도하지 않음
-            if (!window.location.hostname.match(/^(localhost|127\.0\.0\.1)$/)) return;
             try {
-                const res = await fetch('/api/proxy-status', { signal: AbortSignal.timeout(3000) });
-                if (!res.ok) return;
+                const res = await fetch(PITL_API + '/api/proxy-status', { signal: AbortSignal.timeout(3000) });
+                if (!res.ok) { if (PITL_API) showLocalServerNotice(true); return; }
                 const data = await res.json();
                 if (data.ok && data.proxyAvailable) {
                     window.PITL_USE_LOCAL_PROXY = true;
+                    showLocalServerNotice(false);
                     console.info('[PITL] 로컬 서버 감지 완료 — claude -p 엔진으로 동작합니다.');
                     // 뱃지 표시
                     const n = document.getElementById('proxy-badge-nav');
@@ -8834,7 +8863,8 @@ ${idea.slice(0, 2000)}`
                     if (btnSide) btnSide.title = '🟢 로컬 서버 연결됨 (Claude CLI)';
                 }
             } catch (e) {
-                // 서버 없음 — 생성 시 안내 모달 표시
+                // 서버 없음 — 웹(GitHub Pages)에서 연 경우 상단 안내, 생성 시 안내 모달 표시
+                if (PITL_API) showLocalServerNotice(true);
             }
         }
         window.PITL_PROXY_READY = detectLocalProxy();
@@ -10303,7 +10333,7 @@ function toggleVizTable(btn) {
             const say = msg => { if (typeof logAgentClientSide === 'function') logAgentClientSide('system', msg); };
             if (!docs || !(docs.audit || docs.prototype || docs['1pager'])) return null;
             let status;
-            try { status = await fetch('/api/archive/status').then(r => r.json()); } catch (e) { status = null; }
+            try { status = await fetch(PITL_API + '/api/archive/status').then(r => r.json()); } catch (e) { status = null; }
             if (!status) { if (!auto) pitlAlert(t('아카이브 서버 상태를 확인하지 못했습니다.', 'Could not reach the archive service.'), 'error'); return null; }
             if (auto && !status.autoPublish) return null;
             if (!status.authenticated) {
@@ -10328,7 +10358,7 @@ function toggleVizTable(btn) {
                     tags: ['PITL', t('상품기획', 'Product planning')],
                     date: archiveDate(docs)
                 };
-                const res = await fetch('/api/archive/publish', {
+                const res = await fetch(PITL_API + '/api/archive/publish', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ slug, item, files })
@@ -11122,7 +11152,7 @@ function toggleVizTable(btn) {
 
             // 2. 서버 outputs/ 파일
             try {
-                const res = await fetch(`/api/history?title=${encodeURIComponent(title)}&date=${encodeURIComponent(date)}`, { method: 'DELETE' });
+                const res = await fetch(`${PITL_API}/api/history?title=${encodeURIComponent(title)}&date=${encodeURIComponent(date)}`, { method: 'DELETE' });
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
                 showCompletionToast(data.deleted
@@ -11417,7 +11447,7 @@ function toggleVizTable(btn) {
 
         // Planning history fetching
         async function loadHistoryList() {
-            fetch('/api/history')
+            fetch(PITL_API + '/api/history')
             .then(res => {
                 if (!res.ok) throw new Error();
                 return res.json();
@@ -11503,7 +11533,7 @@ function toggleVizTable(btn) {
             }
 
             const currentLang = localStorage.getItem('pitl_lang') || 'ko';
-            fetch(`/api/history/load?title=${encodeURIComponent(title)}&date=${encodeURIComponent(date)}&lang=${currentLang}`)
+            fetch(`${PITL_API}/api/history/load?title=${encodeURIComponent(title)}&date=${encodeURIComponent(date)}&lang=${currentLang}`)
             .then(res => {
                 if (!res.ok) throw new Error("네트워크 서버 통신 오류");
                 return res.json();

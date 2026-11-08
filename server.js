@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = Number(process.env.PORT) || 4000;
+const PORT = Number(process.env.PORT) || 7878;
 const HOST = '127.0.0.1';
 
 // ── Claude CLI (claude -p) engine config ─────────────────────────────────────
@@ -29,15 +29,28 @@ const CLAUDE_VERSION = claudeCheck.status === 0 ? claudeCheck.stdout.trim() : nu
 
 // ── Local-only guard ─────────────────────────────────────────────────────────
 // 브라우저 요청은 원격 사이트에서 와도 IP가 127.0.0.1이므로, Host/Origin 헤더로
-// 같은 로컬 origin에서 온 요청만 허용한다 (CSRF / DNS rebinding 차단).
+// 같은 로컬 origin 또는 허용한 웹 화면(GitHub Pages)에서 온 요청만 받는다 (CSRF / DNS rebinding 차단).
 const ALLOWED_HOSTS = new Set([`localhost:${PORT}`, `127.0.0.1:${PORT}`]);
+// GitHub Pages(https://ndkkdn.github.io/pitl/)에서 연 화면이 이 로컬 서버를 쓸 수 있게 허용할 origin 목록
+const ALLOWED_ORIGINS = new Set((process.env.ALLOWED_ORIGINS ?? 'https://ndkkdn.github.io')
+    .split(',').map(o => o.trim().replace(/\/$/, '')).filter(Boolean));
 function localOnlyGuard(req, res, next) {
     if (!ALLOWED_HOSTS.has(req.headers.host)) {
         return res.status(403).json({ error: '허용되지 않은 Host입니다.' });
     }
     const origin = req.headers.origin;
     if (origin && !ALLOWED_HOSTS.has(origin.replace(/^http:\/\//, ''))) {
-        return res.status(403).json({ error: '허용되지 않은 Origin입니다.' });
+        if (!ALLOWED_ORIGINS.has(origin)) {
+            return res.status(403).json({ error: '허용되지 않은 Origin입니다.' });
+        }
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Vary', 'Origin');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        res.setHeader('Access-Control-Max-Age', '600');
+        // Chrome 사설망 접근(Private Network Access): 공개 사이트 → localhost 요청 허용
+        if (req.headers['access-control-request-private-network']) res.setHeader('Access-Control-Allow-Private-Network', 'true');
+        if (req.method === 'OPTIONS') return res.sendStatus(204);
     }
     next();
 }
@@ -1206,6 +1219,7 @@ app.post('/api/llm', async (req, res) => {
 // Start Server
 app.listen(PORT, HOST, () => {
     console.log(`[PITL Engine] Server is running on http://localhost:${PORT}`);
+    if (ALLOWED_ORIGINS.size) console.log(`[PITL Engine] Also accepting the web app from: ${[...ALLOWED_ORIGINS].join(', ')}`);
     console.log(CLAUDE_VERSION
         ? `[PITL Engine] claude -p engine ready (${CLAUDE_VERSION})`
         : `[PITL Engine] ⚠️ Claude CLI (${CLAUDE_BIN}) not found — generation is disabled`);
