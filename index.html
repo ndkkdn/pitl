@@ -8834,7 +8834,7 @@ ${idea.slice(0, 2000)}`
             el.id = 'local-server-notice';
             el.className = 'local-server-notice';
             el.setAttribute('role', 'status');
-            el.innerHTML = `<i class="fa-solid fa-plug-circle-xmark"></i><span>${t(`로컬 PITL 서버(localhost:${window.PITL_LOCAL_PORT})에 연결되지 않았습니다. 터미널에서 <code>npm start</code> 후`, `Not connected to the local PITL server (localhost:${window.PITL_LOCAL_PORT}). Run <code>npm start</code>, then`)}</span><button type="button" onclick="retryLocalProxy()">${t('다시 연결', 'Reconnect')}</button>`;
+            el.innerHTML = `<i class="fa-solid fa-plug-circle-xmark"></i><span>${t(`로컬 PITL 서버(localhost:${window.PITL_LOCAL_PORT})에 연결되지 않았습니다. 터미널에서 <code>npm start</code>를 실행하고, 브라우저가 로컬 네트워크 접근을 물으면 허용한 뒤`, `Not connected to the local PITL server (localhost:${window.PITL_LOCAL_PORT}). Run <code>npm start</code>, allow local network access if asked, then`)}</span><button type="button" onclick="retryLocalProxy()">${t('다시 연결', 'Reconnect')}</button>`;
             document.body.appendChild(el);
         }
         async function retryLocalProxy() {
@@ -8844,7 +8844,8 @@ ${idea.slice(0, 2000)}`
         }
         async function detectLocalProxy() {
             try {
-                const res = await fetch(PITL_API + '/api/proxy-status', { signal: AbortSignal.timeout(3000) });
+                // 웹에서 열면 브라우저가 "로컬 네트워크 접근" 허용을 묻는 동안 기다려야 하므로 넉넉히 기다린다 (서버가 꺼져 있으면 바로 실패함)
+                const res = await fetch(PITL_API + '/api/proxy-status', { signal: AbortSignal.timeout(PITL_API ? 60000 : 3000) });
                 if (!res.ok) { if (PITL_API) showLocalServerNotice(true); return; }
                 const data = await res.json();
                 if (data.ok && data.proxyAvailable) {
