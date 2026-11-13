@@ -4708,6 +4708,13 @@
         .theme-seg button[aria-pressed="true"] { background: rgba(var(--accent-rgb), .14); color: var(--text-primary); font-weight: 700; }
         .theme-seg button:focus-visible { outline: 2px solid rgb(var(--accent-rgb)); outline-offset: 1px; }
         .landing-theme-corner { position: fixed; top: 16px; right: 20px; z-index: 60; }
+        /* 소개 페이지와 같은 PITL 로고 */
+        .pitl-logo { --logo-grad: linear-gradient(100deg, #8B6CFF 0%, #C468D6 55%, #EC6FA8 100%); --logo-dot: #EC6FA8; display: inline-flex; align-items: baseline; font: 400 26px/1 'Instrument Serif', Georgia, serif; letter-spacing: -0.01em; text-decoration: none; cursor: pointer; }
+        body.light-theme .pitl-logo { --logo-grad: linear-gradient(100deg, #5B3BF0 0%, #9B3BC4 55%, #C2337A 100%); --logo-dot: #C2337A; }
+        .pitl-logo b { font-weight: 400; background: var(--logo-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .pitl-logo i { width: 7px; height: 7px; border-radius: 50%; background: var(--logo-dot); margin-left: 2px; display: inline-block; }
+        .landing-logo-corner { position: fixed; top: 18px; left: 24px; z-index: 60; }
+        body:not(.state-landing) .landing-logo-corner { display: none; }
         body:not(.state-landing) .landing-theme-corner { display: none; }
         .chrome-title-bar.pitl-rail-bar { position: relative; }
         .plan-actions { position: absolute; top: 16px; right: 28px; display: flex; gap: 8px; align-items: center; z-index: 5; }
@@ -4974,6 +4981,7 @@
        1. LANDING PAGE STATE VIEW
        ========================================================================== -->
     <div class="landing-view-container">
+        <a class="pitl-logo landing-logo-corner" href="index.html" aria-label="PITL 소개 페이지"><b>PITL</b><i></i></a>
         <div class="landing-theme-corner">
                     <div class="theme-seg" role="group" aria-label="테마">
                         <button type="button" data-theme-mode="system" aria-pressed="false" onclick="setThemeMode('system')" title="시스템 설정 따르기" aria-label="시스템 테마"><i class="fa-solid fa-desktop"></i></button>
@@ -5055,7 +5063,7 @@
         <!-- PANEL 1: LEFT SIDEBAR (History, Actions, Reset) -->
         <aside class="sidebar-panel" id="panel-sidebar">
             <div class="sidebar-logo-container" onclick="resetToLanding()" style="cursor: pointer;" title="첫 화면으로 이동">
-                <h3>PITL Workspace</h3>
+                <span class="pitl-logo" aria-label="PITL"><b>PITL</b><i></i></span>
             </div>
             
             <button class="new-plan-btn" onclick="startNewPlan()" data-i18n="new_plan_btn">
