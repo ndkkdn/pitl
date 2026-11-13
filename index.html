@@ -4848,6 +4848,24 @@
         .status-pill-open.run-pause-btn { margin-top: 8px; }
         body.pitl-paused .run-caret, body.pitl-paused .run-pulse, body.pitl-paused .run-sk, body.pitl-paused .run-node, body.pitl-paused .run-link { animation-play-state: paused !important; }
         body.pitl-paused .run-writer .run-paper { opacity: .55; }
+        /* ══ 최근 기획서: 정적인 알약형 목록 (흐름·기울기 없음) ══ */
+        .landing-view-container > .landing-history-section .landing-history-marquee-wrapper.is-pills { mask-image: none; -webkit-mask-image: none; overflow: visible; max-width: 1080px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; }
+        .landing-history-marquee-wrapper.is-pills .landing-history-grid { width: 100%; flex-wrap: wrap; justify-content: center; gap: 8px !important; animation: none !important; transform: none; }
+        .landing-history-pill { display: inline-flex; align-items: center; gap: 7px; max-width: 320px; height: 34px; padding: 0 8px 0 14px; border-radius: 999px; border: 1px solid var(--border-color); background: color-mix(in srgb, var(--bg-card) 88%, transparent); color: var(--text-primary); font: 500 13px/1 'Noto Sans KR', sans-serif; cursor: pointer; transition: border-color .15s, background .15s; }
+        .landing-history-pill > i { color: var(--accent-text); font-size: 12px; flex: none; }
+        .landing-history-pill .pill-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .landing-history-pill .pill-date { flex: none; font-size: 11.5px; color: var(--text-secondary); }
+        .landing-history-pill .pill-tag { flex: none; font-style: normal; font-size: 10.5px; font-weight: 600; padding: 2px 6px; border-radius: 999px; border: 1px solid var(--border-color); color: var(--text-secondary); }
+        .landing-history-pill .pill-del { flex: none; width: 20px; height: 20px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--text-secondary); font-size: 11px; cursor: pointer; opacity: 0; transition: opacity .15s, background .15s; }
+        .landing-history-pill:not(:has(.pill-del)) { padding-right: 14px; }
+        .landing-history-pill:hover .pill-del, .landing-history-pill:focus-within .pill-del { opacity: 1; }
+        .landing-history-pill .pill-del:hover { background: rgba(var(--hairline-rgb), .1); color: var(--text-primary); }
+        .landing-history-pill:hover { border-color: rgba(var(--accent-rgb), .45); background: rgba(var(--accent-rgb), .06); }
+        .landing-history-pill:focus-visible, .landing-history-pill .pill-del:focus-visible { outline: 2px solid rgb(var(--accent-rgb)); outline-offset: 2px; }
+        .landing-history-pill.is-more { cursor: default; padding: 0 14px; color: var(--text-secondary); background: transparent; border-style: dashed; }
+        .landing-history-pill.is-more:hover { border-color: var(--border-color); background: transparent; }
+        @media (hover: none) { .landing-history-pill .pill-del { opacity: 1; } }
+        @media (max-width: 560px) { .landing-history-pill { max-width: 100%; } .landing-history-pill .pill-date { display: none; } }
             /* 공개 기획서 표시 */
         .shared-badge { font-style: normal; font-size: 10.5px; font-weight: 600; padding: 1px 6px; margin-right: 6px; border-radius: 999px; border: 1px solid var(--border-color); color: var(--text-secondary); }
     </style>
@@ -11546,6 +11564,7 @@ function toggleVizTable(btn) {
             const landingGrid2 = document.getElementById('landing-history-list-2');
             if (landingGrid) {
                 if (!data || data.length === 0) {
+                    if (marqueeWrapper) marqueeWrapper.classList.remove('is-pills');
                     landingGrid.style.animation = 'none';
                     delete landingGrid.dataset.cards;
                     if (landingGrid2) { landingGrid2.hidden = true; landingGrid2.innerHTML = ''; delete landingGrid2.dataset.cards; }
@@ -11560,49 +11579,31 @@ function toggleVizTable(btn) {
                         </div>
                     `;
                 } else {
-                    const buildCard = (item) => {
-                        const fullIdeaText = item.idea || item.displayTitle || '';
+                    // 정적인 알약형 목록: 흐르지 않고, 최근 순으로 줄바꿈하며 가운데 정렬
+                    if (marqueeWrapper) marqueeWrapper.classList.add('is-pills');
+                    landingGrid.style.animation = 'none';
+                    delete landingGrid.dataset.cards;
+                    if (landingGrid2) { landingGrid2.hidden = true; landingGrid2.innerHTML = ''; delete landingGrid2.dataset.cards; }
+                    const PILL_LIMIT = 12;
+                    const buildPill = (item) => {
+                        const label = item.displayTitle || item.title || '';
+                        const tip = `${label} · ${item.displayDate || ''} · ${item.types.length}${t("개 파일", " files")}`;
                         return `
-                        <div class="landing-history-card" onclick="if (!String(window.getSelection())) loadHistoryItem('${item.title}', '${item.date}')">
-                            <div class="landing-card-content">
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
-                                    <div class="landing-card-title" style="user-select:text; flex: 1;">
-                                        <i class="fa-regular fa-file-lines" style="color: var(--accent-text); margin-right: 6px; user-select:none;"></i> ${item.displayTitle}
-                                    </div>
-                                    ${item.shared ? '' : `<button class="btn-delete-history" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}">
-                                        <i class="fa-regular fa-trash-can"></i>
-                                    </button>`}
-                                </div>
-                                ${fullIdeaText ? `<div class="landing-card-idea" style="font-size:12px; color:var(--text-secondary); margin:6px 0 4px; line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:188px;">${fullIdeaText}</div>` : ''}
-                                <div class="landing-card-footer">
-                                    <span style="user-select:text;">${item.displayDate}</span>
-                                    <span class="landing-card-badge">${item.shared ? `${t('공개', 'Public')} · ` : ''}${item.types.length}${t("개 파일 완료", " files completed")}</span>
-                                </div>
-                            </div>
+                        <div class="landing-history-pill${item.shared ? ' is-shared' : ''}" role="button" tabindex="0" title="${escHtml(tip)}"
+                             onclick="loadHistoryItem('${item.title}', '${item.date}')"
+                             onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); loadHistoryItem('${item.title}', '${item.date}'); }">
+                            <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+                            ${item.shared ? `<em class="pill-tag">${t('공개', 'Public')}</em>` : ''}
+                            <span class="pill-title">${escHtml(label)}</span>
+                            <span class="pill-date">${escHtml(item.displayDate || '')}</span>
+                            ${item.shared ? '' : `<button type="button" class="pill-del" onclick="deleteHistoryItem('${item.title}', '${item.date}', event)" title="${t("삭제", "Delete")}" aria-label="${t("삭제", "Delete")}"><i class="fa-solid fa-xmark"></i></button>`}
                         </div>`;
                     };
-                    // 끊김 없는 흐름: 화면 폭을 채울 만큼 반복한 묶음을 두 번 이어 붙인다 (-50% 이동)
-                    // 두 줄이 서로 반대로 흐른다: 6개 이상이면 번갈아 나눠 담고, 적으면 두 줄 모두 전체(아랫줄은 역순)
-                    const row1 = data.length >= 6 ? data.filter((_, i) => i % 2 === 0) : data;
-                    const row2 = data.length >= 6 ? data.filter((_, i) => i % 2 === 1) : [...data].reverse();
-                    landingGrid.style.animation = '';
-                    landingGrid.dataset.cards = row1.map(buildCard).join('');
-                    fillHistoryMarquee(landingGrid);
-                    if (landingGrid2) {
-                        landingGrid2.hidden = false;
-                        landingGrid2.dataset.cards = row2.map(buildCard).join('');
-                        fillHistoryMarquee(landingGrid2);
-                    }
+                    const rest = data.length - PILL_LIMIT;
+                    landingGrid.innerHTML = data.slice(0, PILL_LIMIT).map(buildPill).join('')
+                        + (rest > 0 ? `<span class="landing-history-pill is-more" aria-hidden="true">+${rest}</span>` : '');
                 }
             }
-            
-            // Dynamically bind 3D Tilt on loaded history cards
-            setTimeout(() => {
-                document.querySelectorAll('.landing-history-card').forEach(card => {
-                    card.addEventListener('mousemove', (e) => handleTilt(e, card, 6)); // classier subtle tilt
-                    card.addEventListener('mouseleave', () => resetTilt(card));
-                });
-            }, 200);
         }
 
         // 공개 기획서: shared/plans.json 에 올린 기획서는 서버 없이도 (GitHub Pages 방문자 포함) 누구나 본다
