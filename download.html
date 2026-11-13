@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <title>Download PITL</title>
+    <meta name="description" content="PITL을 macOS, Windows, Linux에 설치하는 방법. ZIP을 받아 시작 스크립트를 실행하거나 터미널로 설치합니다.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // 앱(demo.html)과 같은 테마 설정을 쓴다. 기본은 다크.
+        try {
+            const m = localStorage.getItem('pitl_theme');
+            const light = m === 'light' || (m === 'system' && matchMedia('(prefers-color-scheme: light)').matches);
+            document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
+        } catch (e) { /* 기본 다크 */ }
+    </script>
+    <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<header class="nav" id="nav" lang="en">
+    <div class="wrap nav-in">
+        <a class="logo" href="index.html" aria-label="PITL home"><b class="grad-text">PITL</b><i></i></a>
+        <nav class="nav-links" aria-label="Main menu">
+            <a href="index.html#how">How it works</a>
+            <a href="index.html#docs">Documents</a>
+            <a href="index.html#features">Features</a>
+            <a href="download.html" aria-current="page">Download</a>
+            <a href="index.html#faq">FAQ</a>
+            <a href="demo.html">Demo</a>
+        </nav>
+        <div class="nav-cta">
+            <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle theme" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+            <a class="icon-btn" href="https://github.com/ndkkdn/pitl" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a class="btn btn-ghost btn-sm hide-sm" href="demo.html">Demo</a>
+        </div>
+    </div>
+</header>
+
+<main id="top">
+    <!-- Hero -->
+    <section class="hero dl-hero">
+        <div class="wrap">
+            <span class="eyebrow" lang="en"><i class="fa-solid fa-download" aria-hidden="true"></i>Free · Open source</span>
+            <h1 lang="en">Get <span class="grad-text">PITL</span><br>on your machine.</h1>
+            <p class="lead">압축 파일을 받아 시작 스크립트를 더블클릭하면 패키지 설치, 설정 파일 생성, 서버 실행까지 한 번에 끝납니다.</p>
+            <div class="hero-cta">
+                <a class="btn btn-primary btn-lg" href="https://github.com/ndkkdn/pitl/archive/refs/heads/main.zip" data-os-href="#terminal" lang="en"><i class="fa-solid fa-download"></i><span data-os-label>Download ZIP</span></a>
+                <a class="btn btn-ghost btn-lg" href="#terminal" lang="en">Install from terminal</a>
+            </div>
+            <ul class="trust" lang="en">
+                <li><span class="dot"></span>main branch</li>
+                <li>macOS · Windows · Linux</li>
+                <li>Requires Node.js + Claude Code</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Desktop -->
+    <section id="desktop" style="padding-top: 0;">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="label">Desktop</span>
+                <h2>운영체제를 고르세요</h2>
+                <p class="lead">macOS와 Windows는 같은 ZIP 안에 각자의 시작 스크립트가 들어 있습니다. 스크립트가 Node.js와 <code style="font:14px 'Fira Code',monospace">claude</code> 설치 여부부터 확인합니다.</p>
+            </div>
+            <div class="os-grid three">
+                <a class="os reveal" data-os="mac" href="https://github.com/ndkkdn/pitl/archive/refs/heads/main.zip">
+                    <i class="fa-brands fa-apple"></i>
+                    <span><b>macOS<span class="rec">추천</span></b><small>ZIP을 풀고 <code>start.command</code>를 더블클릭합니다. Apple Silicon과 Intel 모두 됩니다.</small></span>
+                    <span class="go">ZIP 받기 <i class="fa-solid fa-arrow-down" style="font-size:13px"></i></span>
+                </a>
+                <a class="os reveal" data-os="win" href="https://github.com/ndkkdn/pitl/archive/refs/heads/main.zip">
+                    <i class="fa-brands fa-windows"></i>
+                    <span><b>Windows<span class="rec">추천</span></b><small>ZIP을 풀고 <code>start.cmd</code>를 더블클릭합니다. Windows 10/11.</small></span>
+                    <span class="go">ZIP 받기 <i class="fa-solid fa-arrow-down" style="font-size:13px"></i></span>
+                </a>
+                <a class="os reveal" data-os="linux" href="#terminal">
+                    <i class="fa-brands fa-linux"></i>
+                    <span><b>Linux<span class="rec">추천</span></b><small>시작 스크립트 없이 터미널 명령 네 줄로 설치하고 실행합니다.</small></span>
+                    <span class="go">터미널 설치 보기 <i class="fa-solid fa-arrow-right" style="font-size:13px"></i></span>
+                </a>
+            </div>
+            <p class="note reveal">macOS에서 <code>start.command</code>를 처음 열 때 "확인되지 않은 개발자" 경고가 뜨면, 파일을 우클릭한 뒤 <b>열기</b>를 누르세요. 실행하는 동안 열린 터미널 창은 닫지 마세요.</p>
+        </div>
+    </section>
+
+    <!-- Terminal -->
+    <section id="terminal" style="padding-top: 0;">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="label">Terminal</span>
+                <h2>터미널로 설치하기</h2>
+                <p class="lead">git으로 받으면 나중에 한 줄로 업데이트할 수 있습니다.</p>
+            </div>
+            <div class="panel reveal">
+                <div class="tabs" role="tablist" aria-label="터미널 설치 방법" style="margin-top: 0;">
+                    <button type="button" role="tab" aria-selected="true" data-tab="unix">macOS / Linux</button>
+                    <button type="button" role="tab" aria-selected="false" data-tab="win">Windows</button>
+                </div>
+                <div class="code tabbed" data-pane="unix"><button class="copy" type="button"><i class="fa-regular fa-copy"></i>복사</button><span class="c"># 코드를 받고, 패키지를 설치하고, 서버를 켭니다</span>
+<span class="p">$ </span>git clone https://github.com/ndkkdn/pitl.git
+<span class="p">$ </span>cd pitl && npm install
+<span class="p">$ </span>cp .env.example .env
+<span class="p">$ </span>npm start</div>
+                <div class="code tabbed" data-pane="win" hidden><button class="copy" type="button"><i class="fa-regular fa-copy"></i>복사</button><span class="c"># PowerShell</span>
+<span class="p">&gt; </span>git clone https://github.com/ndkkdn/pitl.git
+<span class="p">&gt; </span>cd pitl; npm install
+<span class="p">&gt; </span>copy .env.example .env
+<span class="p">&gt; </span>npm start</div>
+                <p class="note">정상으로 켜지면 터미널에 <code>[PITL Engine] Server is running on http://localhost:7878</code>이 출력됩니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Requirements + Then -->
+    <section style="padding-top: 0;">
+        <div class="wrap two">
+            <div class="panel reveal">
+                <h3 class="sec-title">준비물</h3>
+                <ul class="req">
+                    <li><i class="fa-solid fa-check"></i><span><b>Node.js</b> — <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>에서 설치합니다.</span></li>
+                    <li><i class="fa-solid fa-check"></i><span><b>Claude Code CLI</b> — 터미널에서 <code>claude</code>를 한 번 실행해 로그인해 두세요. 기획 문서는 <code>claude -p</code>로 만듭니다.</span></li>
+                    <li><i class="fa-solid fa-check"></i><span><b>git</b> — 터미널로 설치하거나 업데이트할 때만 필요합니다.</span></li>
+                </ul>
+            </div>
+            <div class="panel reveal">
+                <h3 class="sec-title">실행한 다음</h3>
+                <ol class="then">
+                    <li><span>터미널에 <b>Server is running on http://localhost:7878</b>이 보이면 준비된 것입니다.</span></li>
+                    <li><span><a href="demo.html"><b>데모 화면</b></a>이나 <b>http://localhost:7878</b>을 열고 <b>다시 연결</b>을 누릅니다. Chrome이 로컬 네트워크 접근을 물으면 <b>허용</b>하세요.</span></li>
+                    <li><span>아이디어를 적고 <b>START</b>를 누르면 기획이 시작됩니다.</span></li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- Update -->
+    <section id="update" style="padding-top: 0;">
+        <div class="wrap two">
+            <div class="reveal">
+                <span class="label">Update</span>
+                <h2>최신 버전으로 업데이트</h2>
+                <p class="lead">git으로 받았다면 PITL 폴더에서 아래 명령을 실행한 뒤 서버를 다시 켜세요. ZIP으로 받았다면 새 ZIP을 받아 덮어쓰면 됩니다. 이때 내 <code style="font:14px 'Fira Code',monospace">.env</code>와 기록 폴더는 그대로 두세요.</p>
+            </div>
+            <div class="code reveal" data-pane="update"><button class="copy" type="button"><i class="fa-regular fa-copy"></i>복사</button><span class="c"># PITL 폴더에서</span>
+<span class="p">$ </span>git pull
+<span class="p">$ </span>npm install
+<span class="p">$ </span>npm start</div>
+        </div>
+    </section>
+
+    <!-- Troubleshooting -->
+    <section id="trouble" style="padding-top: 0;">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="label">Troubleshooting</span>
+                <h2>문제가 생겼다면</h2>
+            </div>
+            <ul class="trouble reveal">
+                <li><b>웹 화면에 "연결되지 않았습니다"가 떠요</b><span>서버가 켜져 있는지 확인한 뒤 <b>다시 연결</b>을 누르세요.</span></li>
+                <li><b>"포트 7878에서 이미 서버가 실행 중"이라고 나와요</b><span>이미 켜져 있습니다. 웹 화면에서 <b>다시 연결</b>만 누르면 됩니다.</span></li>
+                <li><b>기획 생성이 실패해요</b><span>터미널에서 <code>claude</code>를 실행해 로그인 상태를 확인하세요.</span></li>
+                <li><b>다른 주소에서 띄운 화면이 연결되지 않아요</b><span><code>.env</code>의 <code>ALLOWED_ORIGINS</code>에 그 주소를 추가하고 서버를 다시 켜세요.</span></li>
+            </ul>
+            <p class="note reveal">더 자세한 설정은 <a href="https://github.com/ndkkdn/pitl#readme" target="_blank" rel="noopener">README</a>를 보거나, <a href="https://github.com/ndkkdn/pitl/issues" target="_blank" rel="noopener">GitHub 이슈</a>로 남겨 주세요.</p>
+        </div>
+    </section>
+</main>
+
+<footer style="margin-top: 0;">
+    <div class="wrap">
+        <div class="foot">
+            <div>
+                <a class="logo" href="index.html"><b class="grad-text">PITL</b><i></i></a>
+                <p>Planning in the Loop. 아이디어 한 줄을 검토 가능한 기획 문서로.</p>
+            </div>
+            <div class="foot-cols">
+                <div>
+                    <h4>제품</h4>
+                    <a href="index.html#how">작동 방식</a>
+                    <a href="index.html#docs">기획 문서</a>
+                    <a href="index.html#features">기능</a>
+                    <a href="demo.html">Demo</a>
+                </div>
+                <div>
+                    <h4>시작하기</h4>
+                    <a href="download.html">다운로드</a>
+                    <a href="https://github.com/ndkkdn/pitl#readme" target="_blank" rel="noopener">README</a>
+                    <a href="index.html#faq">FAQ</a>
+                </div>
+                <div>
+                    <h4>커뮤니티</h4>
+                    <a href="https://github.com/ndkkdn/pitl" target="_blank" rel="noopener">GitHub</a>
+                    <a href="https://github.com/ndkkdn/pitl/issues" target="_blank" rel="noopener">이슈 남기기</a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">© 2026 PITL</div>
+    </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="assets/site.js"></script>
+</body>
+</html>

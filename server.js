@@ -69,6 +69,7 @@ app.get('/', sendApp);
 app.get('/demo.html', sendApp);
 app.get('/index.html', sendApp); // 예전 주소 호환
 app.get('/intro', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/download.html', (req, res) => res.sendFile(path.join(__dirname, 'download.html')));
 app.use('/assets', express.static(path.join(__dirname, 'assets'), { index: false }));
 // 공개 기획서(GitHub Pages에도 올라가는 예시 기획서)
 app.use('/shared', express.static(path.join(__dirname, 'shared'), { index: false }));
