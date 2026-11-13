@@ -85,6 +85,7 @@
                     <span class="go">터미널 설치 보기 <i class="fa-solid fa-arrow-right" style="font-size:13px"></i></span>
                 </a>
             </div>
+            <p class="note reveal"><i class="fa-brands fa-github" aria-hidden="true"></i> 개발자라면 <a href="#terminal">GitHub에서 터미널로 설치</a>할 수도 있습니다. <code>git clone</code>과 GitHub CLI 둘 다 됩니다.</p>
             <p class="note reveal">macOS에서 <code>start.command</code>를 처음 열 때 "확인되지 않은 개발자" 경고가 뜨면, 파일을 우클릭한 뒤 <b>열기</b>를 누르세요. 실행하는 동안 열린 터미널 창은 닫지 마세요.</p>
         </div>
     </section>
@@ -93,14 +94,15 @@
     <section id="terminal" style="padding-top: 0;">
         <div class="wrap">
             <div class="section-head reveal">
-                <span class="label">Terminal</span>
-                <h2>터미널로 설치하기</h2>
-                <p class="lead">git으로 받으면 나중에 한 줄로 업데이트할 수 있습니다.</p>
+                <span class="label">GitHub · Terminal</span>
+                <h2>GitHub에서 터미널로 설치하기</h2>
+                <p class="lead">GitHub 저장소를 터미널로 바로 받습니다. <code style="font:14px 'Fira Code',monospace">git</code>이나 GitHub CLI(<code style="font:14px 'Fira Code',monospace">gh</code>)로 받으면 나중에 한 줄로 업데이트할 수 있습니다.</p>
             </div>
             <div class="panel reveal">
                 <div class="tabs" role="tablist" aria-label="터미널 설치 방법" style="margin-top: 0;">
                     <button type="button" role="tab" aria-selected="true" data-tab="unix">macOS / Linux</button>
                     <button type="button" role="tab" aria-selected="false" data-tab="win">Windows</button>
+                    <button type="button" role="tab" aria-selected="false" data-tab="gh"><i class="fa-brands fa-github" aria-hidden="true"></i> GitHub CLI</button>
                 </div>
                 <div class="code tabbed" data-pane="unix"><button class="copy" type="button"><i class="fa-regular fa-copy"></i>복사</button><span class="c"># 코드를 받고, 패키지를 설치하고, 서버를 켭니다</span>
 <span class="p">$ </span>git clone https://github.com/ndkkdn/pitl.git
@@ -112,6 +114,12 @@
 <span class="p">&gt; </span>cd pitl; npm install
 <span class="p">&gt; </span>copy .env.example .env
 <span class="p">&gt; </span>npm start</div>
+                <div class="code tabbed" data-pane="gh" hidden><button class="copy" type="button"><i class="fa-regular fa-copy"></i>복사</button><span class="c"># GitHub CLI(gh)로 받습니다. 처음이면 gh auth login 먼저</span>
+<span class="p">$ </span>gh repo clone ndkkdn/pitl
+<span class="p">$ </span>cd pitl && npm install
+<span class="p">$ </span>cp .env.example .env
+<span class="p">$ </span>npm start</div>
+                <p class="note" data-pane-note="gh" hidden>Windows PowerShell에서는 <code>&amp;&amp;</code> 대신 <code>;</code>, <code>cp</code> 대신 <code>copy</code>를 쓰세요. 저장소: <a href="https://github.com/ndkkdn/pitl" target="_blank" rel="noopener">github.com/ndkkdn/pitl</a></p>
                 <p class="note">정상으로 켜지면 터미널에 <code>[PITL Engine] Server is running on http://localhost:7878</code>이 출력됩니다.</p>
             </div>
         </div>
@@ -125,7 +133,7 @@
                 <ul class="req">
                     <li><i class="fa-solid fa-check"></i><span><b>Node.js</b> — <a href="https://nodejs.org" target="_blank" rel="noopener">nodejs.org</a>에서 설치합니다.</span></li>
                     <li><i class="fa-solid fa-check"></i><span><b>Claude Code CLI</b> — 터미널에서 <code>claude</code>를 한 번 실행해 로그인해 두세요. 기획 문서는 <code>claude -p</code>로 만듭니다.</span></li>
-                    <li><i class="fa-solid fa-check"></i><span><b>git</b> — 터미널로 설치하거나 업데이트할 때만 필요합니다.</span></li>
+                    <li><i class="fa-solid fa-check"></i><span><b>git</b> — 터미널로 설치하거나 업데이트할 때만 필요합니다. GitHub CLI(<code>gh</code>)는 선택입니다.</span></li>
                 </ul>
             </div>
             <div class="panel reveal">

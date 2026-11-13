@@ -224,3 +224,5 @@ h2 { font-family: 'Instrument Serif', 'Noto Sans KR', Georgia, serif; }
 .final h2 .grad-text { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
 .logo { font-family: 'Instrument Serif', Georgia, serif; font-size: 26px; letter-spacing: -0.01em; }
 .logo b { font-weight: 400; }
+.note a { color: var(--text-2); text-decoration: underline; text-underline-offset: 3px; }
+.tabs [role="tab"] .fa-github { margin-right: 4px; }

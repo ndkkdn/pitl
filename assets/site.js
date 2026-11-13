@@ -18,6 +18,7 @@
     function selectTab(name) {
         document.querySelectorAll('.tabs [role="tab"]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
         document.querySelectorAll('.code.tabbed[data-pane]').forEach(p => { p.hidden = p.dataset.pane !== name; });
+        document.querySelectorAll('[data-pane-note]').forEach(p => { p.hidden = p.dataset.paneNote !== name; });
     }
     document.querySelectorAll('.tabs [role="tab"]').forEach(b => b.addEventListener('click', () => selectTab(b.dataset.tab)));
 
