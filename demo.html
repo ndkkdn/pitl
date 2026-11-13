@@ -12038,6 +12038,23 @@ function toggleVizTable(btn) {
         fitLandingTitle();
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitLandingTitle);
         window.addEventListener('resize', fitLandingTitle);
+
+        // 좌측 상단 로고를 아래 입력 상자의 왼쪽 끝과 맞춘다
+        function alignLandingLogo() {
+            const logo = document.querySelector('.landing-logo-corner');
+            const box = document.querySelector('.manus-prompt-container');
+            if (!logo || !box) return;
+            const r = box.getBoundingClientRect();
+            if (!r.width) return;
+            logo.style.left = Math.max(16, Math.round(r.left)) + 'px';
+        }
+        alignLandingLogo();
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(alignLandingLogo);
+        window.addEventListener('resize', alignLandingLogo);
+        if ('ResizeObserver' in window) {
+            const landingContent = document.querySelector('.landing-content');
+            if (landingContent) new ResizeObserver(alignLandingLogo).observe(landingContent);
+        }
     </script>
 
     <script>
