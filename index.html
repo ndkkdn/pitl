@@ -72,7 +72,7 @@
         .logo b { font-weight: 700; }
         .logo i { font-style: normal; width: 7px; height: 7px; border-radius: 50%; background: var(--pink); margin-left: 2px; display: inline-block; }
         .nav-links { display: flex; gap: 22px; margin-right: auto; }
-        .nav-links a { text-decoration: none; font-size: 14.5px; color: var(--text-2); transition: color .15s; }
+        .nav-links a { text-decoration: none; font: 500 14.5px 'Space Grotesk', sans-serif; color: var(--text-2); transition: color .15s; }
         .nav-links a:hover { color: var(--text); }
         .nav-cta { display: flex; gap: 8px; align-items: center; }
         .icon-btn { width: 36px; height: 36px; display: inline-grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); background: none; color: var(--text-2); font-size: 15px; cursor: pointer; text-decoration: none; }
@@ -83,15 +83,19 @@
         .hero { position: relative; padding: clamp(56px, 9vw, 104px) 0 0; text-align: center; overflow: hidden; }
         .hero::before { content: ''; position: absolute; inset: -20% -10% auto; height: 760px; background: radial-gradient(50% 50% at 50% 30%, rgba(var(--accent-rgb), .22), transparent 70%), radial-gradient(30% 40% at 72% 40%, color-mix(in srgb, var(--pink) 18%, transparent), transparent 70%); pointer-events: none; z-index: 0; }
         .hero > * { position: relative; z-index: 1; }
-        .hero h1 { font: 800 clamp(38px, 6.6vw, 76px)/1.12 'Noto Sans KR', sans-serif; letter-spacing: -0.035em; margin: 24px auto 20px; max-width: 900px; }
+        .hero h1 { font: 700 clamp(34px, 7vw, 84px)/1.06 'Space Grotesk', 'Noto Sans KR', sans-serif; letter-spacing: -0.045em; margin: 24px auto 20px; max-width: 900px; }
         .hero .lead { margin: 0 auto; font-size: clamp(16px, 1.6vw, 19px); max-width: 620px; }
         .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 34px; }
-        .hero-sub { margin-top: 14px; font-size: 13.5px; color: var(--text-3); }
-        .hero-sub a { color: var(--text-2); }
-        .stats { display: flex; justify-content: center; gap: clamp(24px, 5vw, 64px); margin: 44px 0 0; padding: 0; list-style: none; flex-wrap: wrap; }
-        .stats li { text-align: center; }
-        .stats b { display: block; font: 700 30px/1.1 'Space Grotesk', sans-serif; letter-spacing: -0.03em; }
-        .stats span { font-size: 13px; color: var(--text-3); }
+        .hero .eyebrow { font: 500 14px/1 'Space Grotesk', sans-serif; color: var(--accent); padding: 10px 16px; border-color: rgba(var(--accent-rgb), .35); background: rgba(var(--accent-rgb), .08); }
+        .hero .eyebrow i { font-size: 12px; }
+        .hero .lead { font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif; letter-spacing: -0.01em; }
+        .btn-lg { height: 56px; padding: 0 30px; font: 600 17px 'Space Grotesk', 'Noto Sans KR', sans-serif; border-radius: 14px; }
+        .btn-lg.btn-ghost { border-color: rgba(var(--accent-rgb), .35); }
+        .btn-primary .fa-arrow-right { transition: transform .15s; }
+        .btn-primary:hover .fa-arrow-right { transform: translateX(3px); }
+        .trust { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 28px; margin: 28px 0 0; padding: 0; list-style: none; font: 400 14.5px 'Space Grotesk', sans-serif; color: var(--text-3); }
+        .trust li { display: inline-flex; align-items: center; gap: 8px; }
+        .trust .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
         .shot { margin: 64px auto 0; width: min(1100px, 100%); border-radius: 18px 18px 0 0; border: 1px solid var(--line); border-bottom: 0; overflow: hidden; box-shadow: 0 -10px 80px rgba(var(--accent-rgb), .18); background: var(--card); }
         .shot-bar { display: flex; align-items: center; gap: 7px; height: 36px; padding: 0 14px; border-bottom: 1px solid var(--line); background: var(--bg-2); }
         .shot-bar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(127, 127, 127, .35); }
@@ -202,46 +206,45 @@
 </head>
 <body>
 
-<header class="nav" id="nav">
+<header class="nav" id="nav" lang="en">
     <div class="wrap nav-in">
-        <a class="logo" href="#top" aria-label="PITL 홈"><b class="grad-text">PITL</b><i></i></a>
-        <nav class="nav-links" aria-label="주요 메뉴">
-            <a href="#how">작동 방식</a>
-            <a href="#docs">기획 문서</a>
-            <a href="#features">기능</a>
-            <a href="#download">다운로드</a>
+        <a class="logo" href="#top" aria-label="PITL home"><b class="grad-text">PITL</b><i></i></a>
+        <nav class="nav-links" aria-label="Main menu">
+            <a href="#how">How it works</a>
+            <a href="#docs">Documents</a>
+            <a href="#features">Features</a>
+            <a href="#download">Download</a>
             <a href="#faq">FAQ</a>
             <a href="demo.html">Demo</a>
         </nav>
         <div class="nav-cta">
-            <button class="icon-btn" id="theme-btn" type="button" aria-label="테마 바꾸기" title="테마 바꾸기"><i class="fa-solid fa-moon"></i></button>
-            <a class="icon-btn" href="https://github.com/ndkkdn/pitl" target="_blank" rel="noopener" aria-label="GitHub 저장소" title="GitHub"><i class="fa-brands fa-github"></i></a>
+            <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle theme" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+            <a class="icon-btn" href="https://github.com/ndkkdn/pitl" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub"><i class="fa-brands fa-github"></i></a>
             <a class="btn btn-ghost btn-sm hide-sm" href="demo.html">Demo</a>
-            <a class="btn btn-primary btn-sm" href="#download">다운로드</a>
+            <a class="btn btn-primary btn-sm" href="#download">Download</a>
         </div>
     </div>
 </header>
 
 <main id="top">
     <!-- Hero -->
-    <section class="hero">
+    <section class="hero" lang="en">
         <div class="wrap">
-            <span class="eyebrow"><span class="dot"></span>오픈소스 · 내 컴퓨터에서 실행</span>
-            <h1>아이디어 한 줄이<br><span class="grad-text">아홉 개의 기획 문서</span>가 됩니다</h1>
-            <p class="lead">PITL은 아이디어를 1-Pager, 3C·SWOT·STP 분석, PRD, 와이어프레임, 프로토타입, QA 감사까지 이어서 써 주는 기획 도구입니다. 중간에 멈춰서 사람이 검토하고, 그 판단을 반영해 나머지를 완성합니다.</p>
+            <span class="eyebrow"><i class="fa-solid fa-infinity" aria-hidden="true"></i>Planning in the Loop</span>
+            <h1>Give your idea<br><span class="grad-text">the plan it deserves.</span></h1>
+            <p class="lead" lang="ko">한 줄만 적어 보세요. PITL이 그 한 줄을 아홉 개의 기획 문서로 키우고, 중간에 멈춰 당신의 판단을 담아 나머지를 완성합니다.</p>
             <div class="hero-cta">
-                <a class="btn btn-primary" href="#download" id="hero-dl"><i class="fa-solid fa-download"></i><span>다운로드</span></a>
-                <a class="btn btn-ghost" href="demo.html"><i class="fa-solid fa-play"></i>데모 열기</a>
+                <a class="btn btn-primary btn-lg" href="#download" id="hero-dl"><span>Download</span><i class="fa-solid fa-arrow-right"></i></a>
+                <a class="btn btn-ghost btn-lg" href="demo.html">Open the demo</a>
             </div>
-            <p class="hero-sub">macOS · Windows · Linux &nbsp;·&nbsp; Node.js와 <a href="https://claude.com/claude-code" target="_blank" rel="noopener">Claude Code</a> 필요</p>
-            <ul class="stats">
-                <li><b class="grad-text">9</b><span>단계별 기획 문서</span></li>
-                <li><b>1</b><span>사람이 보는 중간 검토</span></li>
-                <li><b>0</b><span>외부에 저장되는 기록</span></li>
+            <ul class="trust">
+                <li><span class="dot"></span>Open source</li>
+                <li>macOS · Windows · Linux</li>
+                <li>Your plans stay yours</li>
             </ul>
             <div class="shot reveal">
                 <div class="shot-bar"><i></i><i></i><i></i><span>localhost:7878</span></div>
-                <img src="assets/app-home.jpg" alt="PITL 첫 화면. 아이디어 입력창과 START 버튼, 중간 검토 토글, 최근 작성한 기획서 목록이 보인다." width="1440" height="900">
+                <img src="assets/app-home.jpg" alt="The PITL home screen, with the idea input, the START button, the mid-run review toggle and the list of recent plans." width="1440" height="900">
             </div>
         </div>
     </section>
@@ -492,7 +495,7 @@
         if (os) {
             document.querySelector(`.os[data-os="${os}"]`)?.classList.add('recommended');
             const hero = document.querySelector('#hero-dl span');
-            if (hero) hero.textContent = os === 'mac' ? 'macOS용 다운로드' : 'Windows용 다운로드';
+            if (hero) hero.textContent = os === 'mac' ? 'Download for macOS' : 'Download for Windows';
             if (os === 'win') selectTab('win');
         }
 
