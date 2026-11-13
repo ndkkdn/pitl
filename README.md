@@ -1,6 +1,6 @@
 # PITL — Planning in the Loop
 
-웹 화면은 [ndkkdn.github.io/pitl](https://ndkkdn.github.io/pitl/)에 있고, 기획을 실제로 생성하는 일은 **내 컴퓨터에서 돌아가는 로컬 서버**(`localhost:7878`)가 합니다. 서버가 꺼져 있으면 웹 화면에 아래 오류가 뜹니다.
+소개·다운로드 페이지는 [ndkkdn.github.io/pitl](https://ndkkdn.github.io/pitl/), 앱 화면(Demo)은 [ndkkdn.github.io/pitl/demo.html](https://ndkkdn.github.io/pitl/demo.html)에 있고, 기획을 실제로 생성하는 일은 **내 컴퓨터에서 돌아가는 로컬 서버**(`localhost:7878`)가 합니다. 서버가 꺼져 있으면 웹 화면에 아래 오류가 뜹니다.
 
 > 로컬 PITL 서버(localhost:7878)에 연결되지 않았습니다.
 
@@ -50,7 +50,7 @@ npm start
 ## 웹 화면과 연결하기
 
 1. 서버를 켭니다.
-2. https://ndkkdn.github.io/pitl/ 에서 **다시 연결**을 누릅니다.
+2. https://ndkkdn.github.io/pitl/demo.html (또는 http://localhost:7878) 에서 **다시 연결**을 누릅니다.
 3. Chrome이 로컬 네트워크 접근을 물으면 **허용**을 누릅니다. 공개 사이트가 내 컴퓨터의 `localhost`에 접속하려면 이 허용이 필요합니다.
 
 ## `.env` 주요 설정

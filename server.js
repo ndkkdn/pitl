@@ -62,10 +62,14 @@ function localOnlyGuard(req, res, next) {
 app.use(localOnlyGuard);
 app.use(express.json({ limit: '20mb' }));
 
-// 정적 파일은 앱 화면(index.html)만 제공한다 (소스·문서·outputs 노출 방지)
-const sendIndex = (req, res) => res.sendFile(path.join(__dirname, 'index.html'));
-app.get('/', sendIndex);
-app.get('/index.html', sendIndex);
+// 정적 파일은 앱 화면(demo.html)과 소개 페이지만 제공한다 (소스·문서·outputs 노출 방지)
+// GitHub Pages에서는 index.html이 소개 페이지, demo.html이 앱이다. 로컬 서버의 첫 화면은 앱이다.
+const sendApp = (req, res) => res.sendFile(path.join(__dirname, 'demo.html'));
+app.get('/', sendApp);
+app.get('/demo.html', sendApp);
+app.get('/index.html', sendApp); // 예전 주소 호환
+app.get('/intro', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.use('/assets', express.static(path.join(__dirname, 'assets'), { index: false }));
 // 공개 기획서(GitHub Pages에도 올라가는 예시 기획서)
 app.use('/shared', express.static(path.join(__dirname, 'shared'), { index: false }));
 

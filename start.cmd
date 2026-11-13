@@ -54,7 +54,7 @@ echo        ARCHIVE_AUTO_PUBLISH=false
 
 rem 5. Start the server
 echo [4/4] Starting server: http://localhost:7878
-echo        Open https://ndkkdn.github.io/pitl/ and click "Reconnect".
+echo        Open https://ndkkdn.github.io/pitl/demo.html (or http://localhost:7878) and click "Reconnect".
 echo        If Chrome asks for local network access, click Allow.
 echo        Keep this window open while you use it. Press Ctrl+C to stop.
 echo.

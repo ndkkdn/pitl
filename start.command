@@ -70,7 +70,7 @@ echo "      ARCHIVE_AUTO_PUBLISH=false"
 
 # 5. 서버 실행
 echo "[4/4] 서버 실행: http://localhost:7878"
-echo "      https://ndkkdn.github.io/pitl/ 에서 '다시 연결'을 누르세요."
+echo "      https://ndkkdn.github.io/pitl/demo.html (또는 http://localhost:7878) 에서 '다시 연결'을 누르세요."
 echo "      Chrome이 로컬 네트워크 접근을 물으면 '허용'을 누르세요."
 echo "      사용하는 동안 이 창을 닫지 마세요. 끄려면 Ctrl+C."
 echo

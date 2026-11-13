@@ -226,7 +226,7 @@ flowchart TD
 
 ### 7.1. 로컬 스토리지 구조 (`localStorage`)
 - `pitl_gemini_api_key`: 사용자 암호화 저장 API 키.
-- `pitl_theme`: `'dark'` | `'light'` 테마 상태.
+- `pitl_theme`: `'dark'` | `'light'` | `'system'` 테마 선택. 값이 없으면 다크가 기본이며, `'system'`일 때만 OS 설정을 따릅니다.
 - `pitl_history_v2`: 생성된 기획서 문서 묶음 배열 (타임스탬프, 타이틀, 8종 문서 본문).
 
 ### 7.2. 생성 문서 객체 구조 (`generatedDocs`)
