@@ -4868,7 +4868,21 @@
         @media (max-width: 560px) { .landing-history-pill { max-width: 100%; } .landing-history-pill .pill-date { display: none; } }
             /* 공개 기획서 표시 */
         .shared-badge { font-style: normal; font-size: 10.5px; font-weight: 600; padding: 1px 6px; margin-right: 6px; border-radius: 999px; border: 1px solid var(--border-color); color: var(--text-secondary); }
-            /* ══ 글꼴: 타이틀은 Instrument Serif, 그 외는 Instrument Sans (한글은 Noto Sans KR) ══ */
+            /* ══ 첫 화면: 내용 묶음(본문 · 애니메이션 · 최근 기획서)을 세로 가운데에 ══ */
+        @media (min-width: 1280px) {
+            body.state-landing .landing-view-container { align-items: center; align-content: safe center; row-gap: clamp(12px, 3vh, 36px); }
+            /* 애니메이션 칸이 화면 높이를 넘지 않게: 폭 = 세로 여유 / 1.08 (캔버스 비율) */
+            .landing-dots { margin-top: 0; flex: 0 0 min(clamp(380px, 34vw, 520px), calc((100vh - 260px) / 1.08)); }
+            .landing-view-container > .landing-history-section { margin-top: 0; }
+        }
+        body.state-landing .landing-view-container { justify-content: safe center; }
+        /* ══ 최근 기획서 · 첫 기획서 안내: 입력 영역과 간격을 두고 아래로 ══ */
+        .landing-view-container > .landing-history-section { margin-top: clamp(28px, 6vh, 64px) !important; }
+        .landing-history-section .section-divider-title { margin-bottom: 0; }
+        .landing-history-hint { margin: -6px 0 0; text-align: center; font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
+        .landing-history-hint[hidden] { display: none; }
+        .landing-history-empty.starter-empty { margin-top: clamp(16px, 3vh, 32px) !important; }
+        /* ══ 글꼴: 타이틀은 Instrument Serif, 그 외는 Instrument Sans (한글은 Noto Sans KR) ══ */
         body, button, input, textarea, select { font-family: 'Instrument Sans', 'Noto Sans KR', sans-serif; }
         .landing-title .title-pitl,
         .landing-title .title-full { font-family: 'Instrument Serif', 'Noto Serif KR', Georgia, serif !important; font-weight: 400 !important; letter-spacing: -0.01em !important; }
@@ -5021,6 +5035,7 @@
         <!-- Recent Planning Runs Divider & Marquee -->
         <div class="landing-history-section">
             <div class="section-divider-title" data-i18n="history_section_title">최근 생성된 완공 기획안 히스토리</div>
+            <p class="landing-history-hint" id="landing-history-hint" data-i18n="history_empty_hint" hidden>기획서를 작성하시면 여기에 내역이 표시됩니다.</p>
             <div class="landing-history-marquee-wrapper">
                 <div class="landing-history-grid" id="landing-history-list">
                     <!-- History cards injected here (doubled for seamless loop) -->
@@ -5209,6 +5224,7 @@
                 suggestion_wellness_app: '🧘 구독형 스트레칭 가이드 앱',
                 suggestion_kanban_dashboard: '📊 에이전트 칸반 대시보드 툴',
                 history_section_title: '최근 작성한 기획서',
+                history_empty_hint: '기획서를 작성하시면 여기에 내역이 표시됩니다.',
                 agent_status_active: '<span class="status-dot-pulse"></span> 에이전트 활성화',
                 new_plan_btn: '<span><i class="fa-solid fa-plus"></i> 새 기획</span><kbd class="kbd-hint">⌘K</kbd>',
                 history_search_placeholder: '기획서 검색',
@@ -5248,6 +5264,7 @@
                 suggestion_wellness_app: '🧘 Subscription Wellness App',
                 suggestion_kanban_dashboard: '📊 Agent Kanban Dashboard',
                 history_section_title: 'Recent Planning Run History',
+                history_empty_hint: 'Plans you create will appear here.',
                 agent_status_active: '<span class="status-dot-pulse"></span> Agents Active',
                 new_plan_btn: '<span><i class="fa-solid fa-plus"></i> New plan</span><kbd class="kbd-hint">⌘K</kbd>',
                 history_search_placeholder: 'Search plans',
@@ -11567,6 +11584,8 @@ function toggleVizTable(btn) {
             const landingGrid = document.getElementById('landing-history-list');
             const marqueeWrapper = landingGrid ? landingGrid.closest('.landing-history-marquee-wrapper') : null;
             const landingGrid2 = document.getElementById('landing-history-list-2');
+            const landingHint = document.getElementById('landing-history-hint');
+            if (landingHint) landingHint.hidden = (data || []).some(item => !item.shared);
             if (landingGrid) {
                 if (!data || data.length === 0) {
                     if (marqueeWrapper) marqueeWrapper.classList.remove('is-pills');
