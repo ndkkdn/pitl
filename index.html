@@ -18,6 +18,17 @@
             document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
         } catch (e) { /* 기본 다크 */ }
     </script>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="canonical" href="https://ndkkdn.github.io/pitl/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="PITL">
+    <meta property="og:title" content="PITL — Planning in the Loop">
+    <meta property="og:description" content="아이디어 한 줄을 1-Pager부터 PRD, 와이어프레임, 프로토타입, QA 감사까지 9개 기획 문서로. 중간에 멈춰 사람이 검토합니다.">
+    <meta property="og:url" content="https://ndkkdn.github.io/pitl/">
+    <meta property="og:image" content="https://ndkkdn.github.io/pitl/assets/og.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
@@ -155,7 +166,7 @@
                 <div class="feat reveal">
                     <span class="ic"><i class="fa-solid fa-share-nodes"></i></span>
                     <h3>공유와 내보내기</h3>
-                    <p>완성한 기획서를 파일로 내보내거나, 원하면 GitHub Pages 아카이브에 게시합니다.</p>
+                    <p>완성한 기획서를 HTML 페이지나 슬라이드 한 파일로 내보내 바로 공유합니다.</p>
                 </div>
             </div>
         </div>
@@ -193,7 +204,7 @@
             <div class="faq reveal">
                 <details>
                     <summary>설치하지 않고 써 볼 수 있나요?</summary>
-                    <p><a href="demo.html">데모</a>에서 화면 구성과 공개된 예시 기획서를 볼 수 있습니다. 새 기획서를 만들려면 내 컴퓨터에 로컬 서버를 켜야 합니다.</p>
+                    <p><a href="demo.html">데모</a>에서 화면 구성과 공개된 예시 기획서를 설치 없이 열어 볼 수 있습니다. 새 기획서를 만들려면 내 컴퓨터에 로컬 서버를 켜야 합니다.</p>
                 </details>
                 <details>
                     <summary>왜 로컬 서버가 필요한가요?</summary>
@@ -201,7 +212,7 @@
                 </details>
                 <details>
                     <summary>내 기획 기록은 어디에 저장되나요?</summary>
-                    <p>내 컴퓨터의 PITL 폴더에만 저장됩니다. 아카이브 자동 게시는 시작 스크립트에서 꺼진 상태로 시작하며, <code>.env</code>의 <code>ARCHIVE_AUTO_PUBLISH</code>로 켤 수 있습니다.</p>
+                    <p>내 컴퓨터의 PITL 폴더에만 저장되고, 어디에도 자동으로 올라가지 않습니다. 원하면 <code>.env</code>의 <code>ARCHIVE_REPO</code>에 내 GitHub 저장소를 적어 기획서를 게시할 수 있습니다.</p>
                 </details>
                 <details>
                     <summary>비용이 드나요?</summary>
@@ -255,14 +266,11 @@
                     <a href="download.html">다운로드</a>
                     <a href="https://github.com/ndkkdn/pitl#readme" target="_blank" rel="noopener">README</a>
                     <a href="#faq">FAQ</a>
-                </div>
-                <div>
-                    <h4>커뮤니티</h4>
                     <a href="https://github.com/ndkkdn/pitl" target="_blank" rel="noopener">GitHub</a>
                 </div>
             </div>
         </div>
-        <div class="copyright">© 2026 PITL</div>
+        <div class="copyright">© 2026 PITL · <a href="https://github.com/ndkkdn/pitl/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a></div>
     </div>
 </footer>
 

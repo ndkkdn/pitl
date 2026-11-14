@@ -10,7 +10,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark light">
-    <title>PITL | Autonomous Product Planning Workspace</title>
+    <title>PITL Demo — Planning in the Loop</title>
+    <meta name="description" content="PITL 앱 화면. 아이디어 한 줄로 1-Pager부터 PRD, 와이어프레임, 프로토타입, QA 감사까지 9개 기획 문서를 만듭니다. 새 기획은 내 컴퓨터의 로컬 서버로 생성합니다.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -5023,7 +5025,7 @@
                         <small id="mid-review-desc">MECE 분석까지 마친 뒤 멈추고, 검토 후 2단계를 진행합니다</small>
                     </span>
                 </button>
-                <button type="button" class="review-toggle" id="toggle-archive-upload" role="switch" aria-checked="true" onclick="toggleArchiveUpload()">
+                <button type="button" class="review-toggle" id="toggle-archive-upload" role="switch" aria-checked="true" onclick="toggleArchiveUpload()" hidden>
                     <span class="review-toggle-track" aria-hidden="true"><span class="review-toggle-thumb"></span></span>
                     <span class="review-toggle-text">
                         <b id="archive-upload-label">통합기획서 업로드 ON</b>
@@ -7569,6 +7571,16 @@ ${idea.slice(0, 2000)}`
                 : t('자동 게시하지 않습니다 (타일 대시보드에서 수동 게시 가능)', 'No automatic publishing (manual publish stays available)');
         }
 
+        // 로컬 서버의 아카이브 설정(저장소·자동 게시)을 읽어 스위치와 게시 막대를 보일지 정한다
+        window.pitlArchive = null;
+        function loadArchiveStatus() {
+            return fetch(PITL_API + '/api/archive/status').then(r => r.json()).then(st => {
+                window.pitlArchive = st && st.repo ? st : null;
+                const btn = document.getElementById('toggle-archive-upload');
+                if (btn) btn.hidden = !(window.pitlArchive && window.pitlArchive.autoPublish);
+            }).catch(() => { window.pitlArchive = null; });
+        }
+
         function toggleArchiveUpload() {
             try { localStorage.setItem('pitl_archive_upload', isArchiveUploadEnabled() ? 'off' : 'on'); } catch (e) { /* 저장 불가 시 기본값 유지 */ }
             syncArchiveToggle();
@@ -7778,21 +7790,9 @@ ${idea.slice(0, 2000)}`
                     return title;
                 });
                 
-                // 📚 drbrookskim/thoughts/brunch_articles 저장소 연동 및 에세이 인사이트 추출
-                logAgentClientSide('strategist', `[📚 drbrooks 에세이 분석] github.com/drbrookskim/thoughts/brunch_articles 성찰 관점 파싱 중...`);
-                let drbrooksEssayInsight = "";
-                try {
-                    const ghRes = await fetch('https://api.github.com/repos/drbrookskim/thoughts/contents/brunch_articles', { cache: 'force-cache' });
-                    if (ghRes.ok) {
-                        drbrooksEssayInsight = `- 관점 1: 현장 관찰 데이터에서 출발하는 5Why 본질 추구\n- 관점 2: 이상 공간(Ideal Value)과 현실 공간(Real Scenario)의 개연성 있는 연결\n- 관점 3: 기술적 기능 과잉을 쳐내는 오컴의 면도날(Pruning) 및 핍진성 검증\n- 관점 4: 사용자 삶에 스며드는 브랜드 명분과 '음, 말 되네' 스토리텔링`;
-                        logAgentClientSide('strategist', `[📚 에세이 연동 성공] drbrooks 에세이 다각도 성찰 뷰포인트 융합 완료.`);
-                    } else {
-                        throw new Error("GitHub API non-200");
-                    }
-                } catch (e) {
-                    drbrooksEssayInsight = `- 관점 1: 개념 전환(Concept Shift)을 통한 문제의 본질적 재정의\n- 관점 2: 현장 관찰에서 원칙으로 올라가는 성찰적 사고법\n- 관점 3: 사용자 경험에서의 핍진성(구체성·진정성·일관성) 확보 전략\n- 관점 4: 브랜드 철학과 명분을 담아내는 '음, 말 되네' 톤앤매너`;
-                    logAgentClientSide('strategist', `[📚 에세이 지식 그래프 연동] drbrooks 작가 성찰 프레임워크 4대 다각도 관점 융합 완료.`);
-                }
+                // 📚 drbrooks 성찰 관점 (외부 저장소를 부르지 않고 고정 관점을 쓴다)
+                const drbrooksEssayInsight = `- 관점 1: 현장 관찰 데이터에서 출발하는 5Why 본질 추구\n- 관점 2: 이상 공간(Ideal Value)과 현실 공간(Real Scenario)의 개연성 있는 연결\n- 관점 3: 기술적 기능 과잉을 쳐내는 오컴의 면도날(Pruning) 및 핍진성 검증\n- 관점 4: 사용자 삶에 스며드는 브랜드 명분과 '음, 말 되네' 스토리텔링`;
+                logAgentClientSide('strategist', `[📚 성찰 관점 적용] drbrooks 성찰 프레임워크 4대 관점을 융합합니다.`);
 
                 // STAGE 1: Product Strategist (1-pager)
                 logAgentClientSide('strategist', `입력하신 아이디어 '${idea}'를 바탕으로 1-pager 요약서 기획을 시작합니다.`);
@@ -9069,6 +9069,7 @@ ${idea.slice(0, 2000)}`
                         setTimeout(() => { location.href = `http://localhost:${data.port}/`; }, moved ? 2500 : 800);
                     }
                 });
+                if (data.ok) loadArchiveStatus();
                 if (data.ok && data.proxyAvailable) {
                     window.PITL_USE_LOCAL_PROXY = true;
                     showLocalServerNotice(false);
@@ -9279,13 +9280,16 @@ ${idea.slice(0, 2000)}`
         }
 
         // Start planning transition from landing
-        function startPlanningFromLanding() {
+        async function startPlanningFromLanding() {
             const textarea = document.getElementById('idea-textarea');
             const idea = textarea.value.trim();
             if (!idea) {
                 pitlAlert(t('상품 기획안 아이디어를 입력해주세요.', 'Please enter your product planning idea.'), 'warn', t('입력 필요', 'Input Required'));
                 return;
             }
+            // 로컬 서버가 없으면 작업 화면으로 넘어가지 않고 첫 화면에서 바로 안내한다
+            await window.PITL_PROXY_READY;
+            if (!window.PITL_USE_LOCAL_PROXY) { showLocalServerRequired(); return; }
 
             // 타겟유저·경쟁사 누락은 입력창 아래 칩·안내 문구로만 알린다 (확인 팝업 없음)
             executeStartPlanningTransition();
@@ -10557,6 +10561,7 @@ function toggleVizTable(btn) {
             let status;
             try { status = await fetch(PITL_API + '/api/archive/status').then(r => r.json()); } catch (e) { status = null; }
             if (!status) { if (!auto) pitlAlert(t('아카이브 서버 상태를 확인하지 못했습니다.', 'Could not reach the archive service.'), 'error'); return null; }
+            if (!status.repo) { if (!auto) pitlAlert(t('아카이브 저장소가 설정되어 있지 않습니다. .env의 ARCHIVE_REPO에 내 GitHub 저장소(예: 아이디/저장소)를 적고 서버를 다시 켜세요.', 'No archive repository is set. Put your GitHub repo in ARCHIVE_REPO in .env and restart the server.'), 'warn', t('아카이브 게시', 'Archive')); return null; }
             if (auto && !status.autoPublish) return null;
             if (!status.authenticated) {
                 const msg = t('GitHub 인증 정보가 없어 아카이브 게시를 건너뜁니다. (.env의 GITHUB_TOKEN 또는 gh auth login)', 'Skipping archive publish: no GitHub credentials.');
@@ -10609,6 +10614,8 @@ function toggleVizTable(btn) {
         function archiveBarHtml() {
             if (!generatedDocs || !(generatedDocs.audit || generatedDocs.prototype)) return '';
             const pub = generatedDocs.archive;
+            // 아카이브를 설정하지 않은 서버(또는 서버 없이 보는 공개 기획서)에서는 게시 막대를 숨기고, 이미 게시된 링크만 보여 준다
+            if (!window.pitlArchive) return pub && pub.url ? `<div class="archive-bar"><span><i class="fa-solid fa-box-archive"></i> ${t('아카이브에 게시됨', 'Published to the archive')} · <a href="${vizEsc(pub.url)}" target="_blank" rel="noopener">${t('기획서 보기 ↗', 'Open ↗')}</a></span></div>` : '';
             return `<div class="archive-bar">
                 <span><i class="fa-solid fa-box-archive"></i> ${pub && pub.url
                     ? `${t('아카이브에 게시됨', 'Published to the archive')} · <a href="${vizEsc(pub.url)}" target="_blank" rel="noopener">${t('기획서 보기 ↗', 'Open ↗')}</a>`
@@ -11639,7 +11646,7 @@ function toggleVizTable(btn) {
         }
 
         // 공개 기획서: shared/plans.json 에 올린 기획서는 서버 없이도 (GitHub Pages 방문자 포함) 누구나 본다
-        let sharedPlansPromise = null;
+        var sharedPlansPromise = null; // var: 이 선언보다 먼저 loadHistoryList()가 불려도 오류 없이 동작
         function loadSharedPlans() {
             if (!sharedPlansPromise) {
                 sharedPlansPromise = fetch('shared/plans.json', { cache: 'no-cache' })

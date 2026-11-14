@@ -17,7 +17,7 @@ const app = express();
 const PORT = Number(process.env.PORT) || 7878;
 const HOST = '127.0.0.1';
 // 예전 포트(4000) 주소에 남은 브라우저 기록을 옮길 수 있도록 같은 서버를 이 포트로도 연다 (0이면 끔)
-const LEGACY_PORT = Number(process.env.LEGACY_PORT ?? 4000);
+const LEGACY_PORT = Number(process.env.LEGACY_PORT || 0); // 예전 포트(4000) 기록 이사용. 기본은 끔
 
 // ── Claude CLI (claude -p) engine config ─────────────────────────────────────
 const CLAUDE_BIN = process.env.CLAUDE_BIN || 'claude';
@@ -1139,11 +1139,12 @@ app.get('/api/generate-stream', async (req, res) => {
 // ── Artifact archive publishing (GitHub Pages repo) ──────────────────────────
 // 분석이 끝난 기획서를 ARCHIVE_REPO에 커밋해 GitHub Pages 아카이브에 게시한다.
 // 인증: GITHUB_TOKEN 환경변수, 없으면 로그인된 gh CLI 토큰
-const ARCHIVE_REPO = process.env.ARCHIVE_REPO || 'ndkkdn/artifactarchives';
+// ARCHIVE_REPO를 비워 두면 아카이브 게시를 쓰지 않는다
+const ARCHIVE_REPO = (process.env.ARCHIVE_REPO || '').trim();
 const ARCHIVE_BRANCH = process.env.ARCHIVE_BRANCH || 'main';
-const [archiveOwner, archiveName] = ARCHIVE_REPO.split('/');
-const ARCHIVE_SITE_URL = (process.env.ARCHIVE_SITE_URL || `https://${archiveOwner}.github.io/${archiveName}/`).replace(/\/?$/, '/');
-const ARCHIVE_AUTO_PUBLISH = process.env.ARCHIVE_AUTO_PUBLISH !== 'false';
+const [archiveOwner = '', archiveName = ''] = ARCHIVE_REPO.split('/');
+const ARCHIVE_SITE_URL = ARCHIVE_REPO ? (process.env.ARCHIVE_SITE_URL || `https://${archiveOwner}.github.io/${archiveName}/`).replace(/\/?$/, '/') : '';
+const ARCHIVE_AUTO_PUBLISH = !!ARCHIVE_REPO && process.env.ARCHIVE_AUTO_PUBLISH === 'true';
 const ARCHIVE_SLUG_RE = /^p-\d{8}-[a-z0-9]{6}$/;
 
 function githubToken() {
@@ -1204,11 +1205,12 @@ app.get('/api/archive/status', (req, res) => {
         branch: ARCHIVE_BRANCH,
         siteUrl: ARCHIVE_SITE_URL,
         autoPublish: ARCHIVE_AUTO_PUBLISH,
-        authenticated: !!githubToken()
+        authenticated: ARCHIVE_REPO ? !!githubToken() : false
     });
 });
 
 app.post('/api/archive/publish', async (req, res) => {
+    if (!ARCHIVE_REPO) return res.status(400).json({ error: '아카이브 저장소(ARCHIVE_REPO)가 설정되어 있지 않습니다.' });
     const { slug, item, files, dryRun } = req.body || {};
     const isStr = (v, max) => typeof v === 'string' && v.length > 0 && v.length <= max;
     if (!isStr(slug, 40) || !ARCHIVE_SLUG_RE.test(slug)) return res.status(400).json({ error: 'invalid slug' });

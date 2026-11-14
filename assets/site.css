@@ -182,6 +182,7 @@ footer { padding: 56px 0 40px; border-top: 1px solid var(--line); margin-top: cl
 .foot-cols a { display: block; text-decoration: none; color: var(--text-2); font-size: 14.5px; margin-bottom: 8px; }
 .foot-cols a:hover { color: var(--text); }
 .copyright { margin-top: 40px; font-size: 13px; color: var(--text-3); }
+.copyright a { color: inherit; }
 
 /* ── Reveal on scroll ── */
 .reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }

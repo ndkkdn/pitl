@@ -58,11 +58,10 @@ npm start
 | 키 | 기본값 | 설명 |
 | --- | --- | --- |
 | `PORT` | `7878` | 서버 포트 |
-| `LEGACY_PORT` | `4000` | 예전 주소로 들어오면 7878로 보내 줍니다. `0`이면 끕니다. |
 | `ALLOWED_ORIGINS` | `https://ndkkdn.github.io` | 로컬 서버에 접속할 수 있는 웹 주소 |
-| `ARCHIVE_AUTO_PUBLISH` | `true` (시작 스크립트는 `false`로 설정) | 완성된 기획을 `ARCHIVE_REPO`(`ndkkdn/artifactarchives`)에 자동으로 커밋할지 여부 |
-| `GITHUB_TOKEN` | 비어 있음 | 자동 게시에 쓰는 토큰. 비어 있으면 로그인된 `gh` CLI의 토큰을 씁니다. |
-| `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET` | 비어 있음 | 네이버 뉴스 검색을 쓸 때만 필요 |
+| `ARCHIVE_REPO` | 비어 있음 | 기획서를 게시할 내 GitHub 저장소(`아이디/저장소`). 비우면 아카이브 게시를 쓰지 않습니다. |
+| `ARCHIVE_AUTO_PUBLISH` | `false` | `true`면 분석이 끝날 때마다 `ARCHIVE_REPO`에 자동으로 게시합니다. |
+| `GITHUB_TOKEN` | 비어 있음 | 아카이브 게시에 쓰는 토큰. 비어 있으면 로그인된 `gh` CLI의 토큰을 씁니다. |
 | `CLAUDE_BIN` / `CLAUDE_MODEL` / `CLAUDE_TIMEOUT_MS` | 비어 있음 | `claude` 실행 파일 경로, 모델, 제한 시간(기본 600000ms) |
 
 `.env`는 커밋하지 마세요. 값을 바꾼 뒤에는 서버를 다시 켜야 적용됩니다.
@@ -75,3 +74,7 @@ npm start
 | "포트 7878에서 이미 서버가 실행 중" | 이미 켜져 있습니다. 웹 화면에서 **다시 연결**만 누르면 됩니다. |
 | 기획 생성이 실패함 | 터미널에서 `claude`를 실행해 로그인 상태를 확인하세요. |
 | 다른 주소에서 띄운 웹 화면이 연결되지 않음 | `.env`의 `ALLOWED_ORIGINS`에 그 주소를 추가하고 서버를 다시 켜세요. |
+
+## 라이선스
+
+[MIT](LICENSE)

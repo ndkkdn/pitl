@@ -4,3 +4,12 @@ _workspace/
 .antigravitycli/
 .gemini/
 .DS_Store
+
+# PITL 앱과 관계없는 개인 작업 하네스 (에세이 창작 등) — 내 컴퓨터에만 두고 저장소에는 올리지 않는다
+CLAUDE.md
+GEMINI.md
+.claude/agents/pitl-planner.md
+.claude/agents/thought-writer.md
+.claude/agents/thought-critic.md
+.claude/skills/essay-*/
+.claude/skills/pitl-orchestrator/

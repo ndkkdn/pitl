@@ -1,6 +1,7 @@
 {
   "name": "pitl-planning-in-the-loop",
   "version": "1.0.0",
+  "license": "MIT",
   "description": "Fully functional PITL Product Planning Automation Workspace",
   "main": "server.js",
   "type": "module",
