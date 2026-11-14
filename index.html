@@ -58,7 +58,13 @@
             </ul>
             <div class="shot reveal">
                 <div class="shot-bar"><i></i><i></i><i></i><span>localhost:7878</span></div>
-                <img src="assets/app-home.jpg" alt="The PITL home screen, with the idea input, the START button, the mid-run review toggle and the list of recent plans." width="1440" height="900">
+                <div class="shot-media">
+                    <img src="assets/app-home.jpg" alt="The PITL home screen, with the idea input, the START button, the mid-run review toggle and the list of recent plans." width="1440" height="900">
+                    <div class="shot-dots" aria-hidden="true">
+                        <canvas id="shot-dots-canvas"></canvas>
+                        <p class="shot-dots-caption" id="shot-dots-caption"></p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -263,5 +269,6 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="assets/site.js"></script>
+<script src="assets/shot-dots.js"></script>
 </body>
 </html>

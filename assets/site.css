@@ -80,6 +80,14 @@ section { padding: clamp(72px, 10vw, 120px) 0; }
 .shot-bar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(127, 127, 127, .35); }
 .shot-bar span { margin: 0 auto; font: 500 12px 'Fira Code', monospace; color: var(--text-3); transform: translateX(-20px); }
 .shot img { width: 100%; height: auto; aspect-ratio: 1440 / 900; object-fit: cover; object-position: top; }
+/* 화면 사진 위 우측 애니메이션 (demo.html 첫 화면과 같은 자리·크기, 1440×900 기준 비율) */
+.shot-media { position: relative; container-type: inline-size; }
+.shot-media img { display: block; }
+.shot-dots { position: absolute; inset: 0; pointer-events: none; }
+#shot-dots-canvas { position: absolute; left: 61.81%; top: 15%; width: 34.03%; aspect-ratio: 1 / 1.08; display: block; }
+.shot-dots-caption { position: absolute; left: 61.81%; width: 34.03%; top: 78.6%; margin: 0; text-align: center; font: 400 max(8px, .833cqw)/1.4 'Instrument Sans', 'Noto Sans KR', sans-serif; letter-spacing: -0.16px; color: rgba(240, 238, 233, 0.72); opacity: 0; transform: translateY(6px); transition: opacity .6s ease, transform .6s ease; }
+.shot-dots-caption.show { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .shot-dots-caption { transition: none; } }
 
 /* ── Steps ── */
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: s; }
