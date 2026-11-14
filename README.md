@@ -22,7 +22,7 @@
 1. Node.js, npm, `claude`가 설치돼 있는지 확인합니다.
 2. 스크립트가 저장소 폴더 안에 있으면 그 폴더를 씁니다. 스크립트만 따로 받았다면 옆에 `pitl` 폴더를 만들어 코드를 받습니다.
 3. 첫 실행 때만 `npm install`로 패키지를 설치합니다.
-4. `.env`가 없으면 `.env.example`을 복사해 만들고, `ARCHIVE_AUTO_PUBLISH=false`로 맞춥니다.
+4. `.env`가 없으면 `.env.example`을 복사해 만듭니다.
 5. `npm start`로 서버를 켭니다.
 
 서버를 쓰는 동안에는 열린 터미널 창을 닫지 마세요. 끄려면 `Ctrl+C`를 누릅니다.
@@ -53,15 +53,18 @@ npm start
 2. https://ndkkdn.github.io/pitl/demo.html (또는 http://localhost:7878) 에서 **다시 연결**을 누릅니다.
 3. Chrome이 로컬 네트워크 접근을 물으면 **허용**을 누릅니다. 공개 사이트가 내 컴퓨터의 `localhost`에 접속하려면 이 허용이 필요합니다.
 
+## 기록은 어디에 저장되나요
+
+만든 기획서와 기록은 모두 이 컴퓨터의 `_workspace/history/` 폴더에만 JSON 파일로 저장됩니다. PITL은 기획서를 GitHub나 다른 서버에 올리지 않습니다. 기획 문서를 만들 때 아이디어와 앞 단계 문서가 내 Claude Code(`claude -p`)로 전달될 뿐입니다. 공유하려면 기획서 화면에서 HTML 문서·슬라이드로 내려받아 직접 보내세요.
+
+`_workspace/`는 `.gitignore`에 들어 있어 커밋되지 않습니다.
+
 ## `.env` 주요 설정
 
 | 키 | 기본값 | 설명 |
 | --- | --- | --- |
 | `PORT` | `7878` | 서버 포트 |
 | `ALLOWED_ORIGINS` | `https://ndkkdn.github.io` | 로컬 서버에 접속할 수 있는 웹 주소 |
-| `ARCHIVE_REPO` | 비어 있음 | 기획서를 게시할 내 GitHub 저장소(`아이디/저장소`). 비우면 아카이브 게시를 쓰지 않습니다. |
-| `ARCHIVE_AUTO_PUBLISH` | `false` | `true`면 분석이 끝날 때마다 `ARCHIVE_REPO`에 자동으로 게시합니다. |
-| `GITHUB_TOKEN` | 비어 있음 | 아카이브 게시에 쓰는 토큰. 비어 있으면 로그인된 `gh` CLI의 토큰을 씁니다. |
 | `CLAUDE_BIN` / `CLAUDE_MODEL` / `CLAUDE_TIMEOUT_MS` | 비어 있음 | `claude` 실행 파일 경로, 모델, 제한 시간(기본 600000ms) |
 
 `.env`는 커밋하지 마세요. 값을 바꾼 뒤에는 서버를 다시 켜야 적용됩니다.

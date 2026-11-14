@@ -7,7 +7,7 @@ rem ------------------------------------------------------------
 rem  PITL local server (localhost:7878) setup and start
 rem  - Inside the repo folder: uses that folder
 rem  - Elsewhere: clones the repo into a "pitl" subfolder
-rem  - Creates .env, sets ARCHIVE_AUTO_PUBLISH=false, runs npm start
+rem  - Creates .env, runs npm start
 rem ------------------------------------------------------------
 
 set "REPO_URL=https://github.com/ndkkdn/pitl.git"
@@ -47,10 +47,6 @@ if not exist ".env" (
   echo [3/4] Using existing .env
 )
 
-rem    Turn off auto-publishing to GitHub (replace the line, or append it)
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$p='.env'; $c=Get-Content $p; if ($c -match '^ARCHIVE_AUTO_PUBLISH=') { $c=$c -replace '^ARCHIVE_AUTO_PUBLISH=.*','ARCHIVE_AUTO_PUBLISH=false' } else { $c+= 'ARCHIVE_AUTO_PUBLISH=false' }; [IO.File]::WriteAllLines((Resolve-Path $p), [string[]]$c, (New-Object Text.UTF8Encoding $false))" || goto :fail
-echo        ARCHIVE_AUTO_PUBLISH=false
 
 rem 5. Start the server
 echo [4/4] Starting server: http://localhost:7878

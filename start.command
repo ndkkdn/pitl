@@ -3,7 +3,7 @@
 #  PITL 로컬 서버 (localhost:7878) 설정 및 실행 — macOS
 #  - 저장소 폴더 안에 있으면 그 폴더를 사용
 #  - 다른 곳에 있으면 옆에 pitl 폴더를 만들어 코드를 받음
-#  - .env 생성, ARCHIVE_AUTO_PUBLISH=false 설정, npm start
+#  - .env 생성, npm start
 # ------------------------------------------------------------
 
 REPO_URL="https://github.com/ndkkdn/pitl.git"
@@ -60,13 +60,6 @@ else
   echo "[3/4] 기존 .env 사용"
 fi
 
-# GitHub 자동 게시 끄기 (있으면 바꾸고, 없으면 추가)
-if grep -q '^ARCHIVE_AUTO_PUBLISH=' .env; then
-  sed -i '' 's/^ARCHIVE_AUTO_PUBLISH=.*/ARCHIVE_AUTO_PUBLISH=false/' .env
-else
-  printf '\nARCHIVE_AUTO_PUBLISH=false\n' >> .env
-fi
-echo "      ARCHIVE_AUTO_PUBLISH=false"
 
 # 5. 서버 실행
 echo "[4/4] 서버 실행: http://localhost:7878"
