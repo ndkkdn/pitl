@@ -26,6 +26,24 @@ const CLAUDE_TIMEOUT_MS = Number(process.env.CLAUDE_TIMEOUT_MS) || 10 * 60 * 100
 const claudeCwd = path.join(os.tmpdir(), 'pitl-claude-cwd');
 fs.mkdirSync(claudeCwd, { recursive: true });
 
+// ── 한국어 문장 규칙 (inte-not-ko-slop 스킬의 작성 규칙) ──────────────────────
+// 한국어가 들어간 생성 요청이면 시스템 프롬프트 끝에 prompts/ko-writing-style.md 를 붙인다.
+// PITL_KO_STYLE=off 로 끌 수 있다.
+const KO_STYLE_PATH = path.join(__dirname, 'prompts', 'ko-writing-style.md');
+const KO_STYLE_ENABLED = (process.env.PITL_KO_STYLE || 'on').toLowerCase() !== 'off';
+let KO_STYLE_GUIDE = '';
+if (KO_STYLE_ENABLED) {
+    try { KO_STYLE_GUIDE = fs.readFileSync(KO_STYLE_PATH, 'utf-8').trim(); }
+    catch (e) { console.warn(`[PITL Engine] 한국어 문장 규칙 파일을 읽지 못했습니다: ${KO_STYLE_PATH}`); }
+}
+const HANGUL_RE = /[\uAC00-\uD7A3]/;
+// lang 이 'en'이면 붙이지 않는다. lang 을 모르면 요청에 한글이 있을 때만 붙인다.
+function withKoreanStyle(systemInstruction, userPrompt, lang) {
+    if (!KO_STYLE_GUIDE || lang === 'en') return systemInstruction;
+    if (lang !== 'ko' && !HANGUL_RE.test(`${systemInstruction}\n${userPrompt}`)) return systemInstruction;
+    return `${systemInstruction}\n\n---\n\n${KO_STYLE_GUIDE}`;
+}
+
 const claudeCheck = spawnSync(CLAUDE_BIN, ['--version'], { encoding: 'utf-8', timeout: 15000 });
 const CLAUDE_VERSION = claudeCheck.status === 0 ? claudeCheck.stdout.trim() : null;
 
@@ -81,7 +99,7 @@ if (!fs.existsSync(outputsDir)) fs.mkdirSync(outputsDir);
 
 // Helper to call Claude via the local CLI (claude -p)
 // 도구·MCP·설정·슬래시 커맨드를 모두 끈 순수 텍스트 생성 모드로 실행한다.
-function callClaude(systemInstruction, userPrompt, logCallback = null, signal = null) {
+function callClaude(systemInstruction, userPrompt, logCallback = null, signal = null, lang = null) {
     return new Promise((resolve, reject) => {
         if (!CLAUDE_VERSION) {
             return reject(new Error(`Claude CLI(${CLAUDE_BIN})를 찾을 수 없습니다. 설치 및 로그인 여부를 확인하세요.`));
@@ -94,7 +112,7 @@ function callClaude(systemInstruction, userPrompt, logCallback = null, signal = 
             '--strict-mcp-config',
             '--disable-slash-commands',
             '--no-session-persistence',
-            '--system-prompt', systemInstruction
+            '--system-prompt', withKoreanStyle(systemInstruction, userPrompt, lang)
         ];
         if (CLAUDE_MODEL) args.push('--model', CLAUDE_MODEL);
 
@@ -680,7 +698,7 @@ app.get('/api/proxy-status', (req, res) => {
 // ── POST /api/llm ─────────────────────────────────────────────────────────────
 // 브라우저 대신 로컬 claude -p 로 생성하는 엔드포인트
 app.post('/api/llm', async (req, res) => {
-    const { systemInstruction, userPrompt } = req.body || {};
+    const { systemInstruction, userPrompt, lang } = req.body || {};
     if (typeof systemInstruction !== 'string' || typeof userPrompt !== 'string' || !systemInstruction || !userPrompt) {
         return res.status(400).json({ error: 'systemInstruction 과 userPrompt 가 필요합니다.' });
     }
@@ -691,7 +709,7 @@ app.post('/api/llm', async (req, res) => {
     const ac = new AbortController();
     res.on('close', () => { if (!res.writableEnded) ac.abort(); });
     try {
-        const text = await callClaude(systemInstruction, userPrompt, null, ac.signal);
+        const text = await callClaude(systemInstruction, userPrompt, null, ac.signal, lang === 'en' || lang === 'ko' ? lang : null);
         res.json({ ok: true, text });
     } catch (err) {
         if (!res.writableEnded && !ac.signal.aborted) res.status(500).json({ ok: false, error: err.message });
@@ -709,4 +727,7 @@ app.listen(PORT, HOST, () => {
     console.log(CLAUDE_VERSION
         ? `[PITL Engine] claude -p engine ready (${CLAUDE_VERSION})`
         : `[PITL Engine] ⚠️ Claude CLI (${CLAUDE_BIN}) not found — generation is disabled`);
+    console.log(KO_STYLE_GUIDE
+        ? `[PITL Engine] Korean writing rules on (prompts/ko-writing-style.md)`
+        : `[PITL Engine] Korean writing rules off`);
 });

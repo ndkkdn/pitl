@@ -66,6 +66,7 @@ npm start
 | `PORT` | `7878` | 서버 포트 |
 | `ALLOWED_ORIGINS` | `https://ndkkdn.github.io` | 로컬 서버에 접속할 수 있는 웹 주소 |
 | `CLAUDE_BIN` / `CLAUDE_MODEL` / `CLAUDE_TIMEOUT_MS` | 비어 있음 | `claude` 실행 파일 경로, 모델, 제한 시간(기본 600000ms) |
+| `PITL_KO_STYLE` | `on` | 한국어 문장 규칙(`prompts/ko-writing-style.md`)을 생성 요청에 붙입니다. `off`로 끕니다. |
 
 `.env`는 커밋하지 마세요. 값을 바꾼 뒤에는 서버를 다시 켜야 적용됩니다.
 

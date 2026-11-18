@@ -5603,7 +5603,7 @@
                 const res = await fetch(PITL_API + '/api/llm', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ systemInstruction, userPrompt: finalPrompt }),
+                    body: JSON.stringify({ systemInstruction, userPrompt: finalPrompt, lang: currentLang }),
                     signal: controller.signal
                 });
                 if (!res.ok) {
