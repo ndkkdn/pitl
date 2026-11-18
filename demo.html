@@ -11476,22 +11476,24 @@ function toggleVizTable(btn) {
         // 내 기록은 로컬 서버에서만 읽는다. 서버에 연결되지 않으면 공개 기획서만 보인다.
         window.pitlHistoryCache = [];
         async function loadHistoryList() {
+            // 여러 번 겹쳐 불려도 공개 기획서가 두 번 붙지 않도록 지역 변수로 합친 뒤 한 번에 바꾼다
             const sharedPromise = loadSharedPlans();
+            let mine = [];
+            let offline = false;
             try {
                 const res = await fetch(PITL_API + '/api/history');
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                window.pitlHistoryOffline = false;
-                window.pitlHistoryCache = Array.isArray(data) ? data : [];
+                mine = Array.isArray(data) ? data : [];
             } catch (err) {
                 console.warn('[PITL] 로컬 서버에 연결되지 않아 기록을 불러오지 못했습니다.');
-                window.pitlHistoryOffline = true;
-                window.pitlHistoryCache = [];
+                offline = true;
             }
             // 같은 기획서가 내 기록에도 있으면 내 기록을 쓴다
-            const own = new Set(window.pitlHistoryCache.map(item => `${item.title}|${item.date}`));
+            const own = new Set(mine.map(item => `${item.title}|${item.date}`));
             const shared = (await sharedPromise).filter(item => !own.has(`${item.title}|${item.date}`));
-            window.pitlHistoryCache = [...window.pitlHistoryCache, ...shared].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+            window.pitlHistoryOffline = offline;
+            window.pitlHistoryCache = [...mine, ...shared].sort((a, b) => String(b.date).localeCompare(String(a.date)));
             renderHistoryLists(window.pitlHistoryCache);
         }
 
