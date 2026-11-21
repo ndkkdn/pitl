@@ -68,10 +68,10 @@
             --bg-editor: #1C1C1C;
             --bg-card: #222222;
             --border-color: rgba(240, 238, 233, 0.12);
-            --border-active: #F2F2F2;
+            --border-active: #F3EFE8;
             --glass-blur: blur(20px);
             --glass-border: 1px solid rgba(240, 238, 233, 0.12);
-            --glass-border-active: 1px solid #F2F2F2;
+            --glass-border-active: 1px solid #F3EFE8;
             --glass-surface: rgba(34, 34, 34, 0.65);
             --glass-surface-hover: rgba(46, 46, 46, 0.85);
 
@@ -81,22 +81,22 @@
             --text-muted: #9E9E9E;
 
             /* ── ACCENT PALETTE ── */
-            --accent-rgb: 242, 242, 242;
+            --accent-rgb: 243, 239, 232;
             --on-accent: #111111;       /* 강조색(흰색) 위 글자 */
             --accent-2-rgb: 255, 122, 144;
             --success-rgb: 52, 211, 153;
             --surface-rgb: 34, 34, 34;
             --hairline-rgb: 240, 238, 233;
-            --accent-neon: #F2F2F2;      /* primary accent (legacy token name) */
+            --accent-neon: #F3EFE8;      /* primary accent (legacy token name) */
             --accent-text: #A5FC8D;      /* point text color (links, labels, emphasis) */
-            --accent-strong: #FFFFFF;    /* accent text on dark surfaces */
-            --accent-soft: #D4D4D4;
-            --accent-coral: #BDBDBD;
-            --cta-gradient: linear-gradient(135deg, #FFFFFF 0%, #C8C8C8 100%);
+            --accent-strong: #F7F4EE;    /* accent text on dark surfaces */
+            --accent-soft: #D8D3CA;
+            --accent-coral: #C2BCB1;
+            --cta-gradient: linear-gradient(135deg, #F7F4EE 0%, #CDC7BC 100%);
             --success: #34D399;
-            --focus-ring: #D4D4D4;
+            --focus-ring: #D8D3CA;
             --accent-blue: #60A5FA;
-            --accent-purple: #E0E0E0;
+            --accent-purple: #E4DFD6;
             --accent-cyan: #22D3EE;
             --accent-green: #34D399;     /* success semantics */
             --accent-red: #FF6B6B;
@@ -144,7 +144,7 @@
             --text-secondary: rgba(28, 28, 28, 0.68);
             --text-muted: #676767;
             --accent-rgb: 17, 17, 17;
-            --on-accent: #FFFFFF;
+            --on-accent: #F3EFE8;
             --accent-2-rgb: 201, 36, 90;
             --success-rgb: 11, 122, 90;
             --surface-rgb: 250, 249, 246;
@@ -4042,7 +4042,7 @@
            ═══════════════════════════════════════════════════════════════════ */
         :root {
             --font-future: 'Instrument Sans', 'Noto Sans KR', sans-serif;
-            --chrome-text: linear-gradient(180deg, #FFFFFF 0%, #DEDEDE 44%, #929292 52%, #F0EEE9 62%, #FFFFFF 100%);
+            --chrome-text: linear-gradient(180deg, #F7F4EE 0%, #E2DDD3 44%, #958F85 52%, #F0EEE9 62%, #F7F4EE 100%);
             --neon-glow: 0 0 10px rgba(var(--accent-rgb), 0.55);
         }
         [data-theme="light"], body.light-theme {
@@ -4109,7 +4109,7 @@
            ═══════════════════════════════════════════════════════════════════ */
         :root {
             --viz-surface: #222222;
-            --viz-1: #E0E0E0;
+            --viz-1: #E4DFD6;
             --viz-2: #d95926;
             --viz-3: #199e70;
             --viz-4: #c98500;
@@ -4583,7 +4583,7 @@
         @media (prefers-reduced-motion: reduce) { .run-stream *, .gate-checkpoint, .status-pill, .run-sk, .run-pulse { animation: none !important; transition: none !important; } }
 
         /* ══ 리디자인: 제목 영역 · 파이프라인 레일 ══ */
-        :root { --agent-s: #E0E0E0; --agent-a: #38BDF8; --agent-d: #F472B6; --agent-r: #3DD39B; }
+        :root { --agent-s: #E4DFD6; --agent-a: #38BDF8; --agent-d: #F472B6; --agent-r: #3DD39B; }
         [data-theme="light"] { --agent-s: #2A2A2A; --agent-a: #0E7490; --agent-d: #B4237A; --agent-r: #0B7A5A; }
         .computer-chrome .chrome-title-bar.pitl-rail-bar { height: auto !important; display: block !important; padding: 18px 28px 14px !important; }
         .plan-head { margin-bottom: 14px; }
@@ -4702,7 +4702,7 @@
         .theme-seg button:focus-visible { outline: 2px solid rgb(var(--accent-rgb)); outline-offset: 1px; }
         .landing-theme-corner { position: fixed; top: 16px; right: 20px; z-index: 60; }
         /* 소개 페이지와 같은 PITL 로고 */
-        .pitl-logo { --logo-grad: linear-gradient(100deg, #FFFFFF 0%, #BDBDBD 55%, #8A8A8A 100%); --logo-dot: #F2F2F2; display: inline-flex; align-items: baseline; font: 400 26px/1 'Instrument Serif', Georgia, serif; letter-spacing: -0.01em; text-decoration: none; cursor: pointer; }
+        .pitl-logo { --logo-grad: linear-gradient(100deg, #F7F4EE 0%, #C2BCB1 55%, #8E887E 100%); --logo-dot: #F3EFE8; display: inline-flex; align-items: baseline; font: 400 26px/1 'Instrument Serif', Georgia, serif; letter-spacing: -0.01em; text-decoration: none; cursor: pointer; }
         body.light-theme .pitl-logo { --logo-grad: linear-gradient(100deg, #111111 0%, #3A3A3A 55%, #6A6A6A 100%); --logo-dot: #111111; }
         .pitl-logo b { font-weight: 400; background: var(--logo-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .pitl-logo i { width: 7px; height: 7px; border-radius: 50%; background: var(--logo-dot); margin-left: 2px; display: inline-block; }
@@ -8650,7 +8650,7 @@ ${idea.slice(0, 2000)}`
                 ];
             } else {
                 return [
-                    { rgb: '242, 242, 242', hex: '#f2f2f2' }, // White
+                    { rgb: '243, 239, 232', hex: '#f3efe8' }, // Warm white
                     { rgb: '128, 128, 128', hex: '#808080' }, // Gray
                     { rgb: '240, 238, 233', hex: '#f0eee9' }  // Cloud Dancer
                 ];
