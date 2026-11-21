@@ -23,6 +23,8 @@ a { color: inherit; }
 img { max-width: 100%; display: block; }
 .wrap { width: min(1160px, 100% - 32px); margin: 0 auto; }
 .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* 강조 문장: 그라데이션 대신 본문과 같은 글자색(이탤릭으로만 강조). 그라데이션은 PITL 로고에만 */
+.em-text { color: var(--text); }
 .eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 600 12.5px/1 'Instrument Sans', 'Noto Sans KR', sans-serif; letter-spacing: .02em; color: var(--text-2); padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; background: color-mix(in srgb, var(--card) 70%, transparent); }
 .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--good) 25%, transparent); }
 .label { font: 600 12px/1 'Instrument Sans', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
@@ -228,9 +230,9 @@ footer { padding: 56px 0 40px; border-top: 1px solid var(--line); margin-top: cl
 button, input, textarea, select { font-family: 'Instrument Sans', 'Noto Sans KR', sans-serif; }
 h1, h2 { font-synthesis: none; }
 .hero h1 { font-family: 'Instrument Serif', 'Noto Sans KR', Georgia, serif !important; font-weight: 400 !important; letter-spacing: -0.02em !important; line-height: 1.02 !important; }
-.hero h1 .grad-text { font-style: italic; padding-right: .06em; }
+.hero h1 .em-text { font-style: italic; padding-right: .06em; }
 h2 { font-family: 'Instrument Serif', 'Noto Sans KR', Georgia, serif; }
-.final h2 .grad-text { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
+.final h2 .em-text { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
 .logo { font-family: 'Instrument Serif', Georgia, serif; font-size: 26px; letter-spacing: -0.01em; }
 .logo b { font-weight: 400; }
 .note a { color: var(--text-2); text-decoration: underline; text-underline-offset: 3px; }

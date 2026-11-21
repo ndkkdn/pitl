@@ -88,7 +88,7 @@
             --surface-rgb: 34, 34, 34;
             --hairline-rgb: 240, 238, 233;
             --accent-neon: #F3EFE8;      /* primary accent (legacy token name) */
-            --accent-text: #A5FC8D;      /* point text color (links, labels, emphasis) */
+            --accent-text: #D6CCBA;      /* 포인트 글자색(링크·라벨·강조): 베이지 톤 웜그레이 */
             --accent-strong: #F7F4EE;    /* accent text on dark surfaces */
             --accent-soft: #D8D3CA;
             --accent-coral: #C2BCB1;
@@ -150,7 +150,7 @@
             --surface-rgb: 250, 249, 246;
             --hairline-rgb: 28, 28, 28;
             --accent-neon: #111111;
-            --accent-text: #287113;      /* #A5FC8D 계열의 진한 녹색: 라이트 배경 AA 대비 */
+            --accent-text: #5A5145;      /* 라이트 배경용 진한 웜그레이 (AA 대비) */
             --accent-strong: #000000;
             --accent-soft: #555555;
             --accent-coral: #3A3A3A;
@@ -3745,10 +3745,7 @@
             font-size: 22px;
             font-weight: 700;
             line-height: 1;
-            background: var(--cta-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--text-primary);
         }
         .tile-code {
             font-size: 11px;
@@ -6756,7 +6753,7 @@ ${idea.slice(0, 2000)}`
             .cover .chip { font-size: 1.15cqw; }
             .agenda ol { columns: 2; column-gap: 6cqw; font-size: 2cqw; line-height: 2.1; margin: 0; padding-left: 3cqw; }
             .divider { justify-content: center; }
-            .divider .num { font: 700 9cqw/1 'Pretendard Variable', sans-serif; letter-spacing: -0.05em; background: var(--cta-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+            .divider .num { font: 700 9cqw/1 'Pretendard Variable', sans-serif; letter-spacing: -0.05em; color: var(--text-primary); }
             .divider h2 { font-size: 4.4cqw; margin-top: 1cqh; }
             .divider .doc-time { font-size: 1.3cqw; }
             .crumb { font-size: 1.1cqw; font-weight: 700; letter-spacing: .06em; color: var(--accent-text); margin: 0 0 1.5cqh; }
@@ -9320,7 +9317,7 @@ ${idea.slice(0, 2000)}`
             const targetArea = document.getElementById('viewer-main-content');
             targetArea.innerHTML = `
                 <div class="document-wrapper" style="text-align: center; padding: 60px 20px;">
-                    <i class="fa-solid fa-brain" style="font-size: 64px; background: linear-gradient(135deg, var(--accent-neon), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(var(--accent-rgb), 0.25)); margin-bottom: 24px;"></i>
+                    <i class="fa-solid fa-brain" style="font-size: 64px; color: var(--text-secondary); filter: drop-shadow(0 0 10px rgba(var(--accent-rgb), 0.25)); margin-bottom: 24px;"></i>
                     <h2 style="font-family: 'Instrument Sans', sans-serif; font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px;">Planning-in-the-Loop Workspace</h2>
                     <p style="font-size: 14px; color: var(--text-secondary); max-width: 500px; margin: 0 auto 24px auto; line-height: 1.6;">에이전트들이 아이디어를 기반으로 비즈니스 상세 기획, PRD 작성, 와이어프레임 구조 설계 및 교차 정합성 평가를 진행하는 컴퓨터 가상화 뷰어입니다.</p>
                     <button class="new-plan-btn" style="margin: 0 auto;" onclick="resetToLanding()"><i class="fa-solid fa-play"></i> 기획안 작성하러 가기</button>
