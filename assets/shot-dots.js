@@ -81,7 +81,7 @@
     const clamp01 = x => Math.min(1, Math.max(0, x));
 
     // 화면 사진은 다크 테마로 찍었으므로 앱의 다크 테마 색을 고정해 쓴다
-    const DARK = { '--agent-s': '#E4DFD6', '--agent-a': '#38BDF8', '--agent-d': '#F472B6', '--agent-r': '#3DD39B' };
+    const DARK = { '--agent-s': '#8B6CFF', '--agent-a': '#38BDF8', '--agent-d': '#F472B6', '--agent-r': '#3DD39B' };
     let W = 0, H = 0, S = 1, colors = [], muted = 'rgba(240, 238, 233, 0.72)', textColor = '#F0EEE9';
     function readTheme() {
         colors = COLOR_VARS.map(v => DARK[v]);
