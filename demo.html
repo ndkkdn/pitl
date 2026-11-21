@@ -11965,11 +11965,12 @@ function toggleVizTable(btn) {
 
             let W = 0, H = 0, colors = [], muted = '#888', textColor = '#222';
             function readTheme() {
-                const cs = getComputedStyle(document.documentElement);
-                colors = COLOR_VARS.map(v => cs.getPropertyValue(v).trim() || '#8B6CFF');
-                const bcs = getComputedStyle(document.body);
-                textColor = bcs.getPropertyValue('--text-primary').trim() || '#222';
-                muted = bcs.getPropertyValue('--text-secondary').trim() || '#888';
+                // 우측 애니메이션은 흰색 한 가지로만 (라이트 테마는 배경이 밝아 흰색이 안 보이므로 진한 글자색)
+                const light = document.body.classList.contains('light-theme') || document.documentElement.getAttribute('data-theme') === 'light';
+                const ink = light ? '#1B1A1F' : '#FFFFFF';
+                colors = COLOR_VARS.map(() => ink);
+                textColor = ink;
+                muted = light ? 'rgba(27, 26, 31, 0.6)' : 'rgba(255, 255, 255, 0.72)';
             }
             // 배경 점 캔버스의 마스크 중심을 애니메이션 위치에 맞춘다
             function placeParticleMask() {
@@ -12077,6 +12078,7 @@ function toggleVizTable(btn) {
                     sceneStart = now;
                     if (scene === 0) cycle++;
                 }
+                readTheme(); // 테마를 바꾸면 바로 반영 (클래스 확인만 하므로 가볍다)
                 drawAt(scene, now - sceneStart);
                 setCaption(...captionFor(scene, cycleLang()));
                 raf = requestAnimationFrame(loop);
