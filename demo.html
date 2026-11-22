@@ -4589,6 +4589,13 @@
         .plan-crumb { font-size: 12px; color: var(--text-secondary); display: flex; gap: 6px; }
         .plan-title { font-family: 'Instrument Sans', 'Noto Sans KR', sans-serif !important; font-weight: 800; font-size: clamp(22px, 2.4vw, 32px); letter-spacing: -0.03em; line-height: 1.2; margin: 2px 0 8px; color: var(--text-primary); border: none; padding: 0; background: none; -webkit-text-fill-color: currentColor; }
         .plan-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+        /* 기획서 › 완료 옆: 입력한 문장 다시 보기 */
+        .plan-idea-btn { display: inline-flex; align-items: center; gap: 5px; margin-left: 8px; padding: 2px 9px; border: 1px solid var(--border-color); border-radius: 999px; background: none; color: var(--text-secondary); font: 500 11.5px/1.5 'Instrument Sans', 'Noto Sans KR', sans-serif; cursor: pointer; transition: color .15s, border-color .15s; }
+        .plan-idea-btn i { font-size: 9px; }
+        .plan-idea-btn:hover, .plan-idea-btn:focus-visible { color: var(--text-primary); border-color: rgba(var(--accent-rgb), .5); }
+        .plan-idea-btn[hidden] { display: none; }
+        .plan-idea-text { text-align: left; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; max-height: 50vh; overflow: auto; margin: 4px 0 0; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: 12px; background: rgba(var(--hairline-rgb), .04); color: var(--text-primary); font: 400 14px/1.75 'Pretendard Variable', 'Noto Sans KR', sans-serif; }
+        .plan-idea-meta { margin: 8px 0 0; text-align: left; font-size: 11.5px; color: var(--text-secondary); }
         .plan-chip { font-size: 12px; border: 1px solid var(--border-color); border-radius: 999px; padding: 2px 10px; color: var(--text-secondary); background: var(--bg-card); }
 
         #circle-tabs-bar.pipeline-rail { display: grid !important; grid-template-columns: minmax(0, 5fr) 72px minmax(0, 4fr); gap: 12px; align-items: end; height: auto !important; padding: 12px 16px 10px !important; border: 1px solid var(--border-color); border-radius: 16px; background: var(--bg-card); overflow-x: auto; }
@@ -5119,7 +5126,7 @@
 
                     <!-- 기획서 제목 + 정보 칩 -->
                     <div class="plan-head" id="plan-head" hidden>
-                        <div class="plan-crumb"><button type="button" class="plan-back" id="btn-plan-back" onclick="goBackView()" title="이전 화면" aria-label="이전 화면으로" hidden><i class="fa-solid fa-arrow-left"></i></button>기획서 <span>›</span> <span id="plan-state"></span></div>
+                        <div class="plan-crumb"><button type="button" class="plan-back" id="btn-plan-back" onclick="goBackView()" title="이전 화면" aria-label="이전 화면으로" hidden><i class="fa-solid fa-arrow-left"></i></button>기획서 <span>›</span> <span id="plan-state"></span><button type="button" class="plan-idea-btn" id="btn-plan-idea" onclick="showPlanIdea()" title="입력한 문장 다시 보기" aria-haspopup="dialog" hidden><i class="fa-solid fa-quote-left"></i><span>입력한 문장</span></button></div>
                         <h1 class="plan-title" id="plan-title"></h1>
                         <div class="plan-chips" id="plan-chips"></div>
                     </div>
@@ -7047,6 +7054,37 @@ ${idea.slice(0, 2000)}`
             if (back) back.hidden = !(window.pitlViewStack && window.pitlViewStack.length);
             const chipBox = document.getElementById('plan-chips');
             if (chipBox.innerHTML !== chips) chipBox.innerHTML = chips;
+            const ideaBtn = document.getElementById('btn-plan-idea');
+            if (ideaBtn) {
+                ideaBtn.hidden = !String(idea).trim();
+                const label = t('입력한 문장', 'Your input');
+                if (ideaBtn.lastElementChild.textContent !== label) { ideaBtn.lastElementChild.textContent = label; ideaBtn.title = t('입력한 문장 다시 보기', 'View the text you entered'); }
+            }
+        }
+
+        // 사용자가 처음 입력한 문장을 팝업으로 다시 보여 준다 (복사 가능)
+        function showPlanIdea() {
+            const tm = window.pitlTiming;
+            const running = !!(tm && tm.active && !tm.finishedAt);
+            const idea = String(running && !generatedDocs ? (window.pitlRunIdea || '') : ((generatedDocs && generatedDocs.idea) || window.pitlRunIdea || '')).trim();
+            if (!idea) return;
+            const date = generatedDocs && typeof archiveDate === 'function' ? archiveDate(generatedDocs) : '';
+            pitlAlert(`<div class="plan-idea-text">${escHtml(idea)}</div>${date ? `<p class="plan-idea-meta">${t('입력한 날', 'Entered')} · ${escHtml(date)} · ${idea.length.toLocaleString()}${t('자', ' characters')}</p>` : ''}`,
+                'info', t('입력한 문장', 'Your input'));
+            const icon = document.getElementById('pitl-alert-icon');
+            if (icon) icon.className = 'fa-solid fa-quote-left';
+            const btns = document.getElementById('pitl-alert-buttons');
+            if (btns) {
+                const copy = document.createElement('button');
+                copy.type = 'button';
+                copy.className = 'pitl-modal-btn';
+                copy.innerHTML = `<i class="fa-regular fa-copy"></i> ${t('복사', 'Copy')}`;
+                copy.onclick = async () => {
+                    try { await navigator.clipboard.writeText(idea); copy.innerHTML = `<i class="fa-solid fa-check"></i> ${t('복사됨', 'Copied')}`; }
+                    catch (e) { copy.textContent = t('복사하지 못했습니다', 'Copy failed'); }
+                };
+                btns.prepend(copy);
+            }
         }
 
         // ── 중간 검토 체크포인트: 1단계 결과 요약 + 승인 / 수정 요청 / 다시 생성 ──
