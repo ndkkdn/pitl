@@ -8434,7 +8434,8 @@ ${idea.slice(0, 2000)}`
                 });
                 
                 showCompletionToast(t("기획안 생성이 성공적으로 완공되었습니다!", "Planning documents generated successfully!"));
-                switchDocument('prd');
+                // 분석이 끝나면 9개 문서를 한눈에 보는 타일 대시보드를 보여 준다
+                switchDocument('dashboard');
                 loadHistoryList();
                 
             } catch (err) {
