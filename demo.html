@@ -11921,7 +11921,8 @@ function toggleVizTable(btn) {
             const phoneRows = [.3, .4, .5, .6, .7];
 
             // ── 작은 점(생각의 조각) · 장식 도우미 ──
-            const NS = 36, TAU = Math.PI * 2, GOLD = 2.39996;
+            const NS = 36, DUST = 56, TAU = Math.PI * 2, GOLD = 2.39996;
+            const SHIFT_Y = .06; // 그림 전체를 캔버스 높이의 6%만큼 아래로
             const orbit = (cx, cy, j, el, rMin = .03, rStep = .012, speed = 1) => {
                 const ang = j * GOLD + el / (1400 + (j % 5) * 260) * (j % 2 ? 1 : -1) * speed;
                 const r = rMin + (j % 4) * rStep;
@@ -12094,15 +12095,29 @@ function toggleVizTable(btn) {
                     const f = prev.dots(i, prev.dur), to = sc.dots(i, el);
                     cur.push({ x: lerp(f.x, to.x, q), y: lerp(f.y, to.y, q), r: lerp(f.r, to.r, q), a: lerp(f.a, to.a, q) });
                 }
-                const sFrom = satsOf(prev, prev.dur), sTo = satsOf(sc, el);
-                const sats = sTo.map((t, j) => {
-                    const q = ease(clamp01((el - 150 - j * 18) / TRANS)), f = sFrom[j];
-                    return { x: lerp(f.x, t.x, q), y: lerp(f.y, t.y, q), r: lerp(f.r, t.r, q), a: lerp(f.a, t.a, q) };
+                const sFrom = satsOf(prev, prev.dur);
+                const satsAt = t => satsOf(sc, t).map((to, j) => {
+                    const q = ease(clamp01((t - 150 - j * 18) / TRANS)), f = sFrom[j];
+                    return { x: lerp(f.x, to.x, q), y: lerp(f.y, to.y, q), r: lerp(f.r, to.r, q), a: lerp(f.a, to.a, q) };
                 });
+                const sats = satsAt(el);
                 ctx.clearRect(0, 0, W, H);
+                ctx.save();
+                ctx.translate(0, H * SHIFT_Y); // 그림만 살짝 아래로 (자막 위치는 그대로)
                 const P = d => [d.x * W, d.y * H];
                 const ink = colors[0];
                 drawDeco(sc, el);
+
+                // 먼지: 화면 전체를 천천히 떠도는 아주 옅은 점 (모든 장면 공통)
+                ctx.fillStyle = ink;
+                const dust = [];
+                for (let k = 0; k < DUST; k++) {
+                    const x = (rand(k + 200) + Math.sin(el / 5200 + k) * .02 + (performance.now() / 90000) * (k % 3 ? 1 : -1)) % 1;
+                    const d = { x: x < 0 ? x + 1 : x, y: .04 + rand(k + 300) * .9 + Math.cos(el / 4300 + k * .7) * .015 };
+                    dust.push(d);
+                    ctx.globalAlpha = .1 + .08 * Math.sin(el / 900 + k);
+                    ctx.beginPath(); ctx.arc(d.x * W, d.y * H, .9, 0, TAU); ctx.fill();
+                }
 
                 // 작은 점끼리 · 작은 점과 큰 점을 잇는 가는 그물
                 const webQ = sc.web === false ? 1 - ease(clamp01(el / 600)) : (prev.web === false ? ease(clamp01(el / 900)) : 1);
@@ -12115,11 +12130,17 @@ function toggleVizTable(btn) {
                             ctx.globalAlpha = .14 * (1 - pd / .12) * Math.min(s1.a / .5, 1) * Math.min(p.a, 1) * webQ;
                             ctx.beginPath(); ctx.moveTo(s1.x * W, s1.y * H); ctx.lineTo(p.x * W, p.y * H); ctx.stroke();
                         }
+                        for (const m of dust) { // 가까운 먼지와 아주 가는 실
+                            const d = Math.hypot((s1.x - m.x) * W, (s1.y - m.y) * H) / W;
+                            if (d > .06) continue;
+                            ctx.globalAlpha = (1 - d / .06) * .12 * Math.min(s1.a, 1) * webQ;
+                            ctx.beginPath(); ctx.moveTo(s1.x * W, s1.y * H); ctx.lineTo(m.x * W, m.y * H); ctx.stroke();
+                        }
                         for (let b = a + 1; b < NS; b++) {
                             const s2 = sats[b]; if (s2.a < .03) continue;
                             const d = Math.hypot((s1.x - s2.x) * W, (s1.y - s2.y) * H) / W;
-                            if (d > .075) continue;
-                            ctx.globalAlpha = (1 - d / .075) * .22 * Math.min(s1.a, s2.a) * webQ;
+                            if (d > .1) continue;
+                            ctx.globalAlpha = (1 - d / .1) * .22 * Math.min(s1.a, s2.a) * webQ;
                             ctx.beginPath(); ctx.moveTo(s1.x * W, s1.y * H); ctx.lineTo(s2.x * W, s2.y * H); ctx.stroke();
                         }
                     }
@@ -12159,8 +12180,13 @@ function toggleVizTable(btn) {
                     });
                 }
 
-                // 작은 점
+                // 작은 점: 지나온 자리에 짧은 꼬리를 남긴다
                 ctx.fillStyle = ink;
+                [[90, .28], [45, .5]].forEach(([dt, k]) => satsAt(el - dt).forEach(d => {
+                    if (d.a < .03) return;
+                    ctx.globalAlpha = Math.min(d.a, 1) * k;
+                    ctx.beginPath(); ctx.arc(d.x * W, d.y * H, Math.max(.5, d.r * .8), 0, TAU); ctx.fill();
+                }));
                 sats.forEach(d => {
                     if (d.a < .01) return;
                     ctx.globalAlpha = Math.min(d.a, 1);
@@ -12178,6 +12204,13 @@ function toggleVizTable(btn) {
                     ctx.beginPath(); ctx.arc(x, y, d.r * 2.3, 0, TAU); ctx.fill();
                     ctx.globalAlpha = alpha;
                     ctx.beginPath(); ctx.arc(x, y, d.r, 0, TAU); ctx.fill();
+                    if (d.r >= 4.5) { // 원자처럼: 가는 궤도 고리와 그 위를 도는 점
+                        const orr = d.r * 2.6, ang = el / (700 + i * 90) * (i % 2 ? 1 : -1) + i;
+                        ctx.globalAlpha = alpha * .16; ctx.strokeStyle = colors[i]; ctx.lineWidth = .8;
+                        ctx.beginPath(); ctx.arc(x, y, orr, 0, TAU); ctx.stroke();
+                        ctx.globalAlpha = alpha * .7;
+                        ctx.beginPath(); ctx.arc(x + Math.cos(ang) * orr, y + Math.sin(ang) * orr, 1.4, 0, TAU); ctx.fill();
+                    }
                     if (sc.pulse && i === 0) { // 첫 점은 숨 쉬듯 퍼지는 고리
                         for (let w = 0; w < 2; w++) {
                             const rr = ((Math.max(0, el) + w * 800) % 1600) / 1600;
@@ -12191,9 +12224,10 @@ function toggleVizTable(btn) {
                         ctx.fillStyle = i % 2 ? muted : textColor;
                         ctx.font = `500 ${Math.max(11, W * .027)}px 'Instrument Sans', 'Noto Sans KR', sans-serif`;
                         ctx.textAlign = 'center';
-                        ctx.fillText(LABELS[i], x, y + (i % 2 ? 26 : -16));
+                        ctx.fillText(LABELS[i], x, y + (i % 2 ? 30 : -20));
                     }
                 });
+                ctx.restore();
                 ctx.globalAlpha = 1;
             }
 
