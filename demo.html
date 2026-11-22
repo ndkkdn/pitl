@@ -11883,8 +11883,10 @@ function toggleVizTable(btn) {
 
     <script>
         (function landingDots() {
-            // 첫 화면 우측 애니메이션: 세 가지 이야기가 번갈아 재생된다
-            //  A. 아이디어 → 9단계 → 한 장의 기획   B. 에이전트 4팀 → 하나의 루프   C. 구조 → 우선순위 → 검증 → 화면
+            // 첫 화면 우측 애니메이션: 다섯 가지 이야기가 번갈아 재생된다
+            //  A. 아이디어 → 9단계 → 한 장의 기획   D. 발산 → 비교 → 수렴 → 핵심   B. 에이전트 4팀 → 하나의 루프
+            //  E. 만들기 → 살피기 → 다듬기          C. 구조 → 우선순위 → 검증 → 화면
+            // 큰 점 9개(기획 단계) + 작은 점 36개(생각의 조각)가 궤도·흐름·격자를 이루고, 선 위로 신호가 흐른다
             const canvas = document.getElementById('landing-dots-canvas');
             const caption = document.getElementById('landing-dots-caption');
             if (!canvas || !caption) return;
@@ -11918,43 +11920,96 @@ function toggleVizTable(btn) {
             const CHECK = [[.26, .48], [.32, .55], [.38, .62], [.44, .69], [.52, .6], [.6, .5], [.68, .4], [.76, .3], [.82, .22]];
             const phoneRows = [.3, .4, .5, .6, .7];
 
+            // ── 작은 점(생각의 조각) · 장식 도우미 ──
+            const NS = 36, TAU = Math.PI * 2, GOLD = 2.39996;
+            const orbit = (cx, cy, j, el, rMin = .03, rStep = .012, speed = 1) => {
+                const ang = j * GOLD + el / (1400 + (j % 5) * 260) * (j % 2 ? 1 : -1) * speed;
+                const r = rMin + (j % 4) * rStep;
+                return { x: cx + Math.cos(ang) * r, y: cy + Math.sin(ang) * r };
+            };
+            // 기본: 작은 점이 자기 큰 점 주위를 돈다 (큰 점이 숨으면 같이 숨는다)
+            const defaultSats = (j, el, m) => { const p = m[j % N]; return { ...orbit(p.x, p.y, j, el, .028, .01), r: 1.6, a: .45 * p.a }; };
+            const SWEEP = el => el / 900 - Math.PI / 2;
+            const sweepLit = (x, y, el) => { const d = ((SWEEP(el) - Math.atan2(y - C.y, x - C.x)) % TAU + TAU) % TAU; return Math.exp(-d * 2.2); };
+            // D: 선택지 세 묶음 / E: 레이더 안 흩어진 점
+            const OPT = [{ x: .27, y: .3 }, { x: .73, y: .3 }, { x: .5, y: .72 }];
+            const inDisc = k => { const ang = rand(k) * TAU, rr = Math.sqrt(rand(k + 33)) * .36; return { x: C.x + Math.cos(ang) * rr, y: C.y + Math.sin(ang) * rr }; };
+            const checkAt = t => { const f = t * (N - 1), k = Math.min(N - 2, Math.floor(f)), u = f - k; return { x: lerp(CHECK[k][0], CHECK[k + 1][0], u), y: lerp(CHECK[k][1], CHECK[k + 1][1], u) }; };
+            const spokes = Array.from({ length: N }, (_, i) => [i, [C.x, C.y]]);
+
             const STORIES = [
                 [ // A
-                    { dur: 3000, ko: '아이디어 한 점에서', en: 'It starts with one dot',
-                      dots: i => i === 0 ? { x: C.x, y: C.y, r: 11, a: 1 } : { x: C.x, y: C.y, r: 3, a: 0 }, edges: [], pulse: true },
+                    { dur: 3000, ko: '아이디어 한 점에서', en: 'It starts with one dot', deco: 'rings',
+                      dots: i => i === 0 ? { x: C.x, y: C.y, r: 11, a: 1 } : { x: C.x, y: C.y, r: 3, a: 0 }, edges: [], pulse: true,
+                      sats: (j, el) => ({ ...orbit(C.x, C.y, j, el, .05, .016, .6), r: 1.4, a: .22 + .14 * Math.sin(el / 500 + j) }) },
                     { dur: 3200, ko: '질문이 생기고', en: 'Questions appear',
                       dots: i => i === 0 ? { x: C.x, y: C.y, r: 9, a: 1 } : i <= 3 ? { x: C.x + Math.cos((i - 1) * 2.094 - 1.571) * .26, y: C.y + Math.sin((i - 1) * 2.094 - 1.571) * .26, r: 7, a: 1 } : { x: C.x, y: C.y, r: 3, a: 0 },
-                      edges: [[0, 1], [0, 2], [0, 3], [1, 2], [2, 3], [3, 1]] },
-                    { dur: 2800, ko: '흩어진 생각을 모아', en: 'Gather scattered thoughts',
-                      dots: i => ({ x: .12 + rand(i) * .76, y: .14 + rand(i + 20) * .64, r: 6, a: .9 }), edges: [] },
-                    { dur: 5400, ko: '하나씩 이어 가면', en: 'Connect them one by one', labels: true, seq: true,
+                      edges: [[0, 1], [0, 2], [0, 3], [1, 2], [2, 3], [3, 1]], signals: true },
+                    { dur: 3200, ko: '흩어진 생각을 모아', en: 'Gather scattered thoughts',
+                      dots: (i, el) => ({ x: .12 + rand(i) * .76 + Math.sin(el / 1500 + i) * .01, y: .14 + rand(i + 20) * .64 + Math.cos(el / 1300 + i) * .01, r: 6, a: .9 }), edges: [],
+                      sats: (j, el) => ({ x: .08 + rand(j + 50) * .84 + Math.sin(el / 1300 + j) * .016, y: .1 + rand(j + 90) * .74 + Math.cos(el / 1100 + j * 1.3) * .016, r: 1.7, a: .55 }) },
+                    { dur: 5400, ko: '하나씩 이어 가면', en: 'Connect them one by one', labels: true, seq: true, signals: true,
                       dots: i => ({ ...zig(i), r: 7, a: 1 }), edges: chain },
-                    { dur: 4400, ko: '한 장의 기획이 됩니다', en: 'And it becomes a plan',
+                    { dur: 4400, ko: '한 장의 기획이 됩니다', en: 'And it becomes a plan', web: false,
                       dots: i => i < 4 ? { x: [.24, .76, .76, .24][i], y: [.16, .16, .86, .86][i], r: 6, a: 1 } : { x: .32, y: docRows[i - 4], r: 5, a: 1 },
-                      edges: [[0, 1], [1, 2], [2, 3], [3, 0], [4, [.68, docRows[0]]], [5, [.62, docRows[1]]], [6, [.66, docRows[2]]], [7, [.56, docRows[3]]], [8, [.6, docRows[4]]]] }
+                      edges: [[0, 1], [1, 2], [2, 3], [3, 0], [4, [.68, docRows[0]]], [5, [.62, docRows[1]]], [6, [.66, docRows[2]]], [7, [.56, docRows[3]]], [8, [.6, docRows[4]]]],
+                      sats: (j, el) => j < 30 ? { x: .3 + (j % 6) * .075, y: .22 + Math.floor(j / 6) * .028, r: 1.3, a: .35 * clamp01((el - 900 - j * 30) / 300) } : { x: .38 + (j - 30) * .06, y: .86, r: 1.6, a: .4 } }
+                ],
+                [ // D: 발산과 수렴
+                    { dur: 3600, ko: '생각을 넓게 펼치고', en: 'Open up every option', deco: 'rings',
+                      dots: (i, el) => ({ ...ring(i, .34, el / 9000), r: 6, a: 1 }), edges: spokes,
+                      sats: (j, el) => { const ang = j * GOLD + el / 7000, rr = (.05 + .32 * (1 - Math.pow(1 - clamp01(el / 2600), 3))) * (.45 + rand(j) * .55); return { x: C.x + Math.cos(ang) * rr, y: C.y + Math.sin(ang) * rr, r: 1.8, a: .55 }; } },
+                    { dur: 3800, ko: '가능성을 견주어 보고', en: 'Weigh the possibilities', signals: true,
+                      dots: (i, el) => { const c = OPT[i % 3], m = Math.floor(i / 3), ang = m * 2.094 + el / 2000 * (i % 2 ? 1 : -1); return { x: c.x + Math.cos(ang) * .07, y: c.y + Math.sin(ang) * .07, r: 6, a: 1 }; },
+                      edges: [[0, 3], [3, 6], [6, 0], [1, 4], [4, 7], [7, 1], [2, 5], [5, 8], [8, 2], [0, 1], [1, 2], [2, 0]],
+                      sats: (j, el) => { const c = OPT[j % 3]; return { ...orbit(c.x, c.y, j, el, .11, .014, .8), r: 1.5, a: .45 }; } },
+                    { dur: 3800, ko: '하나로 좁히면', en: 'Narrow it to one', seq: true, signals: true, web: false,
+                      dots: i => ({ x: .14 + i * .09, y: C.y + (i % 2 ? 1 : -1) * .3 * (1 - i / 8), r: i === N - 1 ? 9 : 6, a: 1 }), edges: chain,
+                      sats: (j, el) => { const t = (el / 2600 + j / NS) % 1, spread = .32 * Math.pow(1 - t, 1.2); return { x: .1 + t * .8, y: C.y + (rand(j) * 2 - 1) * spread, r: 1.6, a: .65 * Math.sin(Math.PI * t) }; } },
+                    { dur: 4200, ko: '핵심만 남습니다', en: 'Only the core remains', deco: 'rings',
+                      dots: (i, el) => i === 0 ? { x: C.x, y: C.y, r: 11, a: 1 } : { ...ring(i - 1, .075, el / 5000), r: 4.5, a: 1 },
+                      edges: Array.from({ length: N - 1 }, (_, i) => [0, i + 1]), pulse: true,
+                      sats: (j, el) => { const k = j % 3, ang = Math.floor(j / 3) / 12 * TAU + el / (2600 + k * 1400) * (k % 2 ? -1 : 1), rr = .17 + k * .085; return { x: C.x + Math.cos(ang) * rr, y: C.y + Math.sin(ang) * rr, r: 1.7, a: .55 - k * .1 }; } }
                 ],
                 [ // B
                     { dur: 3200, ko: '네 에이전트 팀이', en: 'Four agent teams',
                       dots: i => ({ ...teamPos(i, 0, false), r: 7, a: 1 }),
                       edges: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [6, 7]] },
                     { dur: 3600, ko: '각자 맡은 일을 하고', en: 'Each does its part',
-                      dots: (i, el) => ({ ...teamPos(i, el, true), r: 7, a: 1 }), edges: [] },
-                    { dur: 3800, ko: '결과를 건네며', en: 'Then hands it on', seq: true,
+                      dots: (i, el) => ({ ...teamPos(i, el, true), r: 7, a: 1 }), edges: [],
+                      sats: (j, el) => { const c = TEAM_C[j % 4]; return { ...orbit(c.x, c.y, j, el, .13, .012, 1.3), r: 1.5, a: .45 }; } },
+                    { dur: 3800, ko: '결과를 건네며', en: 'Then hands it on', seq: true, signals: true,
                       dots: (i, el) => ({ ...teamPos(i, el + 3600, true), r: 7, a: 1 }), edges: [[4, 5], [5, 6], [7, 8], [8, 0]] },
-                    { dur: 5200, ko: '하나의 루프로 돕니다', en: 'Around one loop', seq: true,
-                      dots: (i, el) => ({ ...ring(i, .3, el / 6000), r: 7, a: 1 }), edges: loopEdges }
+                    { dur: 5200, ko: '하나의 루프로 돕니다', en: 'Around one loop', seq: true, signals: true, deco: 'rings',
+                      dots: (i, el) => ({ ...ring(i, .3, el / 6000), r: 7, a: 1 }), edges: loopEdges,
+                      sats: (j, el) => { const ang = j / NS * TAU + el / 2500, rr = .3 + Math.sin(j * 1.7 + el / 700) * .04; return { x: C.x + Math.cos(ang) * rr, y: C.y + Math.sin(ang) * rr, r: 1.5, a: .45 }; } }
+                ],
+                [ // E: 만들고 살피고 다듬는 반복
+                    { dur: 3800, ko: '만들어 보고', en: 'Build it', signals: true,
+                      dots: (i, el) => ({ x: .12 + i * .095, y: C.y + Math.sin(i * .8 + el / 600) * .14, r: 6, a: 1 }), edges: chain,
+                      sats: (j, el) => ({ x: .08 + j / (NS - 1) * .84, y: C.y + Math.sin(j * .22 + el / 520 + 1.2) * .24 * Math.cos(j * .09 + el / 2400), r: 1.5, a: .45 }) },
+                    { dur: 4000, ko: '빈틈을 살피고', en: 'Scan for gaps', deco: 'radar', web: false,
+                      dots: (i, el) => { const p = inDisc(i + 7); return { ...p, r: 5 + 2.5 * sweepLit(p.x, p.y, el), a: .45 + .55 * sweepLit(p.x, p.y, el) }; }, edges: [],
+                      sats: (j, el) => { const p = inDisc(j + 70); return { ...p, r: 1.6, a: .1 + .8 * sweepLit(p.x, p.y, el) }; } },
+                    { dur: 4400, ko: '다시 다듬습니다', en: 'Then refine again', seq: true, signals: true,
+                      dots: (i, el) => { const k = i + 2, ang = k * GOLD + el / 4000; const rr = .065 * Math.sqrt(k); return { x: C.x + Math.cos(ang) * rr, y: C.y + Math.sin(ang) * rr, r: 6, a: 1 }; }, edges: chain,
+                      sats: (j, el) => { const ang = (j + 12) * GOLD + el / 4000, rr = .38 * Math.sqrt((j + 1) / NS); return { x: C.x + Math.cos(ang) * rr, y: C.y + Math.sin(ang) * rr, r: 1.5, a: .4 }; } }
                 ],
                 [ // C
-                    { dur: 3600, ko: '문제를 구조로 나누고', en: 'Break the problem down',
+                    { dur: 3600, ko: '문제를 구조로 나누고', en: 'Break the problem down', deco: 'grid', web: false,
                       dots: i => ({ ...grid(i), r: 7, a: 1 }),
-                      edges: [[0, 1], [1, 2], [3, 4], [4, 5], [6, 7], [7, 8], [0, 3], [3, 6], [1, 4], [4, 7], [2, 5], [5, 8]] },
-                    { dur: 3600, ko: '우선순위를 정하고', en: 'Decide what matters',
-                      dots: i => ({ ...bar(i), r: 6, a: 1 }), edges: Array.from({ length: N }, (_, i) => [i, [bar(i).x, .74]]), bars: true },
-                    { dur: 3800, ko: '빠짐없이 검증하면', en: 'Check every piece', seq: true,
-                      dots: i => ({ x: CHECK[i][0], y: CHECK[i][1], r: 6, a: 1 }), edges: chain },
-                    { dur: 4600, ko: '만들 준비가 됩니다', en: 'Ready to build',
+                      edges: [[0, 1], [1, 2], [3, 4], [4, 5], [6, 7], [7, 8], [0, 3], [3, 6], [1, 4], [4, 7], [2, 5], [5, 8]],
+                      sats: (j, el) => ({ x: .14 + (j % 6) * .144, y: .1 + Math.floor(j / 6) * .144, r: 1.6, a: .18 + .32 * (.5 + .5 * Math.sin(el / 380 - (j % 6 + Math.floor(j / 6)) * .6)) }) },
+                    { dur: 3600, ko: '우선순위를 정하고', en: 'Decide what matters', web: false,
+                      dots: i => ({ ...bar(i), r: 6, a: 1 }), edges: Array.from({ length: N }, (_, i) => [i, [bar(i).x, .74]]), bars: true,
+                      sats: (j, el) => { const b = j % N, lv = Math.floor(j / N); return { x: bar(b).x + .022, y: .74 - (lv + 1) * BAR_H[b] / 5, r: 1.8, a: .5 * clamp01((el - 700 - b * 70 - lv * 90) / 300) }; } },
+                    { dur: 3800, ko: '빠짐없이 검증하면', en: 'Check every piece', seq: true, signals: true, web: false,
+                      dots: i => ({ x: CHECK[i][0], y: CHECK[i][1], r: 6, a: 1 }), edges: chain,
+                      sats: (j, el) => { const t = (el / 1800 + j / NS) % 1, p = checkAt(t), off = (rand(j) - .5) * .05; return { x: p.x + off, y: p.y - off, r: 1.5, a: .55 * Math.sin(Math.PI * t) }; } },
+                    { dur: 4600, ko: '만들 준비가 됩니다', en: 'Ready to build', web: false,
                       dots: i => i < 4 ? { x: [.34, .66, .66, .34][i], y: [.14, .14, .84, .84][i], r: 6, a: 1 } : { x: .42, y: phoneRows[i - 4], r: 5, a: 1 },
-                      edges: [[0, 1], [1, 2], [2, 3], [3, 0], [4, [.58, phoneRows[0]]], [5, [.56, phoneRows[1]]], [6, [.58, phoneRows[2]]], [7, [.52, phoneRows[3]]], [8, [.57, phoneRows[4]]]] }
+                      edges: [[0, 1], [1, 2], [2, 3], [3, 0], [4, [.58, phoneRows[0]]], [5, [.56, phoneRows[1]]], [6, [.58, phoneRows[2]]], [7, [.52, phoneRows[3]]], [8, [.57, phoneRows[4]]]],
+                      sats: (j, el) => j < 24 ? { x: .39 + (j % 4) * .074, y: .19 + Math.floor(j / 4) * .021 + (Math.floor(j / 4) > 2 ? .5 : 0), r: 1.4, a: .35 * clamp01((el - 1000 - j * 40) / 300) } : { x: .38 + (j - 24) * .022, y: .79, r: 1.6, a: .45 } }
                 ]
             ];
             const SCENES = STORIES.flat();
@@ -11992,6 +12047,44 @@ function toggleVizTable(btn) {
                 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             }
 
+            // 장면의 작은 점 목표 위치 (큰 점 목표 위치를 기준으로)
+            function satsOf(sc, el) {
+                const main = Array.from({ length: N }, (_, i) => sc.dots(i, el));
+                return Array.from({ length: NS }, (_, j) => (sc.sats || defaultSats)(j, el, main));
+            }
+            // 배경 장식: 동심원 · 레이더 · 격자 (장면 시작·끝에 서서히 나타나고 사라진다)
+            function drawDeco(sc, el) {
+                if (!sc.deco) return;
+                const fade = clamp01(el / 700) * clamp01((sc.dur - el) / 500);
+                if (fade <= 0) return;
+                const cx = C.x * W, cy = C.y * H, u = Math.min(W, H);
+                ctx.strokeStyle = colors[0]; ctx.fillStyle = colors[0]; ctx.lineWidth = 1;
+                if (sc.deco === 'rings') {
+                    [.14, .26, .38].forEach((r, k) => {
+                        ctx.globalAlpha = .07 * fade;
+                        ctx.beginPath(); ctx.arc(cx, cy, r * u, 0, TAU); ctx.stroke();
+                        ctx.globalAlpha = .2 * fade; ctx.setLineDash([2, 7]);
+                        const rot = el / (3000 + k * 1500) * (k % 2 ? -1 : 1);
+                        ctx.beginPath(); ctx.arc(cx, cy, r * u, rot, rot + Math.PI * .7); ctx.stroke(); ctx.setLineDash([]);
+                    });
+                } else if (sc.deco === 'radar') {
+                    ctx.globalAlpha = .08 * fade;
+                    [.12, .24, .36].forEach(r => { ctx.beginPath(); ctx.arc(cx, cy, r * u, 0, TAU); ctx.stroke(); });
+                    ctx.beginPath(); ctx.moveTo(cx - .38 * u, cy); ctx.lineTo(cx + .38 * u, cy); ctx.moveTo(cx, cy - .38 * u); ctx.lineTo(cx, cy + .38 * u); ctx.stroke();
+                    for (let k = 0; k < 14; k++) { // 지나간 자리가 꼬리처럼 남는 스윕
+                        const ang = SWEEP(el) - k * .045;
+                        ctx.globalAlpha = (k ? .2 * (1 - k / 14) : .55) * fade;
+                        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(ang) * .37 * u, cy + Math.sin(ang) * .37 * u); ctx.stroke();
+                    }
+                } else if (sc.deco === 'grid') {
+                    for (let gx = 0; gx <= 12; gx++) for (let gy = 0; gy <= 12; gy++) {
+                        ctx.globalAlpha = .1 * fade;
+                        ctx.fillRect(.08 * W + gx * .07 * W - .75, .06 * H + gy * .07 * H - .75, 1.5, 1.5);
+                    }
+                }
+                ctx.globalAlpha = 1;
+            }
+
             // k번째 장면의 el(ms) 시점을 그린다. 시작 위치는 직전 장면의 마지막 위치
             function drawAt(k, el) {
                 const sc = SCENES[k], prev = SCENES[(k + SCENES.length - 1) % SCENES.length];
@@ -12001,41 +12094,97 @@ function toggleVizTable(btn) {
                     const f = prev.dots(i, prev.dur), to = sc.dots(i, el);
                     cur.push({ x: lerp(f.x, to.x, q), y: lerp(f.y, to.y, q), r: lerp(f.r, to.r, q), a: lerp(f.a, to.a, q) });
                 }
+                const sFrom = satsOf(prev, prev.dur), sTo = satsOf(sc, el);
+                const sats = sTo.map((t, j) => {
+                    const q = ease(clamp01((el - 150 - j * 18) / TRANS)), f = sFrom[j];
+                    return { x: lerp(f.x, t.x, q), y: lerp(f.y, t.y, q), r: lerp(f.r, t.r, q), a: lerp(f.a, t.a, q) };
+                });
                 ctx.clearRect(0, 0, W, H);
                 const P = d => [d.x * W, d.y * H];
+                const ink = colors[0];
+                drawDeco(sc, el);
+
+                // 작은 점끼리 · 작은 점과 큰 점을 잇는 가는 그물
+                const webQ = sc.web === false ? 1 - ease(clamp01(el / 600)) : (prev.web === false ? ease(clamp01(el / 900)) : 1);
+                if (webQ > .01) {
+                    ctx.strokeStyle = ink; ctx.lineWidth = .7;
+                    for (let a = 0; a < NS; a++) {
+                        const s1 = sats[a]; if (s1.a < .03) continue;
+                        const p = cur[a % N], pd = Math.hypot((s1.x - p.x) * W, (s1.y - p.y) * H) / W;
+                        if (pd < .12) { // 가까운 큰 점에만 실을 잇는다 (멀리 가로지르는 선 방지)
+                            ctx.globalAlpha = .14 * (1 - pd / .12) * Math.min(s1.a / .5, 1) * Math.min(p.a, 1) * webQ;
+                            ctx.beginPath(); ctx.moveTo(s1.x * W, s1.y * H); ctx.lineTo(p.x * W, p.y * H); ctx.stroke();
+                        }
+                        for (let b = a + 1; b < NS; b++) {
+                            const s2 = sats[b]; if (s2.a < .03) continue;
+                            const d = Math.hypot((s1.x - s2.x) * W, (s1.y - s2.y) * H) / W;
+                            if (d > .075) continue;
+                            ctx.globalAlpha = (1 - d / .075) * .22 * Math.min(s1.a, s2.a) * webQ;
+                            ctx.beginPath(); ctx.moveTo(s1.x * W, s1.y * H); ctx.lineTo(s2.x * W, s2.y * H); ctx.stroke();
+                        }
+                    }
+                }
 
                 // 잇는 선: 점이 자리 잡은 뒤 차례로 그려진다
+                const edgeStart = j => TRANS * .7 + j * (sc.seq ? 380 : 120);
+                const edgeDur = sc.seq ? 420 : 700;
                 sc.edges.forEach((e, j) => {
-                    const start = TRANS * .7 + j * (sc.seq ? 380 : 120);
-                    const q = ease(clamp01((el - start) / (sc.seq ? 420 : 700)));
+                    const q = ease(clamp01((el - edgeStart(j)) / edgeDur));
                     if (q <= 0) return;
                     const d0 = cur[e[0]];
                     const [x1, y1] = P(d0);
                     const toPoint = Array.isArray(e[1]);
                     const [x2, y2] = toPoint ? [e[1][0] * W, e[1][1] * H] : P(cur[e[1]]);
-                    const grad = ctx.createLinearGradient(x1, y1, x2 + .01, y2 + .01);
-                    grad.addColorStop(0, colors[e[0]]);
-                    grad.addColorStop(1, toPoint ? colors[e[0]] : colors[e[1]]);
-                    ctx.strokeStyle = grad;
+                    ctx.strokeStyle = ink;
                     ctx.globalAlpha = (toPoint ? (sc.bars ? .45 : .3) : .55) * Math.min(d0.a, 1);
-                    ctx.lineWidth = toPoint ? (sc.bars ? 8 : 5) : 2;
+                    ctx.lineWidth = toPoint ? (sc.bars ? 8 : (sc.edges === spokes ? 1 : 5)) : 2;
                     ctx.lineCap = 'round';
                     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(lerp(x1, x2, q), lerp(y1, y2, q)); ctx.stroke();
                 });
 
-                // 점
+                // 신호: 다 그려진 선 위로 작은 빛이 흐른다
+                if (sc.signals) {
+                    ctx.fillStyle = ink;
+                    sc.edges.forEach((e, j) => {
+                        if (Array.isArray(e[1])) return;
+                        const t0 = edgeStart(j) + edgeDur;
+                        if (el < t0) return;
+                        const a = cur[e[0]], b = cur[e[1]];
+                        for (let tail = 0; tail < 4; tail++) {
+                            const t = (((el - t0) / 1100 + j * .31) - tail * .035 + 4) % 1;
+                            const x = lerp(a.x, b.x, t) * W, y = lerp(a.y, b.y, t) * H;
+                            ctx.globalAlpha = (tail ? .35 * (1 - tail / 4) : .95) * Math.min(a.a, b.a);
+                            ctx.beginPath(); ctx.arc(x, y, tail ? 1.6 : 2.4, 0, TAU); ctx.fill();
+                        }
+                    });
+                }
+
+                // 작은 점
+                ctx.fillStyle = ink;
+                sats.forEach(d => {
+                    if (d.a < .01) return;
+                    ctx.globalAlpha = Math.min(d.a, 1);
+                    ctx.beginPath(); ctx.arc(d.x * W, d.y * H, Math.max(.5, d.r), 0, TAU); ctx.fill();
+                });
+
+                // 큰 점
                 cur.forEach((d, i) => {
                     if (d.a < .01) return;
                     const [x, y] = P(d);
                     const lit = sc.labels ? clamp01((el - TRANS * .7 - (i - 1) * 380) / 300) : 1;
-                    ctx.globalAlpha = d.a * (sc.labels ? .35 + .65 * lit : 1);
+                    const alpha = d.a * (sc.labels ? .35 + .65 * lit : 1);
                     ctx.fillStyle = colors[i];
-                    ctx.beginPath(); ctx.arc(x, y, d.r, 0, Math.PI * 2); ctx.fill();
+                    ctx.globalAlpha = alpha * .12; // 은은한 빛무리
+                    ctx.beginPath(); ctx.arc(x, y, d.r * 2.3, 0, TAU); ctx.fill();
+                    ctx.globalAlpha = alpha;
+                    ctx.beginPath(); ctx.arc(x, y, d.r, 0, TAU); ctx.fill();
                     if (sc.pulse && i === 0) { // 첫 점은 숨 쉬듯 퍼지는 고리
-                        const rr = (Math.max(0, el) % 1600) / 1600;
-                        ctx.globalAlpha = (1 - rr) * .35;
-                        ctx.strokeStyle = colors[0]; ctx.lineWidth = 2;
-                        ctx.beginPath(); ctx.arc(x, y, d.r + rr * 26, 0, Math.PI * 2); ctx.stroke();
+                        for (let w = 0; w < 2; w++) {
+                            const rr = ((Math.max(0, el) + w * 800) % 1600) / 1600;
+                            ctx.globalAlpha = (1 - rr) * .35;
+                            ctx.strokeStyle = colors[0]; ctx.lineWidth = 2;
+                            ctx.beginPath(); ctx.arc(x, y, d.r + rr * 30, 0, TAU); ctx.stroke();
+                        }
                     }
                     if (sc.labels && lit > 0) {
                         ctx.globalAlpha = d.a * lit * .9;
@@ -12048,7 +12197,7 @@ function toggleVizTable(btn) {
                 ctx.globalAlpha = 1;
             }
 
-            // 자막: 한 바퀴(세 이야기 전체)는 한글, 다음 바퀴는 영어로 번갈아 보여 준다
+            // 자막: 한 바퀴(다섯 이야기 전체)는 한글, 다음 바퀴는 영어로 번갈아 보여 준다
             let capKey = '', cycle = 0;
             function setCaption(text, lang) {
                 if (capKey === text) return;
